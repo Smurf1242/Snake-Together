@@ -44,7 +44,15 @@ const defaultConfig = {
   ]
 };
 
-function getBaseDir() {
+function findFirstExistingPath(...paths) {
+  return paths.find((candidate) => candidate && fs.existsSync(candidate)) || paths[0];
+}
+
+function getBundledDir() {
+  return app.isPackaged ? app.getAppPath() : path.join(__dirname, '..');
+}
+
+function getExternalInstallDir() {
   return app.isPackaged ? path.dirname(process.execPath) : path.join(__dirname, '..');
 }
 
@@ -53,15 +61,23 @@ function getConfigPath() {
 }
 
 function getIconPath() {
-  return path.join(getBaseDir(), 'assets', 'snake.ico');
+  return findFirstExistingPath(
+    path.join(getExternalInstallDir(), 'assets', 'snake.ico'),
+    path.join(process.resourcesPath, 'assets', 'snake.ico'),
+    path.join(getBundledDir(), 'assets', 'snake.ico')
+  );
 }
 
 function getLegacyConfigPath() {
-  return path.join(getBaseDir(), 'snake3d.config.json');
+  return path.join(getExternalInstallDir(), 'snake3d.config.json');
 }
 
 function getGitHubConfigPath() {
-  return path.join(getBaseDir(), 'snake3d.github.json');
+  return findFirstExistingPath(
+    path.join(getExternalInstallDir(), 'snake3d.github.json'),
+    path.join(process.resourcesPath, 'snake3d.github.json'),
+    path.join(getBundledDir(), 'snake3d.github.json')
+  );
 }
 
 function getReleasePageUrl() {
