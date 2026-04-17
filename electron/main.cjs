@@ -12,13 +12,13 @@ const defaultConfig = {
     graphicsPreset: 'high',
     dlssMode: 'off',
     displayMode: 'windowed',
+    windowResolution: '1920x1080',
     showFpsCounter: false,
     vSync: true,
     fpsCap: '60',
     resolutionScale: '1',
     shadowQuality: 'high',
     fogEnabled: true,
-    fakeRtxMode: false,
     dayNightCycle: false,
     sfxVolume: 0.7,
     sfxMuted: false
@@ -87,6 +87,30 @@ function getReleasePageUrl() {
   }
 
   return `https://github.com/${githubConfig.owner}/${githubConfig.releaseRepo}/releases`;
+}
+
+function parseWindowResolution(value) {
+  const match = /^(\d{3,5})x(\d{3,5})$/i.exec(String(value || '').trim());
+  if (!match) {
+    return { width: 1920, height: 1080 };
+  }
+
+  return {
+    width: Math.max(980, Number(match[1]) || 1920),
+    height: Math.max(720, Number(match[2]) || 1080)
+  };
+}
+
+function getWindowedBounds(config) {
+  const primaryDisplay = screen.getPrimaryDisplay();
+  const workArea = primaryDisplay.workArea;
+  const requested = parseWindowResolution(config.graphics.windowResolution);
+  const width = Math.min(requested.width, workArea.width);
+  const height = Math.min(requested.height, workArea.height);
+  const x = workArea.x + Math.max(0, Math.floor((workArea.width - width) / 2));
+  const y = workArea.y + Math.max(0, Math.floor((workArea.height - height) / 2));
+
+  return { x, y, width, height };
 }
 
 function readGitHubConfig() {
@@ -338,10 +362,13 @@ function buildWindowOptions(config) {
   const isFullscreen = displayMode === 'fullscreen';
   const primaryDisplay = screen.getPrimaryDisplay();
   const workArea = primaryDisplay.workAreaSize;
+  const windowedBounds = getWindowedBounds(config);
 
   return {
-    width: isBorderless ? workArea.width : 1440,
-    height: isBorderless ? workArea.height : 960,
+    x: !isBorderless && !isFullscreen ? windowedBounds.x : undefined,
+    y: !isBorderless && !isFullscreen ? windowedBounds.y : undefined,
+    width: isBorderless ? workArea.width : windowedBounds.width,
+    height: isBorderless ? workArea.height : windowedBounds.height,
     minWidth: isBorderless ? undefined : 980,
     minHeight: isBorderless ? undefined : 720,
     autoHideMenuBar: true,
@@ -361,6 +388,7 @@ function buildWindowOptions(config) {
 function applyDisplayMode(win, config) {
   const displayMode = config.graphics.displayMode || 'windowed';
   const workArea = screen.getPrimaryDisplay().workArea;
+  const windowedBounds = getWindowedBounds(config);
 
   if (displayMode === 'fullscreen') {
     if (!win.isMaximized() && !win.isFullScreen()) {
@@ -375,12 +403,8 @@ function applyDisplayMode(win, config) {
 
   if (displayMode === 'windowed') {
     win.setResizable(true);
-    if (lastWindowedBounds) {
-      win.setBounds(lastWindowedBounds);
-    } else {
-      win.setSize(1440, 960);
-      win.center();
-    }
+    win.setBounds(windowedBounds);
+    lastWindowedBounds = win.getBounds();
     return;
   }
 
@@ -484,9 +508,6 @@ ipcMain.handle('snake3d:apply-graphics-settings', (_event, graphicsPatch) => {
   const currentDisplayMode = currentConfig.graphics.displayMode || 'windowed';
 
   if (mainWindow && nextDisplayMode === currentDisplayMode && nextDisplayMode !== 'borderless') {
-    if (nextDisplayMode === 'windowed' && mainWindow && !mainWindow.isFullScreen()) {
-      lastWindowedBounds = mainWindow.getBounds();
-    }
     applyDisplayMode(mainWindow, nextConfig);
   } else if (mainWindow) {
     const bounds = mainWindow.getBounds();
