@@ -20,6 +20,8 @@ const defaultConfig = {
     shadowQuality: 'high',
     fogEnabled: true,
     dayNightCycle: false,
+    dayCycleSeconds: 180,
+    nightCycleSeconds: 180,
     sfxVolume: 0.7,
     sfxMuted: false
   },
