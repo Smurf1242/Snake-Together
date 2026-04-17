@@ -13,6 +13,7 @@ Desktop Snake project recovered into its own standalone workspace.
 1. Make sure `snake3d.github.json` is filled in with your GitHub details.
 2. Build the installer with `npm run package:win`.
 3. The installer and update metadata are written into the `release/` folder.
+4. The NSIS installer now creates both `Snake Together` and `Snake Together Updater` shortcuts. The updater launches the same packaged app in updater mode and checks GitHub automatically.
 
 ## GitHub setup
 
@@ -37,3 +38,4 @@ The app updater reads `snake3d.github.json`. Set:
 - Windows auto update is wired for the NSIS installer path, not the portable build.
 - Publish the generated installer plus `latest.yml` to GitHub Releases for the configured release repo.
 - The game exposes a manual updater button in Settings so players can check for updates and install the newest build.
+- The installer also adds a dedicated `Snake Together Updater` app shortcut that opens a smaller updater window and pulls updates from GitHub automatically.

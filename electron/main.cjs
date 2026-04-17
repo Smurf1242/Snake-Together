@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const { screen } = require('electron');
@@ -152,6 +153,7 @@ if (!bootConfig.graphics.vSync) {
 let mainWindow = null;
 let lastWindowedBounds = null;
 let updater = null;
+const launchMode = process.argv.includes('--updater-mode') ? 'updater' : 'game';
 let updateState = {
   configured: false,
   status: 'idle',
@@ -168,9 +170,11 @@ function setUpdateState(patch) {
     ...patch
   };
 
-  if (mainWindow && !mainWindow.isDestroyed()) {
-    mainWindow.webContents.send('snake3d:update-state', updateState);
-  }
+  BrowserWindow.getAllWindows().forEach((window) => {
+    if (!window.isDestroyed()) {
+      window.webContents.send('snake3d:update-state', updateState);
+    }
+  });
 }
 
 function initUpdater() {
@@ -283,6 +287,27 @@ function initUpdater() {
 }
 
 function buildWindowOptions(config) {
+  if (launchMode === 'updater') {
+    return {
+      width: 560,
+      height: 420,
+      minWidth: 520,
+      minHeight: 380,
+      autoHideMenuBar: true,
+      backgroundColor: '#11091d',
+      title: 'Snake Together Updater',
+      icon: fs.existsSync(getIconPath()) ? getIconPath() : undefined,
+      maximizable: false,
+      fullscreenable: false,
+      resizable: false,
+      webPreferences: {
+        preload: path.join(__dirname, 'preload.cjs'),
+        contextIsolation: true,
+        nodeIntegration: false
+      }
+    };
+  }
+
   const displayMode = config.graphics.displayMode || 'windowed';
   const isBorderless = displayMode === 'borderless';
   const isFullscreen = displayMode === 'fullscreen';
@@ -346,10 +371,18 @@ function createWindow(config = bootConfig) {
   const win = new BrowserWindow(buildWindowOptions(config));
   mainWindow = win;
 
-  win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  if (launchMode === 'updater') {
+    win.loadFile(path.join(__dirname, 'updater.html'));
+  } else {
+    win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
+  }
 
   win.once('ready-to-show', () => {
-    applyDisplayMode(win, config);
+    if (launchMode === 'updater') {
+      win.center();
+    } else {
+      applyDisplayMode(win, config);
+    }
   });
 
   win.on('closed', () => {
@@ -362,6 +395,7 @@ function createWindow(config = bootConfig) {
 ipcMain.handle('snake3d:get-config', () => readConfig());
 ipcMain.handle('snake3d:save-config', (_event, nextConfig) => writeConfig(nextConfig));
 ipcMain.handle('snake3d:get-update-state', () => updateState);
+ipcMain.handle('snake3d:get-launch-mode', () => launchMode);
 ipcMain.handle('snake3d:check-for-updates', async () => {
   if (!updater) {
     return updateState;
@@ -389,6 +423,22 @@ ipcMain.handle('snake3d:install-update', async () => {
   }
 
   return updateState;
+});
+ipcMain.handle('snake3d:launch-main-app', async () => {
+  if (!app.isPackaged) {
+    return { ok: false, message: 'Launch shortcut works in packaged builds only.' };
+  }
+
+  spawn(process.execPath, [], {
+    detached: true,
+    stdio: 'ignore'
+  }).unref();
+
+  setTimeout(() => {
+    app.quit();
+  }, 150);
+
+  return { ok: true };
 });
 ipcMain.handle('snake3d:apply-graphics-settings', (_event, graphicsPatch) => {
   const currentConfig = readConfig();
@@ -428,6 +478,22 @@ ipcMain.handle('snake3d:apply-graphics-settings', (_event, graphicsPatch) => {
 app.whenReady().then(() => {
   createWindow(bootConfig);
   initUpdater();
+
+  if (launchMode === 'updater') {
+    setTimeout(() => {
+      if (updater) {
+        updater.checkForUpdates().catch((error) => {
+          setUpdateState({
+            status: 'error',
+            message: `Updater error: ${error.message}`,
+            progress: 0,
+            updateAvailable: false,
+            downloaded: false
+          });
+        });
+      }
+    }, 900);
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
