@@ -20694,7 +20694,20 @@ function VT() {
   Qa(), tt = "single", Ii = "host", Re.host.label = Qt, Re.guest.label = "Friend", Li(false);
 }
 function ga() {
+  if (tt === "host" && !(Bt != null && Bt.open || tt === "single")) return;
+  if (tt !== "single" && !Bn) return;
   Li(true), xn(), Cn(), tt === "host" && kn({ type: "state", state: fr("Match started. Stay sharp.") });
+}
+function pooIsLaunchKey(s) {
+  return s.code === "Space" || s.key === " " || s.key === "Spacebar" || s.key === "Space";
+}
+function vooHandleLaunchInput() {
+  if (!(Dt === "ready" || Dt === "game-over")) return;
+  if (tt === "guest") {
+    Bn && (Bt != null && Bt.open) && kn({ type: "start-request" });
+    return;
+  }
+  (tt === "host" && Bn && (Bt != null && Bt.open) || tt === "single") && ga();
 }
 function Qc(s) {
   Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), ar(s, 8e3), ai(), xn(), tt === "host" && kn({ type: "state", state: fr(s) });
@@ -20857,8 +20870,8 @@ function YT() {
     (t = window.snake3dDesktop) != null && t.saveConfig && (Ge = ma(await window.snake3dDesktop.saveConfig(Ge))), hu = [...Ge.prizes].sort((n, i) => i.threshold - n.threshold), Tf();
   }), window.addEventListener("resize", qT), window.addEventListener("keydown", (s) => {
     resumeSnakeAudio();
-    if (s.key === " ") {
-      s.preventDefault(), (Dt === "ready" || Dt === "game-over") && (tt === "guest" ? kn({ type: "start-request" }) : (tt === "host" && (Bt != null && Bt.open) || tt === "single") && ga());
+    if (pooIsLaunchKey(s)) {
+      s.preventDefault(), vooHandleLaunchInput();
       return;
     }
     if (s.key === "v" || s.key === "V") {
