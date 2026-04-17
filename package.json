@@ -1,0 +1,60 @@
+{
+  "name": "snake-3d-platform",
+  "private": true,
+  "version": "1.7.0",
+  "type": "module",
+  "description": "Snake: Together desktop build",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "desktop": "electron .",
+    "package:win": "electron-builder --win nsis",
+    "package:portable": "electron-builder --win portable"
+  },
+  "dependencies": {
+    "electron-updater": "^6.6.2",
+    "peerjs": "^1.5.5",
+    "three": "^0.179.1"
+  },
+  "devDependencies": {
+    "electron": "^37.2.1",
+    "electron-builder": "^26.0.12"
+  },
+  "build": {
+    "appId": "com.reece.snake.together",
+    "productName": "Snake Together",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "assets/**/*",
+      "snake3d.github.json",
+      "package.json"
+    ],
+    "asar": true,
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Smurf1242",
+        "repo": "Snake-Together"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "assets/snake.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Snake-Together-Setup-${version}.exe"
+    },
+    "portable": {
+      "artifactName": "Snake Together ${version}.exe"
+    }
+  }
+}

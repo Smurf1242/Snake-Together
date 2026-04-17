@@ -1,0 +1,14 @@
+﻿This workspace was recovered from a packaged Snake: Together build.
+
+What is recovered:
+- dist/ compiled game files
+- electron/ desktop launcher files
+- assets/ including snake.ico
+- node_modules/ that were packaged into the app bundle
+- src/main.recovered.bundle.js copied from the built client bundle
+- src/styles.recovered.css copied from the built stylesheet bundle
+
+Important:
+- The original TypeScript source files were not present in the packaged app bundle.
+- main.recovered.bundle.js is the recovered built runtime, not the original authored source.
+- This recovery workspace is separate from the ASCII Art Converter project.

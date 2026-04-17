@@ -1,0 +1,10 @@
+node_modules/
+release/
+Release-Snake-Together-Version*/
+*.zip
+_zip_verify_155/
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.bak

@@ -1,0 +1,4 @@
+﻿Snake project workspace.
+
+This folder is the separate working area for Snake: Together.
+It was created from the recovered Snake build so it stays isolated from the ASCII Art Converter project.
