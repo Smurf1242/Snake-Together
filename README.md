@@ -12,3 +12,5 @@ run Snake Together Updater
 <img width="1915" height="1077" alt="image" src="https://github.com/user-attachments/assets/a48c8847-947d-4ccc-88a3-f2f5972337f5" />
 Updater can also be ran from in game. 
 <img width="1919" height="1076" alt="image" src="https://github.com/user-attachments/assets/fc5fd070-a109-4874-aa7d-d47b352d3662" />
+<img width="1341" height="850" alt="image" src="https://github.com/user-attachments/assets/e09562fc-1621-49b8-8d23-129ad6b9cb73" />
+
