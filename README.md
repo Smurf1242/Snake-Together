@@ -1,6 +1,6 @@
 # Snake: Together
 
-Desktop Snake project allowing multiplayer with friends
+Desktop Snake project allowing multiplayer with friends, originally made for playing with my partner. (references at the beginning to be removed in next public update) 
 
 ## INSTRUCTIONS
 Download latest release. HERE: https://github.com/Smurf1242/Snake-Together/releases
