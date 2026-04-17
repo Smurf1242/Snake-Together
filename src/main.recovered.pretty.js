@@ -20070,7 +20070,7 @@ class WM {
     t.drawingBufferColorSpace = nt._getDrawingBufferColorSpace(e), t.unpackColorSpace = nt._getUnpackColorSpace();
   }
 }
-const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, Ri = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "high", dlssMode: "off", displayMode: "windowed", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "high", fogEnabled: true, fakeRtxMode: false, dayNightCycle: false, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "Try and beat 850 Amanda.... lots of love, Reece", ready: "Press <strong>Space</strong> to start.", running: "Use the full arena. Chase the <strong>bubblegum pink super food</strong> for bigger growth.", edgeWarning: "Border ahead. Turn now to stay inside the <strong>highlighted arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
+const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, Ri = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "high", dlssMode: "off", displayMode: "windowed", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "high", fogEnabled: true, dayNightCycle: false, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "Try and beat 850 Amanda.... lots of love, Reece", ready: "Press <strong>Space</strong> to start.", running: "Use the full arena. Chase the <strong>bubblegum pink super food</strong> for bigger growth.", edgeWarning: "Border ahead. Turn now to stay inside the <strong>highlighted arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
 if (!gm) throw new Error("App root not found.");
 const _m = gm;
 _m.innerHTML = `
@@ -20134,17 +20134,10 @@ _m.innerHTML = `
         <label class="settings-row"><span>DLSS Style</span><select id="setting-dlss-mode"><option value="off">Off</option><option value="quality">Quality</option><option value="balanced">Balanced</option><option value="performance">Performance</option></select></label>
         <label class="settings-row"><span>Shadow Quality</span><select id="setting-shadow-quality"><option value="off">Off</option><option value="low">Low</option><option value="high">High</option></select></label>
         <label class="settings-row"><span>Fog</span><input type="checkbox" id="setting-fog" /></label>
-        <label class="settings-row"><span>RTX MODE</span><input type="checkbox" id="setting-fake-rtx" /></label>
         <label class="settings-row"><span>Day / Night Cycle</span><input type="checkbox" id="setting-day-night-cycle" /></label>
         <label class="settings-row"><span>SFX Volume</span><span class="settings-inline"><input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" /><strong id="setting-sfx-volume-value">70%</strong></span></label>
         <label class="settings-row"><span>Mute SFX</span><input type="checkbox" id="setting-sfx-muted" /></label>
       </div>
-      <div class="settings-status">
-        <p id="renderer-status">Renderer status: checking...</p>
-        <p id="graphics-status">DLSS Style and RTX MODE are visual presets. WebGPU/DX12 needs support and may require restart.</p>
-        <p id="update-status">Updater status: waiting for desktop integration...</p>
-      </div>
-      <p class="settings-note" id="settings-note">WebGPU and V-Sync changes may need a restart on some systems.</p>
       <div class="settings-actions">
         <button class="settings-save secondary" id="update-check">Check for Updates</button>
         <button class="settings-save secondary hidden" id="update-install">Install Update</button>
@@ -20159,7 +20152,7 @@ function Ye(s, e) {
   if (!s) throw new Error(`${e} not found.`);
   return s;
 }
-const KM = Ye(document.querySelector("#score-local"), "score-local"), jM = Ye(document.querySelector("#score-remote"), "score-remote"), QM = Ye(document.querySelector("#best"), "best"), eT = Ye(document.querySelector("#stage-name"), "stage-name"), tT = Ye(document.querySelector("#food-type"), "food-type"), nT = Ye(document.querySelector("#message"), "message"), iT = Ye(document.querySelector("#label-local"), "label-local"), sT = Ye(document.querySelector("#label-remote"), "label-remote"), rT = Ye(document.querySelector("#menu-panel"), "menu-panel"), Kc = Ye(document.querySelector("#menu-note"), "menu-note"), Qs = Ye(document.querySelector("#username-input"), "username-input"), is = Ye(document.querySelector("#stage-select"), "stage-select"), ym = Ye(document.querySelector("#single-player-button"), "single-player-button"), xm = Ye(document.querySelector("#host-button"), "host-button"), oT = Ye(document.querySelector("#join-button"), "join-button"), vm = Ye(document.querySelector("#join-code-input"), "join-code-input"), aT = Ye(document.querySelector("#host-lobby"), "host-lobby"), cT = Ye(document.querySelector("#host-code"), "host-code"), Oa = Ye(document.querySelector("#lobby-status"), "lobby-status"), Sm = Ye(document.querySelector("#start-match-button"), "start-match-button"), lT = Ye(document.querySelector("#intro-screen"), "intro-screen"), hT = Ye(document.querySelector("#intro-title"), "intro-title"), mf = Ye(document.querySelector("#intro-note"), "intro-note"), uT = Ye(document.querySelector("#settings-button"), "settings-button"), gf = Ye(document.querySelector("#settings-panel"), "settings-panel"), dT = Ye(document.querySelector("#settings-close"), "settings-close"), fT = Ye(document.querySelector("#settings-save"), "settings-save"), _f = Ye(document.querySelector("#settings-note"), "settings-note"), bm = Ye(document.querySelector("#renderer-status"), "renderer-status"), pT = Ye(document.querySelector("#graphics-status"), "graphics-status"), woo = Ye(document.querySelector("#update-status"), "update-status"), Roo = Ye(document.querySelector("#update-check"), "update-check"), Poo = Ye(document.querySelector("#update-install"), "update-install"), mT = Ye(document.querySelector("#fps-panel"), "fps-panel"), gT = Ye(document.querySelector("#fps-value"), "fps-value"), Mm = Ye(document.querySelector("#setting-display-mode"), "setting-display-mode"), Tm = Ye(document.querySelector("#setting-show-fps"), "setting-show-fps"), Em = Ye(document.querySelector("#setting-vsync"), "setting-vsync"), Am = Ye(document.querySelector("#setting-fps-cap"), "setting-fps-cap"), roo = Ye(document.querySelector("#setting-graphics-preset"), "setting-graphics-preset"), ss = Ye(document.querySelector("#setting-renderer"), "setting-renderer"), eo = Ye(document.querySelector("#setting-webgpu-toggle"), "setting-webgpu-toggle"), Cm = Ye(document.querySelector("#setting-resolution-scale"), "setting-resolution-scale"), wm = Ye(document.querySelector("#setting-dlss-mode"), "setting-dlss-mode"), Rm = Ye(document.querySelector("#setting-shadow-quality"), "setting-shadow-quality"), Pm = Ye(document.querySelector("#setting-fog"), "setting-fog"), Im = Ye(document.querySelector("#setting-fake-rtx"), "setting-fake-rtx"), noo = Ye(document.querySelector("#setting-day-night-cycle"), "setting-day-night-cycle"), ao = Ye(document.querySelector("#setting-sfx-volume"), "setting-sfx-volume"), ioo = Ye(document.querySelector("#setting-sfx-volume-value"), "setting-sfx-volume-value"), soo = Ye(document.querySelector("#setting-sfx-muted"), "setting-sfx-muted"), On = new Ip(), _i = new Wa("#231437", 42, 96);
+const KM = Ye(document.querySelector("#score-local"), "score-local"), jM = Ye(document.querySelector("#score-remote"), "score-remote"), QM = Ye(document.querySelector("#best"), "best"), eT = Ye(document.querySelector("#stage-name"), "stage-name"), tT = Ye(document.querySelector("#food-type"), "food-type"), nT = Ye(document.querySelector("#message"), "message"), iT = Ye(document.querySelector("#label-local"), "label-local"), sT = Ye(document.querySelector("#label-remote"), "label-remote"), rT = Ye(document.querySelector("#menu-panel"), "menu-panel"), Kc = Ye(document.querySelector("#menu-note"), "menu-note"), Qs = Ye(document.querySelector("#username-input"), "username-input"), is = Ye(document.querySelector("#stage-select"), "stage-select"), ym = Ye(document.querySelector("#single-player-button"), "single-player-button"), xm = Ye(document.querySelector("#host-button"), "host-button"), oT = Ye(document.querySelector("#join-button"), "join-button"), vm = Ye(document.querySelector("#join-code-input"), "join-code-input"), aT = Ye(document.querySelector("#host-lobby"), "host-lobby"), cT = Ye(document.querySelector("#host-code"), "host-code"), Oa = Ye(document.querySelector("#lobby-status"), "lobby-status"), Sm = Ye(document.querySelector("#start-match-button"), "start-match-button"), lT = Ye(document.querySelector("#intro-screen"), "intro-screen"), hT = Ye(document.querySelector("#intro-title"), "intro-title"), mf = Ye(document.querySelector("#intro-note"), "intro-note"), uT = Ye(document.querySelector("#settings-button"), "settings-button"), gf = Ye(document.querySelector("#settings-panel"), "settings-panel"), dT = Ye(document.querySelector("#settings-close"), "settings-close"), fT = Ye(document.querySelector("#settings-save"), "settings-save"), Roo = Ye(document.querySelector("#update-check"), "update-check"), Poo = Ye(document.querySelector("#update-install"), "update-install"), mT = Ye(document.querySelector("#fps-panel"), "fps-panel"), gT = Ye(document.querySelector("#fps-value"), "fps-value"), Mm = Ye(document.querySelector("#setting-display-mode"), "setting-display-mode"), Tm = Ye(document.querySelector("#setting-show-fps"), "setting-show-fps"), Em = Ye(document.querySelector("#setting-vsync"), "setting-vsync"), Am = Ye(document.querySelector("#setting-fps-cap"), "setting-fps-cap"), roo = Ye(document.querySelector("#setting-graphics-preset"), "setting-graphics-preset"), ss = Ye(document.querySelector("#setting-renderer"), "setting-renderer"), eo = Ye(document.querySelector("#setting-webgpu-toggle"), "setting-webgpu-toggle"), Cm = Ye(document.querySelector("#setting-resolution-scale"), "setting-resolution-scale"), wm = Ye(document.querySelector("#setting-dlss-mode"), "setting-dlss-mode"), Rm = Ye(document.querySelector("#setting-shadow-quality"), "setting-shadow-quality"), Pm = Ye(document.querySelector("#setting-fog"), "setting-fog"), noo = Ye(document.querySelector("#setting-day-night-cycle"), "setting-day-night-cycle"), ao = Ye(document.querySelector("#setting-sfx-volume"), "setting-sfx-volume"), ioo = Ye(document.querySelector("#setting-sfx-volume-value"), "setting-sfx-volume-value"), soo = Ye(document.querySelector("#setting-sfx-muted"), "setting-sfx-muted"), On = new Ip(), _i = new Wa("#231437", 42, 96);
 On.background = new xe("#231437");
 On.fog = _i;
 const _T = new C(0, 0, 0), yT = new C(0, 44, 34), to = new Lt(52, window.innerWidth / window.innerHeight, 0.1, 220), moo = ["overview", "chase", "first-person"];
@@ -20281,14 +20274,10 @@ function AT(s) {
   return s.graphics.rendererPreference === "webgpu" && s.graphics.experimentalWebGpu;
 }
 function CT() {
-  const s = ei.requested === "webgpu" ? "WebGPU / DX12 path" : "Stable WebGL", e = ei.active === "webgpu" ? "WebGPU" : "WebGL";
-  bm.textContent = `Renderer status: ${e} active. ${ei.message}`, pT.textContent = ei.requested === "webgpu" ? `${s} requested. ${ei.supported ? "Support detected." : "Support not detected, so the game stayed on WebGL."} Graphics Preset controls arena lighting/detail. DLSS Style is a resolution-scaling preset. RTX MODE is a brighter lighting preset.` : "Stable WebGL selected. Graphics Preset controls arena lighting/detail. DLSS Style is a resolution-scaling preset. RTX MODE is a brighter lighting preset.";
 }
 function updateUpdateUi(s) {
   const e = s ?? { status: "disabled", message: "Updater unavailable in this build.", downloaded: false, configured: false, progress: 0 };
   Ioo = e;
-  const t = e.message || "Updater idle.";
-  woo.textContent = `Updater status: ${t}`;
   Roo.disabled = e.status === "checking" || e.status === "downloading";
   Roo.textContent = e.status === "checking" ? "Checking..." : e.status === "downloading" ? `Downloading ${Math.round(e.progress || 0)}%` : "Check for Updates";
   Poo.classList.toggle("hidden", !e.downloaded);
@@ -20310,7 +20299,7 @@ function getGraphicsProfile() {
 }
 function applyGraphicsPresetToControls(s, e = false) {
   if (!e) return;
-  s === "low" ? (Cm.value = "0.75", wm.value = "performance", Rm.value = "off", Pm.checked = false, Im.checked = false) : s === "high" ? (Cm.value = "1", wm.value = "off", Rm.value = "high", Pm.checked = true, Im.checked = false) : s === "ultra" ? (Cm.value = "1.25", wm.value = "quality", Rm.value = "high", Pm.checked = true, Im.checked = false) : s === "rtx" && (Cm.value = "1.25", wm.value = "quality", Rm.value = "high", Pm.checked = true, Im.checked = true);
+  s === "low" ? (Cm.value = "0.75", wm.value = "performance", Rm.value = "off", Pm.checked = false) : s === "high" ? (Cm.value = "1", wm.value = "off", Rm.value = "high", Pm.checked = true) : s === "ultra" ? (Cm.value = "1.25", wm.value = "quality", Rm.value = "high", Pm.checked = true) : s === "rtx" && (Cm.value = "1.25", wm.value = "quality", Rm.value = "high", Pm.checked = true);
 }
 async function wT(s) {
   if (AT(s)) if (typeof navigator < "u" && "gpu" in navigator) try {
@@ -20407,40 +20396,39 @@ function updateSfxVolumeLabel() {
   ao.value = String(s), ioo.textContent = `${Math.round(s * 100)}%`;
 }
 function Tf() {
-  Mm.value = Ge.graphics.displayMode, Tm.checked = Ge.graphics.showFpsCounter, Em.checked = Ge.graphics.vSync, Am.value = Ge.graphics.fpsCap, roo.value = Ge.graphics.graphicsPreset || "high", ss.value = Ge.graphics.rendererPreference, eo.checked = Ge.graphics.experimentalWebGpu, Cm.value = Ge.graphics.resolutionScale, wm.value = Ge.graphics.dlssMode, Rm.value = Ge.graphics.shadowQuality, Pm.checked = Ge.graphics.fogEnabled, Im.checked = Ge.graphics.fakeRtxMode, noo.checked = Ge.graphics.dayNightCycle, soo.checked = Ge.graphics.sfxMuted, updateSfxVolumeLabel(), eo.disabled = ss.value !== "webgpu", CT();
+  Mm.value = Ge.graphics.displayMode, Tm.checked = Ge.graphics.showFpsCounter, Em.checked = Ge.graphics.vSync, Am.value = Ge.graphics.fpsCap, roo.value = Ge.graphics.graphicsPreset || "high", ss.value = Ge.graphics.rendererPreference, eo.checked = Ge.graphics.experimentalWebGpu, Cm.value = Ge.graphics.resolutionScale, wm.value = Ge.graphics.dlssMode, Rm.value = Ge.graphics.shadowQuality, Pm.checked = Ge.graphics.fogEnabled, noo.checked = Ge.graphics.dayNightCycle, soo.checked = Ge.graphics.sfxMuted, updateSfxVolumeLabel(), eo.disabled = ss.value !== "webgpu", CT();
 }
 function km() {
   const s = getGraphicsProfile();
   const e = Number(Ge.graphics.resolutionScale), t = Ge.graphics.dlssMode === "quality" ? 0.92 : Ge.graphics.dlssMode === "balanced" ? 0.82 : Ge.graphics.dlssMode === "performance" ? 0.72 : 1;
   ii.setPixelRatio(Math.min(window.devicePixelRatio * e * t, 3)), ii.setSize(window.innerWidth, window.innerHeight);
-  const n = Ge.graphics.shadowQuality !== "off";
-  ii.shadowMap.enabled = n, It.castShadow = n, poo.castShadow = n && s.spotLight > 0.05, Ge.graphics.shadowQuality === "high" ? (It.shadow.mapSize.set(2048, 2048), poo.shadow.mapSize.set(2048, 2048)) : Ge.graphics.shadowQuality === "low" && (It.shadow.mapSize.set(1024, 1024), poo.shadow.mapSize.set(1024, 1024)), Ge.graphics.fakeRtxMode || s.preset === "rtx" ? (On.background = new xe("#47245f"), _i.color.set("#47245f"), _i.near = 46, _i.far = 110, Or.color.set("#fff4fb"), Or.intensity = 0.95, Ki.color.set("#d4f7ff"), Ki.groundColor.set("#56336b"), Ki.intensity = 1.9, It.color.set("#ffe7f5"), It.intensity = 3.2, poo.color.set("#ffe8f7"), poo.intensity = 3.4 * s.spotLight, jl.color.set("#5c3b86"), Ur.color.set("#7b57b5"), Ur.emissive.set("#5a3d8d"), Nr.color.set("#ffb3e4"), Nr.emissive.set("#ff69b8"), Ql.emissive.set("#b2468a"), eh.emissive.set("#3a8ab6"), th.emissive.set("#b78b21"), nh.emissive.set("#6b46a1")) : (On.background = new xe("#231437"), _i.color.set("#231437"), _i.near = 42, _i.far = 96, Or.color.set("#ffd9f4"), Or.intensity = 0.5, Ki.color.set("#93ddff"), Ki.groundColor.set("#341a49"), Ki.intensity = 1.3, It.color.set("#ffcce8"), It.intensity = 1.95, poo.color.set("#ffdff2"), poo.intensity = 2 * s.spotLight, jl.color.set("#362052"), Ur.color.set("#513172"), Ur.emissive.set("#30184c"), Nr.color.set("#ff9fda"), Nr.emissive.set("#8d3367"), Ql.emissive.set("#7f2b5d"), eh.emissive.set("#235572"), th.emissive.set("#86671e"), nh.emissive.set("#503578")), It.position.set(34, 38, 12), poo.position.set(30, 24, 18), jl.metalness = s.floorMetalness, jl.roughness = s.floorRoughness, jl.emissiveIntensity = s.floorEmissive, Ur.metalness = s.tileMetalness, Ur.roughness = s.tileRoughness, Nr.metalness = Math.min(0.58, s.tileMetalness + 0.08), Nr.roughness = Math.max(0.2, s.tileRoughness - 0.08), Ql.metalness = Math.min(0.62, s.tileMetalness + 0.1), Ql.roughness = Math.max(0.18, s.tileRoughness - 0.1), eh.metalness = Math.min(0.52, s.tileMetalness + 0.04), eh.roughness = Math.max(0.24, s.tileRoughness - 0.06), th.metalness = Math.min(0.44, s.tileMetalness), th.roughness = Math.max(0.22, s.tileRoughness - 0.04), nh.metalness = Math.min(0.48, s.tileMetalness + 0.02), nh.roughness = Math.max(0.24, s.tileRoughness - 0.02), Ur.emissiveIntensity = 0.62 + s.arenaGlow * 0.45, Nr.emissiveIntensity = 0.92 + s.arenaGlow * 0.4, Ql.emissiveIntensity = 0.86 + s.arenaGlow * 0.34, eh.emissiveIntensity = 0.82 + s.arenaGlow * 0.28, th.emissiveIntensity = 0.72 + s.arenaGlow * 0.24, nh.emissiveIntensity = 0.8 + s.arenaGlow * 0.26, xT.emissiveIntensity = 1.25 + s.orbGlow * 0.4, vT.emissiveIntensity = 1.42 + s.orbGlow * 0.45, uoo.material.opacity = 0.2 + s.arenaGlow * 0.18, doo.material.opacity = 0.18 + s.arenaGlow * 0.16, foo.material.opacity = 0.18 + s.arenaGlow * 0.16, coo.material.opacity = 0.66 + s.orbGlow * 0.18, loo.material.opacity = 0.66 + s.orbGlow * 0.18, oo.intensity = 2.1 * s.pointLight + (Ge.graphics.fakeRtxMode || s.preset === "rtx" ? 1.15 : 0), aoo.intensity = 1.95 * s.pointLight + (Ge.graphics.fakeRtxMode || s.preset === "rtx" ? 1.15 : 0), hoo.visible = s.preset !== "low", On.fog = Ge.graphics.fogEnabled ? _i : null, Bm();
+  const n = Ge.graphics.shadowQuality !== "off", i = !Ge.graphics.dayNightCycle && s.preset === "rtx";
+  ii.shadowMap.enabled = n, It.castShadow = n, poo.castShadow = n && s.spotLight > 0.05, Ge.graphics.shadowQuality === "high" ? (It.shadow.mapSize.set(2048, 2048), poo.shadow.mapSize.set(2048, 2048)) : Ge.graphics.shadowQuality === "low" && (It.shadow.mapSize.set(1024, 1024), poo.shadow.mapSize.set(1024, 1024)), i ? (On.background = new xe("#38204f"), _i.color.set("#38204f"), _i.near = 44, _i.far = 102, Or.color.set("#ffe9f7"), Or.intensity = 0.44, Ki.color.set("#c3e6ff"), Ki.groundColor.set("#4c2d67"), Ki.intensity = 1.04, It.color.set("#ffe3f5"), It.intensity = 1.56, poo.color.set("#ffe7f5"), poo.intensity = 1.36 * s.spotLight, jl.color.set("#533067"), Ur.color.set("#6f4991"), Ur.emissive.set("#4b2f71"), Nr.color.set("#ffb0e1"), Nr.emissive.set("#b6518f"), Ql.emissive.set("#9a3f79"), eh.emissive.set("#3181a7"), th.emissive.set("#9c7b29"), nh.emissive.set("#6b469e")) : (On.background = new xe("#231437"), _i.color.set("#231437"), _i.near = 38, _i.far = 88, Or.color.set("#ffd9f4"), Or.intensity = 0.28, Ki.color.set("#93ddff"), Ki.groundColor.set("#341a49"), Ki.intensity = 0.76, It.color.set("#ffcce8"), It.intensity = 1.02, poo.color.set("#ffdff2"), poo.intensity = 1.04 * s.spotLight, jl.color.set("#362052"), Ur.color.set("#513172"), Ur.emissive.set("#30184c"), Nr.color.set("#ff9fda"), Nr.emissive.set("#8d3367"), Ql.emissive.set("#7f2b5d"), eh.emissive.set("#235572"), th.emissive.set("#86671e"), nh.emissive.set("#503578")), It.position.set(30, 28, 10), poo.position.set(24, 16, 12), jl.metalness = s.floorMetalness, jl.roughness = s.floorRoughness, jl.emissiveIntensity = s.floorEmissive * 0.78, Ur.metalness = s.tileMetalness, Ur.roughness = s.tileRoughness, Nr.metalness = Math.min(0.58, s.tileMetalness + 0.08), Nr.roughness = Math.max(0.2, s.tileRoughness - 0.08), Ql.metalness = Math.min(0.62, s.tileMetalness + 0.1), Ql.roughness = Math.max(0.18, s.tileRoughness - 0.1), eh.metalness = Math.min(0.52, s.tileMetalness + 0.04), eh.roughness = Math.max(0.24, s.tileRoughness - 0.06), th.metalness = Math.min(0.44, s.tileMetalness), th.roughness = Math.max(0.22, s.tileRoughness - 0.04), nh.metalness = Math.min(0.48, s.tileMetalness + 0.02), nh.roughness = Math.max(0.24, s.tileRoughness - 0.02), Ur.emissiveIntensity = 0.42 + s.arenaGlow * 0.28, Nr.emissiveIntensity = 0.68 + s.arenaGlow * 0.26, Ql.emissiveIntensity = 0.66 + s.arenaGlow * 0.22, eh.emissiveIntensity = 0.62 + s.arenaGlow * 0.18, th.emissiveIntensity = 0.56 + s.arenaGlow * 0.14, nh.emissiveIntensity = 0.58 + s.arenaGlow * 0.16, xT.emissiveIntensity = 1 + s.orbGlow * 0.24, vT.emissiveIntensity = 1.1 + s.orbGlow * 0.28, uoo.material.opacity = 0.16 + s.arenaGlow * 0.1, doo.material.opacity = 0.14 + s.arenaGlow * 0.08, foo.material.opacity = 0.14 + s.arenaGlow * 0.08, coo.material.opacity = 0.54 + s.orbGlow * 0.1, loo.material.opacity = 0.54 + s.orbGlow * 0.1, oo.intensity = i ? 1.18 * s.pointLight + 0.42 : 0.74 * s.pointLight, aoo.intensity = i ? 1.08 * s.pointLight + 0.38 : 0.68 * s.pointLight, hoo.visible = s.preset !== "low", On.fog = Ge.graphics.fogEnabled ? _i : null, Bm();
 }
 function applyDayNightCycle(s) {
   if (!Ge.graphics.dayNightCycle) return;
-  const e = s * 0.0174533 - 1.1, t = Math.sin(e), i = Math.cos(e), r = Math.min(1, Math.max(0, (t + 1) * 0.5)), o = Math.max(0, t), a = 1 - o, c = Ge.graphics.fakeRtxMode || (Ge.graphics.graphicsPreset || "high") === "rtx", l = getGraphicsProfile();
-  It.position.set(34 * i, 4 + t * 48, 18 + 14 * Math.sin(e * 0.65));
-  poo.position.set(26 * i, 12 + Math.max(0, t) * 24, 16 + 10 * Math.sin(e * 0.5));
-  On.background.lerpColors(ooo, c ? looNight : cooNight, r);
-  _i.color.lerpColors(aooDay, c ? looNight : cooNight, r);
-  Ki.color.lerpColors(uooDay, fooNight, r);
-  Ki.groundColor.lerpColors(vooDay, pooNightGround, r);
-  Or.color.lerpColors(hooDay, dooNight, r);
-  Or.intensity = 0.02 + o * 0.11;
-  Ki.intensity = 0.03 + o * 0.29;
-  It.intensity = o * (c ? 0.85 : 0.61);
-  poo.intensity = o > 0.05 ? o * (c ? 0.82 : 0.46) * l.spotLight : 0;
-  oo.intensity = 0.14 + a * (1.18 * l.pointLight + (c ? 0.7 : 0.48));
-  aoo.intensity = 0.12 + a * (1.06 * l.pointLight + (c ? 0.68 : 0.46));
-  Ql.emissiveIntensity = 0.46 + a * 0.94;
-  eh.emissiveIntensity = 0.38 + a * 0.9;
-  th.emissiveIntensity = 0.26 + a * 0.84;
-  nh.emissiveIntensity = 0.24 + a * 0.88;
-  xT.emissiveIntensity = 0.58 + a * 1.32;
-  vT.emissiveIntensity = 0.64 + a * 1.48;
-  jl.emissiveIntensity = 0.1 + a * Math.max(0.18, l.floorEmissive * 0.34);
-  _i.near = 34 + a * 8;
-  _i.far = 66 + o * 22;
+  const e = s * 0.0174533 - 1.1, t = Math.sin(e), i = Math.cos(e), r = Math.max(0, t), o = 1 - r, a = getGraphicsProfile(), c = Math.sin(e * 0.52), l = o * o;
+  It.position.set(24 * i, 10 + r * 20, 8 + c * 12);
+  On.background.lerpColors(new xe("#231437"), cooNight, o);
+  _i.color.lerpColors(new xe("#231437"), cooNight, o);
+  Ki.color.lerpColors(new xe("#93ddff"), fooNight, o);
+  Ki.groundColor.lerpColors(new xe("#341a49"), pooNightGround, o);
+  Or.color.lerpColors(new xe("#ffd9f4"), dooNight, o);
+  Or.intensity = 0;
+  Ki.intensity = 0;
+  It.intensity = r * 0.94;
+  poo.intensity = 0;
+  oo.intensity = 0;
+  aoo.intensity = 0;
+  Ql.emissiveIntensity = 0.64 + l * 0.66;
+  eh.emissiveIntensity = 0.6 + l * 0.7;
+  th.emissiveIntensity = 0.52 + l * 0.62;
+  nh.emissiveIntensity = 0.54 + l * 0.64;
+  xT.emissiveIntensity = 0.92 + l * 1.02;
+  vT.emissiveIntensity = 0.98 + l * 1.12;
+  jl.emissiveIntensity = 0.08 + l * Math.max(0.12, a.floorEmissive * 0.28);
+  _i.near = 34 + l * 6;
+  _i.far = 64 + r * 20;
 }
 function uu() {
   ih.clear(), Hn.cells.forEach((s) => {
@@ -20794,7 +20782,7 @@ function qT() {
   ii.setSize(window.innerWidth, window.innerHeight), to.aspect = window.innerWidth / window.innerHeight, to.updateProjectionMatrix();
 }
 function $T() {
-  return { ...Ge.graphics, displayMode: Mm.value, showFpsCounter: Tm.checked, vSync: Em.checked, fpsCap: Am.value, graphicsPreset: roo.value, rendererPreference: ss.value, experimentalWebGpu: eo.checked, resolutionScale: Cm.value, dlssMode: wm.value, shadowQuality: Rm.value, fogEnabled: Pm.checked, fakeRtxMode: Im.checked, dayNightCycle: noo.checked, sfxVolume: Number(ao.value), sfxMuted: soo.checked };
+  return { ...Ge.graphics, displayMode: Mm.value, showFpsCounter: Tm.checked, vSync: Em.checked, fpsCap: Am.value, graphicsPreset: roo.value, rendererPreference: ss.value, experimentalWebGpu: eo.checked, resolutionScale: Cm.value, dlssMode: wm.value, shadowQuality: Rm.value, fogEnabled: Pm.checked, dayNightCycle: noo.checked, sfxVolume: Number(ao.value), sfxMuted: soo.checked };
 }
 function YT() {
   Qs.value = Qt, Na.forEach((s) => {
@@ -20842,16 +20830,14 @@ function YT() {
       console.warn("Updater install failed.", e), updateUpdateUi({ ...Ioo, status: "error", message: `Install failed: ${e instanceof Error ? e.message : "Unknown error"}` });
     }
   }), ss.addEventListener("change", () => {
-    eo.disabled = ss.value !== "webgpu", ss.value !== "webgpu" && (eo.checked = false), bm.textContent = ss.value === "webgpu" ? "Renderer status: WebGPU requested. Save and restart to test native support." : "Renderer status: Stable WebGL selected. Save to keep the reliable path.";
+    eo.disabled = ss.value !== "webgpu", ss.value !== "webgpu" && (eo.checked = false);
   }), fT.addEventListener("click", async () => {
     var e, t;
     const s = { ...Ge.graphics };
     if (Ge = ma({ ...Ge, graphics: $T() }), km(), (e = window.snake3dDesktop) != null && e.applyGraphicsSettings) {
       const n = await window.snake3dDesktop.applyGraphicsSettings(Ge.graphics);
       Ge = ma(n.config);
-      const i = s.rendererPreference !== Ge.graphics.rendererPreference || s.experimentalWebGpu !== Ge.graphics.experimentalWebGpu;
-      _f.textContent = n.restartRequired || i ? "Saved. Window/display settings were written. Restart to fully switch V-Sync or the WebGPU/DX12 renderer path." : "Saved. Window/display and graphics settings applied.";
-    } else _f.textContent = "Saved in browser mode for this session.";
+    }
     (t = window.snake3dDesktop) != null && t.saveConfig && (Ge = ma(await window.snake3dDesktop.saveConfig(Ge))), hu = [...Ge.prizes].sort((n, i) => i.threshold - n.threshold), Tf();
   }), window.addEventListener("resize", qT), window.addEventListener("keydown", (s) => {
     resumeSnakeAudio();
