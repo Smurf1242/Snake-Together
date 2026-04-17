@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, dialog } = require('electron');
+const { app, BrowserWindow, ipcMain, dialog, shell } = require('electron');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -62,6 +62,15 @@ function getLegacyConfigPath() {
 
 function getGitHubConfigPath() {
   return path.join(getBaseDir(), 'snake3d.github.json');
+}
+
+function getReleasePageUrl() {
+  const githubConfig = readGitHubConfig();
+  if (!githubConfig.owner || !githubConfig.releaseRepo) {
+    return 'https://github.com';
+  }
+
+  return `https://github.com/${githubConfig.owner}/${githubConfig.releaseRepo}/releases`;
 }
 
 function readGitHubConfig() {
@@ -396,6 +405,7 @@ ipcMain.handle('snake3d:get-config', () => readConfig());
 ipcMain.handle('snake3d:save-config', (_event, nextConfig) => writeConfig(nextConfig));
 ipcMain.handle('snake3d:get-update-state', () => updateState);
 ipcMain.handle('snake3d:get-launch-mode', () => launchMode);
+ipcMain.handle('snake3d:get-release-page-url', () => getReleasePageUrl());
 ipcMain.handle('snake3d:check-for-updates', async () => {
   if (!updater) {
     return updateState;
@@ -403,6 +413,10 @@ ipcMain.handle('snake3d:check-for-updates', async () => {
 
   await updater.checkForUpdates();
   return updateState;
+});
+ipcMain.handle('snake3d:open-release-page', async () => {
+  await shell.openExternal(getReleasePageUrl());
+  return { ok: true };
 });
 ipcMain.handle('snake3d:install-update', async () => {
   if (!updater || !updateState.downloaded) {

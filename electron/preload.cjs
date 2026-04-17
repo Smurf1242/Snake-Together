@@ -6,9 +6,11 @@ contextBridge.exposeInMainWorld('snake3dDesktop', {
   applyGraphicsSettings: (graphics) => ipcRenderer.invoke('snake3d:apply-graphics-settings', graphics),
   getUpdateState: () => ipcRenderer.invoke('snake3d:get-update-state'),
   getLaunchMode: () => ipcRenderer.invoke('snake3d:get-launch-mode'),
+  getReleasePageUrl: () => ipcRenderer.invoke('snake3d:get-release-page-url'),
   checkForUpdates: () => ipcRenderer.invoke('snake3d:check-for-updates'),
   installUpdate: () => ipcRenderer.invoke('snake3d:install-update'),
   launchMainApp: () => ipcRenderer.invoke('snake3d:launch-main-app'),
+  openReleasePage: () => ipcRenderer.invoke('snake3d:open-release-page'),
   onUpdateState: (callback) => {
     if (typeof callback !== 'function') {
       return () => {};

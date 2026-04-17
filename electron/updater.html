@@ -124,6 +124,13 @@
       .hidden {
         display: none;
       }
+
+      .meta {
+        margin-top: 14px;
+        color: var(--muted);
+        font-size: 0.95rem;
+        line-height: 1.5;
+      }
     </style>
   </head>
   <body>
@@ -143,8 +150,10 @@
         <button id="launch-game">Launch Game</button>
         <button id="check-updates">Check Again</button>
         <button id="install-update" class="primary hidden">Install Update</button>
+        <button id="open-release-page">Open GitHub Release</button>
       </div>
 
+      <p id="updater-meta" class="meta">Installed version: checking...</p>
       <p class="footnote">When an update is found, this app downloads it in the background from the GitHub Release and then lets you install it.</p>
     </main>
 
@@ -155,6 +164,8 @@
       const checkButton = document.getElementById('check-updates');
       const installButton = document.getElementById('install-update');
       const launchButton = document.getElementById('launch-game');
+      const releaseButton = document.getElementById('open-release-page');
+      const updaterMeta = document.getElementById('updater-meta');
 
       function renderUpdateState(state) {
         const progress = Math.max(0, Math.min(100, Math.round(state?.progress || 0)));
@@ -176,6 +187,7 @@
         checkButton.textContent = state?.status === 'checking' ? 'Checking...' : state?.status === 'downloading' ? `Downloading ${progress}%` : 'Check Again';
         installButton.classList.toggle('hidden', !state?.downloaded);
         installButton.disabled = !state?.downloaded;
+        updaterMeta.textContent = `Installed version: ${state?.version || 'unknown'}${state?.configured ? ' | GitHub updater ready' : ' | GitHub updater not ready yet'}`;
       }
 
       async function refreshState() {
@@ -215,6 +227,15 @@
       launchButton.addEventListener('click', async () => {
         if (window.snake3dDesktop?.launchMainApp) {
           await window.snake3dDesktop.launchMainApp();
+        }
+      });
+
+      releaseButton.addEventListener('click', async () => {
+        if (window.snake3dDesktop?.openReleasePage) {
+          await window.snake3dDesktop.openReleasePage();
+        } else if (window.snake3dDesktop?.getReleasePageUrl) {
+          const url = await window.snake3dDesktop.getReleasePageUrl();
+          window.open(url, '_blank', 'noopener,noreferrer');
         }
       });
 
