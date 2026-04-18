@@ -20070,7 +20070,7 @@ class WM {
     t.drawingBufferColorSpace = nt._getDrawingBufferColorSpace(e), t.unpackColorSpace = nt._getUnpackColorSpace();
   }
 }
-const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, Ri = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "high", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "high", fogEnabled: true, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "Try and beat 850 Amanda.... lots of love, Reece", ready: "Press <strong>Space</strong> to start.", running: "Use the full arena. Chase the <strong>bubblegum pink super food</strong> for bigger growth.", edgeWarning: "Border ahead. Turn now to stay inside the <strong>highlighted arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
+const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "high", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "high", fogEnabled: true, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: "normal", sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "Try and beat 850 Amanda.... lots of love, Reece", ready: "Press <strong>Space</strong> to start.", running: "Use the full arena. Chase the <strong>bubblegum pink super food</strong> for bigger growth.", edgeWarning: "Border ahead. Turn now to stay inside the <strong>highlighted arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
 if (!gm) throw new Error("App root not found.");
 const _m = gm;
 _m.innerHTML = `
@@ -20100,6 +20100,14 @@ _m.innerHTML = `
       </div>
     </section>
     <section class="panel message-panel"><p id="message">Press <strong>Space</strong> to start.</p></section>
+    <section class="panel replay-panel hidden" id="replay-panel">
+      <div class="replay-header"><h2>Run Replay</h2><button class="settings-close" id="replay-close" aria-label="Close replay">x</button></div>
+      <p class="replay-copy" id="replay-copy">Watch the snake grow through the run, then save the clip if you want.</p>
+      <div class="replay-actions">
+        <button class="menu-button primary" id="replay-save-button">Save Clip</button>
+        <button class="menu-button" id="replay-skip-button">Skip</button>
+      </div>
+    </section>
     <section class="panel menu-panel hidden" id="menu-panel">
       <div class="menu-header"><h2>Start Menu</h2><p id="menu-note">Choose a mode, then launch the run.</p></div>
       <label class="menu-row"><span>Your Username</span><input id="username-input" maxlength="18" placeholder="Enter username" /></label>
@@ -20132,8 +20140,8 @@ _m.innerHTML = `
         <label class="settings-row"><span>V-Sync</span><input type="checkbox" id="setting-vsync" /></label>
         <label class="settings-row"><span>FPS Cap</span><select id="setting-fps-cap"><option value="30">30</option><option value="60">60</option><option value="120">120</option><option value="unlimited">Unlimited</option></select></label>
       </div>
-      <div class="settings-section">
-        <h3>Graphics</h3>
+        <div class="settings-section">
+          <h3>Graphics</h3>
         <label class="settings-row"><span>Graphics Preset</span><select id="setting-graphics-preset"><option value="low">Low</option><option value="high">High</option><option value="ultra">Ultra</option><option value="rtx">RTX</option></select></label>
         <label class="settings-row"><span>Renderer</span><select id="setting-renderer"><option value="webgl">Stable WebGL</option><option value="webgpu">WebGPU (Experimental)</option></select></label>
         <label class="settings-row"><span>DX12/WebGPU Path</span><input type="checkbox" id="setting-webgpu-toggle" /></label>
@@ -20144,10 +20152,14 @@ _m.innerHTML = `
         <label class="settings-row"><span>Day / Night Cycle</span><input type="checkbox" id="setting-day-night-cycle" /></label>
         <label class="settings-row"><span>Day Length</span><span class="settings-inline"><input type="range" id="setting-day-cycle" min="60" max="480" step="30" /><strong id="setting-day-cycle-value">180s</strong></span></label>
         <label class="settings-row"><span>Night Length</span><span class="settings-inline"><input type="range" id="setting-night-cycle" min="60" max="480" step="30" /><strong id="setting-night-cycle-value">180s</strong></span></label>
-        <label class="settings-row"><span>SFX Volume</span><span class="settings-inline"><input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" /><strong id="setting-sfx-volume-value">70%</strong></span></label>
-        <label class="settings-row"><span>Mute SFX</span><input type="checkbox" id="setting-sfx-muted" /></label>
-      </div>
-      <div class="settings-actions">
+          <label class="settings-row"><span>SFX Volume</span><span class="settings-inline"><input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" /><strong id="setting-sfx-volume-value">70%</strong></span></label>
+          <label class="settings-row"><span>Mute SFX</span><input type="checkbox" id="setting-sfx-muted" /></label>
+        </div>
+        <div class="settings-section">
+          <h3>Gameplay</h3>
+          <label class="settings-row"><span>Snake Speed</span><select id="setting-snake-speed"><option value="easy">Easy</option><option value="normal">Normal</option><option value="hard">Hard</option></select></label>
+        </div>
+        <div class="settings-actions">
         <button class="settings-save secondary" id="update-check">Check for Updates</button>
         <button class="settings-save secondary hidden" id="update-install">Install Update</button>
       </div>
@@ -20161,7 +20173,7 @@ function Ye(s, e) {
   if (!s) throw new Error(`${e} not found.`);
   return s;
 }
-const KM = Ye(document.querySelector("#score-local"), "score-local"), jM = Ye(document.querySelector("#score-remote"), "score-remote"), QM = Ye(document.querySelector("#best"), "best"), eT = Ye(document.querySelector("#stage-name"), "stage-name"), tT = Ye(document.querySelector("#food-type"), "food-type"), nT = Ye(document.querySelector("#message"), "message"), iT = Ye(document.querySelector("#label-local"), "label-local"), sT = Ye(document.querySelector("#label-remote"), "label-remote"), rT = Ye(document.querySelector("#menu-panel"), "menu-panel"), Kc = Ye(document.querySelector("#menu-note"), "menu-note"), Qs = Ye(document.querySelector("#username-input"), "username-input"), is = Ye(document.querySelector("#stage-select"), "stage-select"), ym = Ye(document.querySelector("#single-player-button"), "single-player-button"), xm = Ye(document.querySelector("#host-button"), "host-button"), oT = Ye(document.querySelector("#join-button"), "join-button"), vm = Ye(document.querySelector("#join-code-input"), "join-code-input"), aT = Ye(document.querySelector("#host-lobby"), "host-lobby"), cT = Ye(document.querySelector("#host-code"), "host-code"), Oa = Ye(document.querySelector("#lobby-status"), "lobby-status"), Sm = Ye(document.querySelector("#start-match-button"), "start-match-button"), lT = Ye(document.querySelector("#intro-screen"), "intro-screen"), hT = Ye(document.querySelector("#intro-title"), "intro-title"), mf = Ye(document.querySelector("#intro-note"), "intro-note"), pooScoreboardButton = Ye(document.querySelector("#scoreboard-button"), "scoreboard-button"), vooScoreboardPanel = Ye(document.querySelector("#scoreboard-panel"), "scoreboard-panel"), booScoreboardClose = Ye(document.querySelector("#scoreboard-close"), "scoreboard-close"), SooScoreboardList = Ye(document.querySelector("#scoreboard-list"), "scoreboard-list"), uT = Ye(document.querySelector("#settings-button"), "settings-button"), gf = Ye(document.querySelector("#settings-panel"), "settings-panel"), dT = Ye(document.querySelector("#settings-close"), "settings-close"), fT = Ye(document.querySelector("#settings-save"), "settings-save"), Roo = Ye(document.querySelector("#update-check"), "update-check"), Poo = Ye(document.querySelector("#update-install"), "update-install"), mT = Ye(document.querySelector("#fps-panel"), "fps-panel"), gT = Ye(document.querySelector("#fps-value"), "fps-value"), Mm = Ye(document.querySelector("#setting-display-mode"), "setting-display-mode"), Foo = Ye(document.querySelector("#setting-window-resolution"), "setting-window-resolution"), Tm = Ye(document.querySelector("#setting-show-fps"), "setting-show-fps"), Em = Ye(document.querySelector("#setting-vsync"), "setting-vsync"), Am = Ye(document.querySelector("#setting-fps-cap"), "setting-fps-cap"), roo = Ye(document.querySelector("#setting-graphics-preset"), "setting-graphics-preset"), ss = Ye(document.querySelector("#setting-renderer"), "setting-renderer"), eo = Ye(document.querySelector("#setting-webgpu-toggle"), "setting-webgpu-toggle"), Cm = Ye(document.querySelector("#setting-resolution-scale"), "setting-resolution-scale"), wm = Ye(document.querySelector("#setting-dlss-mode"), "setting-dlss-mode"), Rm = Ye(document.querySelector("#setting-shadow-quality"), "setting-shadow-quality"), Pm = Ye(document.querySelector("#setting-fog"), "setting-fog"), noo = Ye(document.querySelector("#setting-day-night-cycle"), "setting-day-night-cycle"), pooDayCycle = Ye(document.querySelector("#setting-day-cycle"), "setting-day-cycle"), vooNightCycle = Ye(document.querySelector("#setting-night-cycle"), "setting-night-cycle"), booDayCycleValue = Ye(document.querySelector("#setting-day-cycle-value"), "setting-day-cycle-value"), SooNightCycleValue = Ye(document.querySelector("#setting-night-cycle-value"), "setting-night-cycle-value"), ao = Ye(document.querySelector("#setting-sfx-volume"), "setting-sfx-volume"), ioo = Ye(document.querySelector("#setting-sfx-volume-value"), "setting-sfx-volume-value"), soo = Ye(document.querySelector("#setting-sfx-muted"), "setting-sfx-muted"), On = new Ip(), _i = new Wa("#231437", 42, 96);
+const KM = Ye(document.querySelector("#score-local"), "score-local"), jM = Ye(document.querySelector("#score-remote"), "score-remote"), QM = Ye(document.querySelector("#best"), "best"), eT = Ye(document.querySelector("#stage-name"), "stage-name"), tT = Ye(document.querySelector("#food-type"), "food-type"), nT = Ye(document.querySelector("#message"), "message"), iT = Ye(document.querySelector("#label-local"), "label-local"), sT = Ye(document.querySelector("#label-remote"), "label-remote"), rT = Ye(document.querySelector("#menu-panel"), "menu-panel"), Kc = Ye(document.querySelector("#menu-note"), "menu-note"), Qs = Ye(document.querySelector("#username-input"), "username-input"), is = Ye(document.querySelector("#stage-select"), "stage-select"), ym = Ye(document.querySelector("#single-player-button"), "single-player-button"), xm = Ye(document.querySelector("#host-button"), "host-button"), oT = Ye(document.querySelector("#join-button"), "join-button"), vm = Ye(document.querySelector("#join-code-input"), "join-code-input"), aT = Ye(document.querySelector("#host-lobby"), "host-lobby"), cT = Ye(document.querySelector("#host-code"), "host-code"), Oa = Ye(document.querySelector("#lobby-status"), "lobby-status"), Sm = Ye(document.querySelector("#start-match-button"), "start-match-button"), lT = Ye(document.querySelector("#intro-screen"), "intro-screen"), hT = Ye(document.querySelector("#intro-title"), "intro-title"), mf = Ye(document.querySelector("#intro-note"), "intro-note"), pooScoreboardButton = Ye(document.querySelector("#scoreboard-button"), "scoreboard-button"), vooScoreboardPanel = Ye(document.querySelector("#scoreboard-panel"), "scoreboard-panel"), booScoreboardClose = Ye(document.querySelector("#scoreboard-close"), "scoreboard-close"), SooScoreboardList = Ye(document.querySelector("#scoreboard-list"), "scoreboard-list"), vooReplayPanel = Ye(document.querySelector("#replay-panel"), "replay-panel"), booReplayClose = Ye(document.querySelector("#replay-close"), "replay-close"), SooReplayCopy = Ye(document.querySelector("#replay-copy"), "replay-copy"), RooReplaySave = Ye(document.querySelector("#replay-save-button"), "replay-save-button"), PooReplaySkip = Ye(document.querySelector("#replay-skip-button"), "replay-skip-button"), uT = Ye(document.querySelector("#settings-button"), "settings-button"), gf = Ye(document.querySelector("#settings-panel"), "settings-panel"), dT = Ye(document.querySelector("#settings-close"), "settings-close"), fT = Ye(document.querySelector("#settings-save"), "settings-save"), Roo = Ye(document.querySelector("#update-check"), "update-check"), Poo = Ye(document.querySelector("#update-install"), "update-install"), mT = Ye(document.querySelector("#fps-panel"), "fps-panel"), gT = Ye(document.querySelector("#fps-value"), "fps-value"), Mm = Ye(document.querySelector("#setting-display-mode"), "setting-display-mode"), Foo = Ye(document.querySelector("#setting-window-resolution"), "setting-window-resolution"), Tm = Ye(document.querySelector("#setting-show-fps"), "setting-show-fps"), Em = Ye(document.querySelector("#setting-vsync"), "setting-vsync"), Am = Ye(document.querySelector("#setting-fps-cap"), "setting-fps-cap"), roo = Ye(document.querySelector("#setting-graphics-preset"), "setting-graphics-preset"), ss = Ye(document.querySelector("#setting-renderer"), "setting-renderer"), eo = Ye(document.querySelector("#setting-webgpu-toggle"), "setting-webgpu-toggle"), Cm = Ye(document.querySelector("#setting-resolution-scale"), "setting-resolution-scale"), wm = Ye(document.querySelector("#setting-dlss-mode"), "setting-dlss-mode"), Rm = Ye(document.querySelector("#setting-shadow-quality"), "setting-shadow-quality"), Pm = Ye(document.querySelector("#setting-fog"), "setting-fog"), noo = Ye(document.querySelector("#setting-day-night-cycle"), "setting-day-night-cycle"), pooDayCycle = Ye(document.querySelector("#setting-day-cycle"), "setting-day-cycle"), vooNightCycle = Ye(document.querySelector("#setting-night-cycle"), "setting-night-cycle"), booDayCycleValue = Ye(document.querySelector("#setting-day-cycle-value"), "setting-day-cycle-value"), SooNightCycleValue = Ye(document.querySelector("#setting-night-cycle-value"), "setting-night-cycle-value"), ao = Ye(document.querySelector("#setting-sfx-volume"), "setting-sfx-volume"), ioo = Ye(document.querySelector("#setting-sfx-volume-value"), "setting-sfx-volume-value"), soo = Ye(document.querySelector("#setting-sfx-muted"), "setting-sfx-muted"), uaa = Ye(document.querySelector("#setting-snake-speed"), "setting-snake-speed"), On = new Ip(), _i = new Wa("#231437", 42, 96);
 On.background = new xe("#231437");
 On.fog = _i;
 const _T = new C(0, 0, 0), yT = new C(0, 44, 34), to = new Lt(52, window.innerWidth / window.innerHeight, 0.1, 220), moo = ["overview", "chase", "first-person"];
@@ -20370,7 +20382,7 @@ function wrapStagePoint(s) {
 function yf(s, e) {
   return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, alive: false };
 }
-let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, Hn = cu(En), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = Ri, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0;
+let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, Hn = cu(En), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
 function cooNormalizeScoreboardName(s) {
   return `${s ?? ""}`.trim().replace(/\s+/g, " ").slice(0, 18) || "Player";
@@ -20456,6 +20468,102 @@ function RooLoadScoreboardEntries() {
   }
   fooRenderScoreboard();
 }
+function jooCaptureReplaySnapshot(s = "tick") {
+  return {
+    tag: s,
+    phase: Dt,
+    stageId: En,
+    food: { ...Fn },
+    bestScore: Mi,
+    players: {
+      host: {
+        snake: rh(Re.host.snake),
+        direction: Re.host.direction,
+        score: Re.host.score,
+        alive: Re.host.alive,
+        label: Re.host.label
+      },
+      guest: {
+        snake: rh(Re.guest.snake),
+        direction: Re.guest.direction,
+        score: Re.guest.score,
+        alive: Re.guest.alive,
+        label: Re.guest.label
+      }
+    }
+  };
+}
+function QooResetReplayTimeline() {
+  FooReplayTimeline = [];
+  ZooReplayTriggeredForPhase = false;
+}
+function eaaAddReplaySnapshot(s = "tick") {
+  const e = jooCaptureReplaySnapshot(s), t = FooReplayTimeline[FooReplayTimeline.length - 1];
+  if (t) {
+    const n = JSON.stringify(t.players), i = JSON.stringify(e.players);
+    if (n === i && t.food.x === e.food.x && t.food.y === e.food.y && t.food.kind === e.food.kind) return;
+  }
+  FooReplayTimeline.push(e);
+}
+function taaApplyReplaySnapshot(s) {
+  s && (En = s.stageId, is.value = En, Hn = cu(En), uu(), Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
+    const t = s.players[e];
+    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].alive = t.alive, Re[e].label = t.label;
+  }), Mi = s.bestScore, Vm(), du(true), ai(), xn(), Cn());
+}
+async function naaStopReplayRecording() {
+  if (!WOOReplayRecorder) return GooReplayRecordedBlob;
+  const s = WOOReplayRecorder;
+  return await new Promise((e) => {
+    const t = () => {
+      GooReplayRecordedBlob = XooReplayChunks.length > 0 ? new Blob(XooReplayChunks, { type: "video/webm" }) : null, XooReplayChunks = [], WOOReplayRecorder = null, e(GooReplayRecordedBlob);
+    };
+    s.addEventListener("stop", t, { once: true });
+    s.stop();
+  });
+}
+function iaaStartReplayRecording() {
+  if (typeof MediaRecorder > "u" || !ii || !(ii.domElement instanceof HTMLCanvasElement) || typeof ii.domElement.captureStream != "function") {
+    GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], SooReplayCopy.textContent = "Watch the run back, then decide whether to keep the clip. Saving is not available on this device.";
+    return;
+  }
+  try {
+    const s = ii.domElement.captureStream(30), e = MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported("video/webm;codecs=vp9") ? "video/webm;codecs=vp9" : "video/webm";
+    XooReplayChunks = [], GooReplayRecordedBlob = null, WOOReplayRecorder = new MediaRecorder(s, { mimeType: e }), WOOReplayRecorder.addEventListener("dataavailable", (t) => {
+      t.data && t.data.size > 0 && XooReplayChunks.push(t.data);
+    }), WOOReplayRecorder.start();
+  } catch {
+    GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], SooReplayCopy.textContent = "Watch the run back, then decide whether to keep the clip. Saving is not available on this device.";
+  }
+}
+function raaFinishReplayVisuals() {
+  kooReplayPlaying = false, NooReplayActive = true, RooReplaySave.disabled = !GooReplayRecordedBlob, RooReplaySave.textContent = GooReplayRecordedBlob ? "Save Clip" : "Save Unavailable", SooReplayCopy.textContent = GooReplayRecordedBlob ? "The replay clip is ready. Save it to Documents\\Snake-together-data or skip it." : "The replay clip finished. Saving is unavailable on this device, but you can skip back to the game-over screen.", YooReplayFinalState && taaApplyReplaySnapshot(YooReplayFinalState);
+}
+async function oaaEndReplay(s = false) {
+  if (!NooReplayActive && !kooReplayPlaying) return;
+  kooReplayPlaying = false, NooReplayActive = false, HooReplayStepElapsed = 0, zooReplayIndex = 0, await naaStopReplayRecording(), vooReplayPanel.classList.add("hidden"), GooReplayRecordedBlob = s ? GooReplayRecordedBlob : null, YooReplayFinalState && taaApplyReplaySnapshot(YooReplayFinalState);
+}
+async function aaaSaveReplayClip() {
+  var e;
+  if (!GooReplayRecordedBlob) return;
+  RooReplaySave.disabled = true, RooReplaySave.textContent = "Saving...";
+  const s = await GooReplayRecordedBlob.arrayBuffer(), t = new Uint8Array(s);
+  let n = "";
+  for (let i = 0; i < t.length; i += 1) n += String.fromCharCode(t[i]);
+  const r = `${(Ba().label || "Player").replace(/[^a-z0-9]+/gi, "-")}-score-${Ba().score}-${Date.now()}`, o = (e = window.snake3dDesktop) != null && e.saveReplayClip ? await window.snake3dDesktop.saveReplayClip({ base64: btoa(n), fileName: r }) : { ok: false, message: "Desktop save bridge unavailable." };
+  o.ok ? (SooReplayCopy.textContent = `Replay saved to ${o.path}.`, RooReplaySave.textContent = "Saved") : (SooReplayCopy.textContent = o.message || "Unable to save replay clip.", RooReplaySave.disabled = false, RooReplaySave.textContent = "Save Clip");
+}
+function caaBeginReplaySequence() {
+  if (NooReplayActive || kooReplayPlaying || FooReplayTimeline.length < 2) return;
+  YooReplayFinalState = jooCaptureReplaySnapshot("final"), NooReplayActive = true, kooReplayPlaying = true, zooReplayIndex = 0, HooReplayStepElapsed = 0, GooReplayRecordedBlob = null, RooReplaySave.disabled = true, RooReplaySave.textContent = "Recording...", SooReplayCopy.textContent = "Rewinding the run into a timelapse clip...", vooReplayPanel.classList.remove("hidden"), gf.classList.add("hidden"), vooScoreboardPanel.classList.add("hidden"), taaApplyReplaySnapshot(FooReplayTimeline[0]), iaaStartReplayRecording();
+}
+function laaMaybeTriggerReplay(s, e) {
+  s !== "game-over" && e === "game-over" && !ZooReplayTriggeredForPhase && (ZooReplayTriggeredForPhase = true, caaBeginReplaySequence());
+}
+function haaGetSnakeStepDuration() {
+  const s = Ge.graphics.snakeSpeed || "normal";
+  return s === "easy" ? 0.22 : s === "hard" ? 0.13 : oaaBaseStep;
+}
 function Ba() {
   return Re[Ii];
 }
@@ -20500,7 +20608,7 @@ function updateResolutionSettingAvailability() {
   Foo.disabled = Mm.value !== "windowed";
 }
 function Tf() {
-  Mm.value = Ge.graphics.displayMode, Foo.value = Ge.graphics.windowResolution || "1920x1080", Tm.checked = Ge.graphics.showFpsCounter, Em.checked = Ge.graphics.vSync, Am.value = Ge.graphics.fpsCap, roo.value = Ge.graphics.graphicsPreset || "high", ss.value = Ge.graphics.rendererPreference, eo.checked = Ge.graphics.experimentalWebGpu, Cm.value = Ge.graphics.resolutionScale, wm.value = Ge.graphics.dlssMode, Rm.value = Ge.graphics.shadowQuality, Pm.checked = Ge.graphics.fogEnabled, noo.checked = Ge.graphics.dayNightCycle, soo.checked = Ge.graphics.sfxMuted, updateSfxVolumeLabel(), updateCycleDurationLabels(), updateResolutionSettingAvailability(), eo.disabled = ss.value !== "webgpu", CT();
+  Mm.value = Ge.graphics.displayMode, Foo.value = Ge.graphics.windowResolution || "1920x1080", Tm.checked = Ge.graphics.showFpsCounter, Em.checked = Ge.graphics.vSync, Am.value = Ge.graphics.fpsCap, roo.value = Ge.graphics.graphicsPreset || "high", ss.value = Ge.graphics.rendererPreference, eo.checked = Ge.graphics.experimentalWebGpu, Cm.value = Ge.graphics.resolutionScale, wm.value = Ge.graphics.dlssMode, Rm.value = Ge.graphics.shadowQuality, Pm.checked = Ge.graphics.fogEnabled, noo.checked = Ge.graphics.dayNightCycle, soo.checked = Ge.graphics.sfxMuted, uaa.value = Ge.graphics.snakeSpeed || "normal", updateSfxVolumeLabel(), updateCycleDurationLabels(), updateResolutionSettingAvailability(), eo.disabled = ss.value !== "webgpu", CT();
 }
 function km() {
   const s = getGraphicsProfile();
@@ -20692,7 +20800,7 @@ function Af(s, e, t) {
 function Li(s = false) {
   En = is.value || En, Hn = cu(En), uu();
   const e = NT(tt === "single" ? 1 : 2);
-  Re.host.label = tt === "guest" ? "Host" : Qt, Re.guest.label = tt === "guest" ? Qt : Re.guest.label || "Friend", Af("host", e[0], "right"), tt === "single" ? (Re.guest.snake = [], Re.guest.score = 0, Re.guest.growthPending = 0, Re.guest.alive = false) : Af("guest", e[1] ?? e[0], "left"), ch.clear(), us = "", qs = null, er = 0, zr = Ri, oh = 0, Dt = s ? "running" : "ready", Hm(), du(true), ai(), xn(), Cn();
+  Re.host.label = tt === "guest" ? "Host" : Qt, Re.guest.label = tt === "guest" ? Qt : Re.guest.label || "Friend", Af("host", e[0], "right"), tt === "single" ? (Re.guest.snake = [], Re.guest.score = 0, Re.guest.growthPending = 0, Re.guest.alive = false) : Af("guest", e[1] ?? e[0], "left"), ch.clear(), us = "", qs = null, er = 0, zr = haaGetSnakeStepDuration(), oh = 0, Dt = s ? "running" : "ready", Hm(), du(true), ai(), xn(), Cn(), QooResetReplayTimeline(), eaaAddReplaySnapshot("start");
 }
 function Gm(s, e) {
   const t = Re[s];
@@ -20706,13 +20814,15 @@ function OT() {
   });
 }
 function fr(s = "") {
-  return { phase: Dt, stageId: En, food: { ...Fn }, players: { host: { snake: rh(Re.host.snake), direction: Re.host.direction, score: Re.host.score, alive: Re.host.alive, label: Re.host.label }, guest: { snake: rh(Re.guest.snake), direction: Re.guest.direction, score: Re.guest.score, alive: Re.guest.alive, label: Re.guest.label } }, bestScore: Mi, hudMessage: s, moveBlend: Math.max(0, Math.min(1, er / Ri)) };
+  const e = haaGetSnakeStepDuration();
+  return { phase: Dt, stageId: En, food: { ...Fn }, players: { host: { snake: rh(Re.host.snake), direction: Re.host.direction, score: Re.host.score, alive: Re.host.alive, label: Re.host.label }, guest: { snake: rh(Re.guest.snake), direction: Re.guest.direction, score: Re.guest.score, alive: Re.guest.alive, label: Re.guest.label } }, bestScore: Mi, hudMessage: s, moveBlend: Math.max(0, Math.min(1, er / e)) };
 }
 function FT(s) {
+  const e = haaGetSnakeStepDuration(), t = Dt;
   s.stageId !== En && (En = s.stageId, is.value = En, Hn = cu(En), uu()), Dt = s.phase, Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
-    const t = s.players[e];
-    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].alive = t.alive, Re[e].label = t.label;
-  }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage, zr = Math.max(zr, s.moveBlend * Ri), Vm(), du(false), ai(), xn(), Cn(), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId });
+    const n = s.players[e];
+    Re[e].snake = rh(n.snake), Re[e].direction = n.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = n.score, Re[e].alive = n.alive, Re[e].label = n.label;
+  }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage, zr = Math.max(zr, s.moveBlend * e), Vm(), du(false), ai(), xn(), Cn(), Dt === "running" && eaaAddReplaySnapshot("network"), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId }), laaMaybeTriggerReplay(t, Dt);
 }
 function kn(s) {
   Bt != null && Bt.open && Bt.send(s);
@@ -20843,7 +20953,7 @@ function vooHandleLaunchInput() {
   (yooCanHostStartMatch() || tt === "single") && ga();
 }
 function Qc(s) {
-  Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), SooRefreshScoreboardFromPlayers(), ar(s, 8e3), ai(), xn(), tt === "host" && kn({ type: "state", state: fr(s) });
+  Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), eaaAddReplaySnapshot("game-over"), SooRefreshScoreboardFromPlayers(), ar(s, 8e3), ai(), xn(), laaMaybeTriggerReplay("running", Dt), tt === "host" && kn({ type: "state", state: fr(s) });
 }
 function HT() {
   const s = (tt === "single" ? ["host"] : ["host", "guest"]).filter((i) => Re[i].alive);
@@ -20852,41 +20962,42 @@ function HT() {
     return;
   }
   const e = /* @__PURE__ */ new Map();
+  let t = false;
   s.forEach((i) => {
     const r = Re[i];
     r.queuedDirection && r.queuedDirection !== ru[r.direction] && (r.direction = r.queuedDirection), r.queuedDirection = null;
     const o = su[r.direction];
     e.set(i, wrapStagePoint({ x: r.snake[0].x + o.x, y: r.snake[0].y + o.y }));
   });
-  const t = /* @__PURE__ */ new Map();
+  const n = /* @__PURE__ */ new Map();
   ["host", "guest"].forEach((i) => {
     const r = Re[i];
-    (r.growthPending === 0 ? r.snake.slice(0, -1) : r.snake).forEach((a) => t.set(_n(a), i));
+    (r.growthPending === 0 ? r.snake.slice(0, -1) : r.snake).forEach((a) => n.set(_n(a), i));
   });
-  const n = /* @__PURE__ */ new Set();
+  const r = /* @__PURE__ */ new Set();
   if (s.forEach((i) => {
-    const r = e.get(i);
-    if (!zm(r)) {
-      n.add(i);
+    const o = e.get(i);
+    if (!zm(o)) {
+      r.add(i);
       return;
     }
-    t.get(_n(r)) && n.add(i);
+    n.get(_n(o)) && r.add(i);
   }), s.length === 2) {
-    const i = e.get("host"), r = e.get("guest");
-    i && r && sh(i, r) && (n.add("host"), n.add("guest"));
+    const i = e.get("host"), o = e.get("guest");
+    i && o && sh(i, o) && (r.add("host"), r.add("guest"));
   }
   if (s.forEach((i) => {
-    const r = Re[i];
-    if (n.has(i)) {
-      r.alive = false;
+    const o = Re[i];
+    if (r.has(i)) {
+      o.alive = false;
       return;
     }
-    const o = e.get(i);
-    if (r.snake.unshift(o), sh(o, Fn)) {
-      const a = Fn.kind === "super" ? qM : XM, c = Fn.kind;
-      r.growthPending += a, r.score += c === "super" ? YM : $M, Mi = Math.max(Mi, r.score), _ooRecordScore(r.label, r.score) && tt === "host" && booBroadcastScoreboardSync(), i === Ii && (queuedFoodSound = c, OT()), Hm();
+    const a = e.get(i);
+    if (o.snake.unshift(a), sh(a, Fn)) {
+      const c = Fn.kind === "super" ? qM : XM, l = Fn.kind;
+      t = true, o.growthPending += c, o.score += l === "super" ? YM : $M, Mi = Math.max(Mi, o.score), _ooRecordScore(o.label, o.score) && tt === "host" && booBroadcastScoreboardSync(), i === Ii && (queuedFoodSound = l, OT()), Hm();
     }
-    r.growthPending > 0 ? r.growthPending -= 1 : r.snake.pop();
+    o.growthPending > 0 ? o.growthPending -= 1 : o.snake.pop();
   }), tt === "single") {
     if (!Re.host.alive) {
       Qc(Ge.messages.gameOver);
@@ -20896,10 +21007,11 @@ function HT() {
     Qc("Both snakes wiped out. Press <strong>Space</strong> for another round.");
     return;
   }
-  ai(), du(false), Cn(), tt === "host" && kn({ type: "state", state: fr("Stay alive and chase the super food.") });
+  t && eaaAddReplaySnapshot("food"), ai(), du(false), Cn(), tt === "host" && kn({ type: "state", state: fr("Stay alive and chase the super food.") });
 }
 function GT(s) {
-  if (Dt === "running") for (er += s; er >= Ri && (er -= Ri, HT(), Dt === "running"); ) ;
+  const e = haaGetSnakeStepDuration();
+  if (Dt === "running") for (er += s; er >= e && (er -= e, HT(), Dt === "running"); ) ;
 }
 function WT(s) {
   tt !== "host" || !(Bt != null && Bt.open) || Dt !== "running" || s - oh < 25 || (oh = s, kn({ type: "state", state: fr("Stay alive and chase the super food.") }));
@@ -20938,7 +21050,7 @@ function qT() {
   ii.setSize(window.innerWidth, window.innerHeight), to.aspect = window.innerWidth / window.innerHeight, to.updateProjectionMatrix();
 }
 function $T() {
-  return { ...Ge.graphics, displayMode: Mm.value, windowResolution: Foo.value, showFpsCounter: Tm.checked, vSync: Em.checked, fpsCap: Am.value, graphicsPreset: roo.value, rendererPreference: ss.value, experimentalWebGpu: eo.checked, resolutionScale: Cm.value, dlssMode: wm.value, shadowQuality: Rm.value, fogEnabled: Pm.checked, dayNightCycle: noo.checked, dayCycleSeconds: Number(pooDayCycle.value), nightCycleSeconds: Number(vooNightCycle.value), sfxVolume: Number(ao.value), sfxMuted: soo.checked };
+  return { ...Ge.graphics, displayMode: Mm.value, windowResolution: Foo.value, showFpsCounter: Tm.checked, vSync: Em.checked, fpsCap: Am.value, graphicsPreset: roo.value, rendererPreference: ss.value, experimentalWebGpu: eo.checked, resolutionScale: Cm.value, dlssMode: wm.value, shadowQuality: Rm.value, fogEnabled: Pm.checked, dayNightCycle: noo.checked, dayCycleSeconds: Number(pooDayCycle.value), nightCycleSeconds: Number(vooNightCycle.value), snakeSpeed: uaa.value, sfxVolume: Number(ao.value), sfxMuted: soo.checked };
 }
 function YT() {
   Qs.value = Qt, Na.forEach((s) => {
@@ -20948,6 +21060,12 @@ function YT() {
     vooScoreboardPanel.classList.remove("hidden"), gf.classList.add("hidden"), fooRenderScoreboard();
   }), booScoreboardClose.addEventListener("click", () => {
     vooScoreboardPanel.classList.add("hidden");
+  }), booReplayClose.addEventListener("click", () => {
+    oaaEndReplay(false);
+  }), RooReplaySave.addEventListener("click", async () => {
+    await aaaSaveReplayClip();
+  }), PooReplaySkip.addEventListener("click", async () => {
+    await oaaEndReplay(false);
   }), Qs.addEventListener("change", () => {
     ja(Qs.value);
   }), is.addEventListener("change", () => {
@@ -20960,6 +21078,8 @@ function YT() {
     Ge = ma({ ...Ge, graphics: { ...Ge.graphics, dayCycleSeconds: Number(pooDayCycle.value) } }), updateCycleDurationLabels();
   }), vooNightCycle.addEventListener("input", () => {
     Ge = ma({ ...Ge, graphics: { ...Ge.graphics, nightCycleSeconds: Number(vooNightCycle.value) } }), updateCycleDurationLabels();
+  }), uaa.addEventListener("change", () => {
+    Ge = ma({ ...Ge, graphics: { ...Ge.graphics, snakeSpeed: uaa.value } }), zr = Math.min(zr, haaGetSnakeStepDuration());
   }), roo.addEventListener("change", () => {
     applyGraphicsPresetToControls(roo.value, true);
   }), noo.addEventListener("change", () => {
@@ -20973,7 +21093,7 @@ function YT() {
   }), Sm.addEventListener("click", () => {
     resumeSnakeAudio(), ga();
   }), uT.addEventListener("click", () => {
-    gf.classList.toggle("hidden"), vooScoreboardPanel.classList.add("hidden");
+    gf.classList.toggle("hidden"), vooScoreboardPanel.classList.add("hidden"), vooReplayPanel.classList.add("hidden");
   }), dT.addEventListener("click", () => {
     gf.classList.add("hidden");
   }), Roo.addEventListener("click", async () => {
@@ -21007,6 +21127,10 @@ function YT() {
     (t = window.snake3dDesktop) != null && t.saveConfig && (Ge = ma(await window.snake3dDesktop.saveConfig(Ge))), hu = [...Ge.prizes].sort((n, i) => i.threshold - n.threshold), Tf();
   }), window.addEventListener("resize", qT), window.addEventListener("keydown", (s) => {
     resumeSnakeAudio();
+    if (NooReplayActive || kooReplayPlaying) {
+      s.key === "Escape" && oaaEndReplay(false);
+      return;
+    }
     if (s.ctrlKey || s.metaKey || s.altKey || oooIsTextEntryTarget(s.target)) return;
     if (pooIsLaunchKey(s)) {
       s.preventDefault(), vooHandleLaunchInput();
@@ -21032,14 +21156,28 @@ function Xm(s) {
     const r = 1e3 / t;
     if (s - Sf < r) return;
   }
-  Sf = s, tt !== "guest" ? GT(e) : Dt === "running" && (zr = Math.min(Ri, zr + e)), WT(s);
+  const n = haaGetSnakeStepDuration();
+  Sf = s, tt !== "guest" ? GT(e) : Dt === "running" && (zr = Math.min(n, zr + e)), WT(s);
   queuedFoodSound && (playFoodSound(queuedFoodSound), queuedFoodSound = null);
-  const n = 1.15 + Math.sin(xf * 4.2) * 0.16;
-  ls.position.y = n, hs.position.y = n + 0.14, ls.rotation.y += e * 0.9, hs.rotation.y += e * 1.3;
-  const i = getGraphicsProfile(), r = Math.sin(xf * 0.7), o = Math.cos(xf * 0.54), a = i.preset === "rtx" ? 1.18 : 1;
-  coo.position.set(22 + o * 3.8, 7.2 + Math.sin(xf * 1.6) * 1.4, -12 + r * 2.6), loo.position.set(28 + Math.cos(xf * 0.82) * 3.2, 7 + Math.cos(xf * 1.44) * 1.3, 14 - r * 2.9), oo.position.copy(coo.position), aoo.position.copy(loo.position), doo.rotation.z = xf * 0.08, foo.rotation.z = -xf * 0.06, poo.position.set(30 + Math.cos(xf * 0.35) * 2.8, 24 + Math.sin(xf * 0.28) * 1.2, 18 + Math.sin(xf * 0.31) * 2.2), uoo.material.emissiveIntensity = 0.4 + i.arenaGlow * (0.9 * a), doo.material.emissiveIntensity = 0.68 + i.arenaGlow * (1.2 * a), foo.material.emissiveIntensity = 0.68 + i.arenaGlow * (1.2 * a), coo.material.emissiveIntensity = 1.8 + i.orbGlow * (1.5 * a), loo.material.emissiveIntensity = 1.8 + i.orbGlow * (1.5 * a);
-  const c = Dt === "running" ? Math.max(0, Math.min(1, (tt === "guest" ? zr : er) / Ri)) : 1;
-  DT(c), applyDayNightCycle(xf), updateCameraView(e), Cn(), ii.render(On, to);
+  const i = 1.15 + Math.sin(xf * 4.2) * 0.16;
+  ls.position.y = i, hs.position.y = i + 0.14, ls.rotation.y += e * 0.9, hs.rotation.y += e * 1.3;
+  const r = getGraphicsProfile(), o = Math.sin(xf * 0.7), a = Math.cos(xf * 0.54), c = r.preset === "rtx" ? 1.18 : 1;
+  coo.position.set(22 + a * 3.8, 7.2 + Math.sin(xf * 1.6) * 1.4, -12 + o * 2.6), loo.position.set(28 + Math.cos(xf * 0.82) * 3.2, 7 + Math.cos(xf * 1.44) * 1.3, 14 - o * 2.9), oo.position.copy(coo.position), aoo.position.copy(loo.position), doo.rotation.z = xf * 0.08, foo.rotation.z = -xf * 0.06, poo.position.set(30 + Math.cos(xf * 0.35) * 2.8, 24 + Math.sin(xf * 0.28) * 1.2, 18 + Math.sin(xf * 0.31) * 2.2), uoo.material.emissiveIntensity = 0.4 + r.arenaGlow * (0.9 * c), doo.material.emissiveIntensity = 0.68 + r.arenaGlow * (1.2 * c), foo.material.emissiveIntensity = 0.68 + r.arenaGlow * (1.2 * c), coo.material.emissiveIntensity = 1.8 + r.orbGlow * (1.5 * c), loo.material.emissiveIntensity = 1.8 + r.orbGlow * (1.5 * c);
+  if (kooReplayPlaying) {
+    HooReplayStepElapsed += e;
+    for (; HooReplayStepElapsed >= UooReplayStepDuration && kooReplayPlaying; ) {
+      if (HooReplayStepElapsed -= UooReplayStepDuration, zooReplayIndex += 1, zooReplayIndex >= FooReplayTimeline.length) {
+        kooReplayPlaying = false;
+        break;
+      }
+      taaApplyReplaySnapshot(FooReplayTimeline[zooReplayIndex]);
+    }
+    !kooReplayPlaying && RooReplaySave.textContent === "Recording..." && naaStopReplayRecording().then(() => {
+      raaFinishReplayVisuals();
+    });
+  }
+  const l = Dt === "running" ? Math.max(0, Math.min(1, (tt === "guest" ? zr : er) / n)) : 1;
+  DT(l), applyDayNightCycle(xf), updateCameraView(e), Cn(), ii.render(On, to);
 }
 async function ZT() {
   Ge = await ET(), hu = [...Ge.prizes].sort((s, e) => e.threshold - s.threshold), RooLoadScoreboardEntries(), await initSnakeAudio(), ii = await wT(Ge), ii.setPixelRatio(Math.min(window.devicePixelRatio, 2)), ii.setSize(window.innerWidth, window.innerHeight), _m.appendChild(ii.domElement), voo.copy(yT), Soo.copy(_T), ja(Qt), YT(), km(), uu(), Li(false), XT(), Xm(performance.now());

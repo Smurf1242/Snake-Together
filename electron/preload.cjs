@@ -11,6 +11,8 @@ contextBridge.exposeInMainWorld('snake3dDesktop', {
   installUpdate: () => ipcRenderer.invoke('snake3d:install-update'),
   launchMainApp: () => ipcRenderer.invoke('snake3d:launch-main-app'),
   openReleasePage: () => ipcRenderer.invoke('snake3d:open-release-page'),
+  saveReplayClip: (payload) => ipcRenderer.invoke('snake3d:save-replay-clip', payload),
+  getDataDirectory: () => ipcRenderer.invoke('snake3d:get-data-directory'),
   onUpdateState: (callback) => {
     if (typeof callback !== 'function') {
       return () => {};

@@ -22,6 +22,7 @@ const defaultConfig = {
     dayNightCycle: false,
     dayCycleSeconds: 180,
     nightCycleSeconds: 180,
+    snakeSpeed: 'normal',
     sfxVolume: 0.7,
     sfxMuted: false
   },
@@ -60,6 +61,12 @@ function getExternalInstallDir() {
 
 function getConfigPath() {
   return path.join(app.getPath('userData'), 'snake3d.config.json');
+}
+
+function getDataDirectory() {
+  const dir = path.join(app.getPath('documents'), 'Snake-together-data');
+  fs.mkdirSync(dir, { recursive: true });
+  return dir;
 }
 
 function getIconPath() {
@@ -460,6 +467,35 @@ ipcMain.handle('snake3d:open-release-page', async () => {
   await shell.openExternal(getReleasePageUrl());
   return { ok: true };
 });
+ipcMain.handle('snake3d:get-data-directory', () => ({
+  ok: true,
+  path: getDataDirectory()
+}));
+ipcMain.handle('snake3d:save-replay-clip', async (_event, payload) => {
+  try {
+    const base64 = typeof payload?.base64 === 'string' ? payload.base64 : '';
+    if (!base64) {
+      return { ok: false, message: 'Replay clip payload was empty.' };
+    }
+
+    const safeName = String(payload?.fileName || '')
+      .replace(/[^a-z0-9\-_. ]/gi, '')
+      .trim()
+      .slice(0, 80);
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const fileName = safeName
+      ? `${safeName}.webm`
+      : `Snake-Together-Replay-${timestamp}.webm`;
+    const targetPath = path.join(getDataDirectory(), fileName);
+    fs.writeFileSync(targetPath, Buffer.from(base64, 'base64'));
+    return { ok: true, path: targetPath };
+  } catch (error) {
+    return {
+      ok: false,
+      message: error instanceof Error ? error.message : 'Unable to save replay clip.'
+    };
+  }
+});
 ipcMain.handle('snake3d:install-update', async () => {
   if (!updater || !updateState.downloaded) {
     return updateState;
@@ -529,6 +565,7 @@ ipcMain.handle('snake3d:apply-graphics-settings', (_event, graphicsPatch) => {
 });
 
 app.whenReady().then(() => {
+  getDataDirectory();
   createWindow(bootConfig);
   initUpdater();
 
