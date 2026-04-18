@@ -20717,6 +20717,16 @@ function FT(s) {
 function kn(s) {
   Bt != null && Bt.open && Bt.send(s);
 }
+function xooBuildStartState(s = "Match started. Stay sharp.") {
+  return fr(s);
+}
+function vooBroadcastMatchStart(s = "Match started. Stay sharp.") {
+  if (tt !== "host") return;
+  const e = xooBuildStartState(s);
+  kn({ type: "match-start", state: e }), kn({ type: "state", state: e }), window.setTimeout(() => {
+    Dt === "running" && tt === "host" && kn({ type: "state", state: xooBuildStartState(s) });
+  }, 180);
+}
 function oooIsTextEntryTarget(s) {
   const e = s instanceof Element ? s : s instanceof Node ? s.parentElement : null;
   return !!(e && e.closest('input, textarea, select, [contenteditable="true"]'));
@@ -20746,6 +20756,10 @@ function Wm(s, e) {
     }
     if (n.type === "start-request" && e === "host") {
       ga();
+      return;
+    }
+    if (n.type === "match-start" && e === "guest") {
+      Bn = true, looBlurActiveElement(), FT(n.state);
       return;
     }
     if (n.type === "scoreboard-sync") {
@@ -20802,7 +20816,7 @@ function ga() {
   if (tt === "single")
     return looBlurActiveElement(), Li(true), xn(), Cn(), void 0;
   if (!yooCanHostStartMatch()) return;
-  looBlurActiveElement(), Li(true), xn(), Cn(), kn({ type: "state", state: fr("Match started. Stay sharp.") });
+  looBlurActiveElement(), Li(true), xn(), Cn(), vooBroadcastMatchStart("Match started. Stay sharp.");
 }
 function pooIsLaunchKey(s) {
   return s.code === "Space" || s.key === " " || s.key === "Spacebar" || s.key === "Space";
