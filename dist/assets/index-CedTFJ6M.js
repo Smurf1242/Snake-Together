@@ -20115,7 +20115,13 @@ _m.innerHTML = `
         <button class="menu-button primary" id="start-match-button">Start Match</button>
       </section>
     </section>
+    <button class="scoreboard-button" id="scoreboard-button" aria-label="Open scoreboard">Scoreboard</button>
     <button class="settings-button" id="settings-button" aria-label="Open settings">Settings</button>
+    <section class="panel scoreboard-panel hidden" id="scoreboard-panel">
+      <div class="scoreboard-header"><h2>Scoreboard</h2><button class="settings-close" id="scoreboard-close" aria-label="Close scoreboard">x</button></div>
+      <p class="scoreboard-copy">Best scores sync between players during multiplayer. Higher scores replace older records for the same name.</p>
+      <div class="scoreboard-list" id="scoreboard-list"></div>
+    </section>
     <section class="panel settings-panel hidden" id="settings-panel">
       <div class="settings-header"><h2>Settings</h2><button class="settings-close" id="settings-close" aria-label="Close settings">x</button></div>
       <div class="settings-section">
@@ -20155,7 +20161,7 @@ function Ye(s, e) {
   if (!s) throw new Error(`${e} not found.`);
   return s;
 }
-const KM = Ye(document.querySelector("#score-local"), "score-local"), jM = Ye(document.querySelector("#score-remote"), "score-remote"), QM = Ye(document.querySelector("#best"), "best"), eT = Ye(document.querySelector("#stage-name"), "stage-name"), tT = Ye(document.querySelector("#food-type"), "food-type"), nT = Ye(document.querySelector("#message"), "message"), iT = Ye(document.querySelector("#label-local"), "label-local"), sT = Ye(document.querySelector("#label-remote"), "label-remote"), rT = Ye(document.querySelector("#menu-panel"), "menu-panel"), Kc = Ye(document.querySelector("#menu-note"), "menu-note"), Qs = Ye(document.querySelector("#username-input"), "username-input"), is = Ye(document.querySelector("#stage-select"), "stage-select"), ym = Ye(document.querySelector("#single-player-button"), "single-player-button"), xm = Ye(document.querySelector("#host-button"), "host-button"), oT = Ye(document.querySelector("#join-button"), "join-button"), vm = Ye(document.querySelector("#join-code-input"), "join-code-input"), aT = Ye(document.querySelector("#host-lobby"), "host-lobby"), cT = Ye(document.querySelector("#host-code"), "host-code"), Oa = Ye(document.querySelector("#lobby-status"), "lobby-status"), Sm = Ye(document.querySelector("#start-match-button"), "start-match-button"), lT = Ye(document.querySelector("#intro-screen"), "intro-screen"), hT = Ye(document.querySelector("#intro-title"), "intro-title"), mf = Ye(document.querySelector("#intro-note"), "intro-note"), uT = Ye(document.querySelector("#settings-button"), "settings-button"), gf = Ye(document.querySelector("#settings-panel"), "settings-panel"), dT = Ye(document.querySelector("#settings-close"), "settings-close"), fT = Ye(document.querySelector("#settings-save"), "settings-save"), Roo = Ye(document.querySelector("#update-check"), "update-check"), Poo = Ye(document.querySelector("#update-install"), "update-install"), mT = Ye(document.querySelector("#fps-panel"), "fps-panel"), gT = Ye(document.querySelector("#fps-value"), "fps-value"), Mm = Ye(document.querySelector("#setting-display-mode"), "setting-display-mode"), Foo = Ye(document.querySelector("#setting-window-resolution"), "setting-window-resolution"), Tm = Ye(document.querySelector("#setting-show-fps"), "setting-show-fps"), Em = Ye(document.querySelector("#setting-vsync"), "setting-vsync"), Am = Ye(document.querySelector("#setting-fps-cap"), "setting-fps-cap"), roo = Ye(document.querySelector("#setting-graphics-preset"), "setting-graphics-preset"), ss = Ye(document.querySelector("#setting-renderer"), "setting-renderer"), eo = Ye(document.querySelector("#setting-webgpu-toggle"), "setting-webgpu-toggle"), Cm = Ye(document.querySelector("#setting-resolution-scale"), "setting-resolution-scale"), wm = Ye(document.querySelector("#setting-dlss-mode"), "setting-dlss-mode"), Rm = Ye(document.querySelector("#setting-shadow-quality"), "setting-shadow-quality"), Pm = Ye(document.querySelector("#setting-fog"), "setting-fog"), noo = Ye(document.querySelector("#setting-day-night-cycle"), "setting-day-night-cycle"), pooDayCycle = Ye(document.querySelector("#setting-day-cycle"), "setting-day-cycle"), vooNightCycle = Ye(document.querySelector("#setting-night-cycle"), "setting-night-cycle"), booDayCycleValue = Ye(document.querySelector("#setting-day-cycle-value"), "setting-day-cycle-value"), SooNightCycleValue = Ye(document.querySelector("#setting-night-cycle-value"), "setting-night-cycle-value"), ao = Ye(document.querySelector("#setting-sfx-volume"), "setting-sfx-volume"), ioo = Ye(document.querySelector("#setting-sfx-volume-value"), "setting-sfx-volume-value"), soo = Ye(document.querySelector("#setting-sfx-muted"), "setting-sfx-muted"), On = new Ip(), _i = new Wa("#231437", 42, 96);
+const KM = Ye(document.querySelector("#score-local"), "score-local"), jM = Ye(document.querySelector("#score-remote"), "score-remote"), QM = Ye(document.querySelector("#best"), "best"), eT = Ye(document.querySelector("#stage-name"), "stage-name"), tT = Ye(document.querySelector("#food-type"), "food-type"), nT = Ye(document.querySelector("#message"), "message"), iT = Ye(document.querySelector("#label-local"), "label-local"), sT = Ye(document.querySelector("#label-remote"), "label-remote"), rT = Ye(document.querySelector("#menu-panel"), "menu-panel"), Kc = Ye(document.querySelector("#menu-note"), "menu-note"), Qs = Ye(document.querySelector("#username-input"), "username-input"), is = Ye(document.querySelector("#stage-select"), "stage-select"), ym = Ye(document.querySelector("#single-player-button"), "single-player-button"), xm = Ye(document.querySelector("#host-button"), "host-button"), oT = Ye(document.querySelector("#join-button"), "join-button"), vm = Ye(document.querySelector("#join-code-input"), "join-code-input"), aT = Ye(document.querySelector("#host-lobby"), "host-lobby"), cT = Ye(document.querySelector("#host-code"), "host-code"), Oa = Ye(document.querySelector("#lobby-status"), "lobby-status"), Sm = Ye(document.querySelector("#start-match-button"), "start-match-button"), lT = Ye(document.querySelector("#intro-screen"), "intro-screen"), hT = Ye(document.querySelector("#intro-title"), "intro-title"), mf = Ye(document.querySelector("#intro-note"), "intro-note"), pooScoreboardButton = Ye(document.querySelector("#scoreboard-button"), "scoreboard-button"), vooScoreboardPanel = Ye(document.querySelector("#scoreboard-panel"), "scoreboard-panel"), booScoreboardClose = Ye(document.querySelector("#scoreboard-close"), "scoreboard-close"), SooScoreboardList = Ye(document.querySelector("#scoreboard-list"), "scoreboard-list"), uT = Ye(document.querySelector("#settings-button"), "settings-button"), gf = Ye(document.querySelector("#settings-panel"), "settings-panel"), dT = Ye(document.querySelector("#settings-close"), "settings-close"), fT = Ye(document.querySelector("#settings-save"), "settings-save"), Roo = Ye(document.querySelector("#update-check"), "update-check"), Poo = Ye(document.querySelector("#update-install"), "update-install"), mT = Ye(document.querySelector("#fps-panel"), "fps-panel"), gT = Ye(document.querySelector("#fps-value"), "fps-value"), Mm = Ye(document.querySelector("#setting-display-mode"), "setting-display-mode"), Foo = Ye(document.querySelector("#setting-window-resolution"), "setting-window-resolution"), Tm = Ye(document.querySelector("#setting-show-fps"), "setting-show-fps"), Em = Ye(document.querySelector("#setting-vsync"), "setting-vsync"), Am = Ye(document.querySelector("#setting-fps-cap"), "setting-fps-cap"), roo = Ye(document.querySelector("#setting-graphics-preset"), "setting-graphics-preset"), ss = Ye(document.querySelector("#setting-renderer"), "setting-renderer"), eo = Ye(document.querySelector("#setting-webgpu-toggle"), "setting-webgpu-toggle"), Cm = Ye(document.querySelector("#setting-resolution-scale"), "setting-resolution-scale"), wm = Ye(document.querySelector("#setting-dlss-mode"), "setting-dlss-mode"), Rm = Ye(document.querySelector("#setting-shadow-quality"), "setting-shadow-quality"), Pm = Ye(document.querySelector("#setting-fog"), "setting-fog"), noo = Ye(document.querySelector("#setting-day-night-cycle"), "setting-day-night-cycle"), pooDayCycle = Ye(document.querySelector("#setting-day-cycle"), "setting-day-cycle"), vooNightCycle = Ye(document.querySelector("#setting-night-cycle"), "setting-night-cycle"), booDayCycleValue = Ye(document.querySelector("#setting-day-cycle-value"), "setting-day-cycle-value"), SooNightCycleValue = Ye(document.querySelector("#setting-night-cycle-value"), "setting-night-cycle-value"), ao = Ye(document.querySelector("#setting-sfx-volume"), "setting-sfx-volume"), ioo = Ye(document.querySelector("#setting-sfx-volume-value"), "setting-sfx-volume-value"), soo = Ye(document.querySelector("#setting-sfx-muted"), "setting-sfx-muted"), On = new Ip(), _i = new Wa("#231437", 42, 96);
 On.background = new xe("#231437");
 On.fog = _i;
 const _T = new C(0, 0, 0), yT = new C(0, 44, 34), to = new Lt(52, window.innerWidth / window.innerHeight, 0.1, 220), moo = ["overview", "chase", "first-person"];
@@ -20364,8 +20370,92 @@ function wrapStagePoint(s) {
 function yf(s, e) {
   return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, alive: false };
 }
-let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, Hn = cu(En), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = Ri, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null;
+let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, Hn = cu(En), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = Ri, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [];
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
+function cooNormalizeScoreboardName(s) {
+  return `${s ?? ""}`.trim().replace(/\s+/g, " ").slice(0, 18) || "Player";
+}
+function looScoreboardTimestamp(s) {
+  const e = Number(s);
+  return Number.isFinite(e) && e > 0 ? Math.floor(e) : Date.now();
+}
+function hooSortScoreboardEntries(s, e) {
+  return e.bestScore !== s.bestScore ? e.bestScore - s.bestScore : e.updatedAt !== s.updatedAt ? e.updatedAt - s.updatedAt : s.name.localeCompare(e.name);
+}
+function uooSanitizeScoreboardEntries(s) {
+  if (!Array.isArray(s)) return [];
+  const e = /* @__PURE__ */ new Map();
+  s.forEach((t) => {
+    if (!t || typeof t != "object") return;
+    const n = cooNormalizeScoreboardName(t.name), i = Number(t.bestScore);
+    if (!Number.isFinite(i) || i < 0) return;
+    const r = { name: n, bestScore: Math.max(0, Math.round(i)), updatedAt: looScoreboardTimestamp(t.updatedAt) }, o = e.get(n);
+    (!o || r.bestScore > o.bestScore || r.bestScore === o.bestScore && r.updatedAt > o.updatedAt) && e.set(n, r);
+  });
+  return [...e.values()].sort(hooSortScoreboardEntries);
+}
+function dooSaveScoreboardEntries() {
+  try {
+    window.localStorage.setItem(xooScoreboardKey, JSON.stringify(vooScoreboardEntries));
+  } catch {
+  }
+}
+function fooRenderScoreboard() {
+  const s = document.createDocumentFragment();
+  if (vooScoreboardEntries.length === 0) {
+    const e = document.createElement("div");
+    e.className = "scoreboard-empty", e.textContent = "No scores yet. Play a run to start the rivalry.", s.appendChild(e), SooScoreboardList.replaceChildren(s);
+    return;
+  }
+  vooScoreboardEntries.forEach((e, t) => {
+    const n = document.createElement("div");
+    n.className = "scoreboard-entry";
+    const i = document.createElement("span");
+    i.className = "scoreboard-rank", i.textContent = `#${t + 1}`;
+    const r = document.createElement("span");
+    r.className = "scoreboard-name", r.textContent = e.name;
+    const o = document.createElement("span");
+    o.className = "scoreboard-score", o.textContent = e.bestScore.toString(), n.append(i, r, o), s.appendChild(n);
+  }), SooScoreboardList.replaceChildren(s);
+}
+function mooGetScoreboardSnapshot() {
+  return vooScoreboardEntries.map((s) => ({ ...s }));
+}
+function yooMergeScoreboardEntries(s) {
+  const e = uooSanitizeScoreboardEntries([...vooScoreboardEntries, ...uooSanitizeScoreboardEntries(s)]);
+  let t = e.length !== vooScoreboardEntries.length;
+  if (!t) {
+    for (let n = 0; n < e.length; n += 1) {
+      const i = e[n], r = vooScoreboardEntries[n];
+      if (!r || i.name !== r.name || i.bestScore !== r.bestScore || i.updatedAt !== r.updatedAt) {
+        t = true;
+        break;
+      }
+    }
+  }
+  return t && (vooScoreboardEntries = e, dooSaveScoreboardEntries(), fooRenderScoreboard()), t;
+}
+function _ooRecordScore(s, e) {
+  const t = cooNormalizeScoreboardName(s), n = Math.max(0, Math.round(Number(e) || 0));
+  if (!t || n <= 0) return false;
+  const i = vooScoreboardEntries.find((r) => r.name === t);
+  return i && i.bestScore >= n ? false : yooMergeScoreboardEntries([{ name: t, bestScore: n, updatedAt: Date.now() }]);
+}
+function booBroadcastScoreboardSync() {
+  tt !== "single" && Bn && kn({ type: "scoreboard-sync", scoreboard: mooGetScoreboardSnapshot() });
+}
+function SooRefreshScoreboardFromPlayers() {
+  const s = _ooRecordScore(Re.host.label, Re.host.score), e = tt !== "single" ? _ooRecordScore(Re.guest.label, Re.guest.score) : false;
+  (s || e) && tt === "host" && booBroadcastScoreboardSync();
+}
+function RooLoadScoreboardEntries() {
+  try {
+    vooScoreboardEntries = uooSanitizeScoreboardEntries(JSON.parse(window.localStorage.getItem(xooScoreboardKey) || "[]"));
+  } catch {
+    vooScoreboardEntries = [];
+  }
+  fooRenderScoreboard();
+}
 function Ba() {
   return Re[Ii];
 }
@@ -20622,7 +20712,7 @@ function FT(s) {
   s.stageId !== En && (En = s.stageId, is.value = En, Hn = cu(En), uu()), Dt = s.phase, Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
     const t = s.players[e];
     Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].alive = t.alive, Re[e].label = t.label;
-  }), Mi = s.bestScore, us = s.hudMessage, zr = Math.max(zr, s.moveBlend * Ri), Vm(), du(false), ai(), xn(), Cn();
+  }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage, zr = Math.max(zr, s.moveBlend * Ri), Vm(), du(false), ai(), xn(), Cn();
 }
 function kn(s) {
   Bt != null && Bt.open && Bt.send(s);
@@ -20643,19 +20733,23 @@ function ka(s) {
 }
 function Wm(s, e) {
   Bt = s, s.on("open", () => {
-    Bn = true, xn(), Cn(), e === "guest" && kn({ type: "join-request", username: Qt });
+    Bn = true, xn(), Cn(), e === "guest" && kn({ type: "join-request", username: Qt, scoreboard: mooGetScoreboardSnapshot() });
   }), s.on("data", (t) => {
     const n = t;
     if (n.type === "join-request" && e === "host") {
-      Bn = true, looBlurActiveElement(), Re.guest.label = n.username || "Friend", Oa.textContent = `${Re.guest.label} connected. Press Start Match when ready.`, ai(), xn(), kn({ type: "join-ack", hostLabel: Re.host.label, guestLabel: Re.guest.label }), kn({ type: "state", state: fr("Connected. Waiting for the host to start the match.") });
+      Bn = true, looBlurActiveElement(), Re.guest.label = n.username || "Friend", yooMergeScoreboardEntries(n.scoreboard), Oa.textContent = `${Re.guest.label} connected. Press Start Match when ready.`, ai(), xn(), kn({ type: "join-ack", hostLabel: Re.host.label, guestLabel: Re.guest.label, scoreboard: mooGetScoreboardSnapshot() }), kn({ type: "state", state: fr("Connected. Waiting for the host to start the match.") });
       return;
     }
     if (n.type === "join-ack" && e === "guest") {
-      Bn = true, looBlurActiveElement(), Re.host.label = n.hostLabel || "Host", Re.guest.label = n.guestLabel || Qt, ai(), xn(), Cn();
+      Bn = true, looBlurActiveElement(), Re.host.label = n.hostLabel || "Host", Re.guest.label = n.guestLabel || Qt, yooMergeScoreboardEntries(n.scoreboard), ai(), xn(), Cn();
       return;
     }
     if (n.type === "start-request" && e === "host") {
       ga();
+      return;
+    }
+    if (n.type === "scoreboard-sync") {
+      yooMergeScoreboardEntries(n.scoreboard);
       return;
     }
     if (n.type === "input") {
@@ -20722,7 +20816,7 @@ function vooHandleLaunchInput() {
   (yooCanHostStartMatch() || tt === "single") && ga();
 }
 function Qc(s) {
-  Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), ar(s, 8e3), ai(), xn(), tt === "host" && kn({ type: "state", state: fr(s) });
+  Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), SooRefreshScoreboardFromPlayers(), ar(s, 8e3), ai(), xn(), tt === "host" && kn({ type: "state", state: fr(s) });
 }
 function HT() {
   const s = (tt === "single" ? ["host"] : ["host", "guest"]).filter((i) => Re[i].alive);
@@ -20763,7 +20857,7 @@ function HT() {
     const o = e.get(i);
     if (r.snake.unshift(o), sh(o, Fn)) {
       const a = Fn.kind === "super" ? qM : XM, c = Fn.kind;
-      r.growthPending += a, r.score += c === "super" ? YM : $M, Mi = Math.max(Mi, r.score), i === Ii && (queuedFoodSound = c, OT()), Hm();
+      r.growthPending += a, r.score += c === "super" ? YM : $M, Mi = Math.max(Mi, r.score), _ooRecordScore(r.label, r.score) && tt === "host" && booBroadcastScoreboardSync(), i === Ii && (queuedFoodSound = c, OT()), Hm();
     }
     r.growthPending > 0 ? r.growthPending -= 1 : r.snake.pop();
   }), tt === "single") {
@@ -20823,7 +20917,11 @@ function YT() {
   Qs.value = Qt, Na.forEach((s) => {
     const e = document.createElement("option");
     e.value = s.id, e.textContent = s.name, is.appendChild(e);
-  }), is.value = En, Tf(), xn(), ai(), Cn(), Qs.addEventListener("change", () => {
+  }), is.value = En, Tf(), xn(), ai(), Cn(), pooScoreboardButton.addEventListener("click", () => {
+    vooScoreboardPanel.classList.remove("hidden"), gf.classList.add("hidden"), fooRenderScoreboard();
+  }), booScoreboardClose.addEventListener("click", () => {
+    vooScoreboardPanel.classList.add("hidden");
+  }), Qs.addEventListener("change", () => {
     ja(Qs.value);
   }), is.addEventListener("change", () => {
     En = is.value, Li(false), tt === "host" && kn({ type: "state", state: fr("Stage changed. Waiting for the host to start.") });
@@ -20848,7 +20946,7 @@ function YT() {
   }), Sm.addEventListener("click", () => {
     resumeSnakeAudio(), ga();
   }), uT.addEventListener("click", () => {
-    gf.classList.toggle("hidden");
+    gf.classList.toggle("hidden"), vooScoreboardPanel.classList.add("hidden");
   }), dT.addEventListener("click", () => {
     gf.classList.add("hidden");
   }), Roo.addEventListener("click", async () => {
@@ -20917,7 +21015,7 @@ function Xm(s) {
   DT(c), applyDayNightCycle(xf), updateCameraView(e), Cn(), ii.render(On, to);
 }
 async function ZT() {
-  Ge = await ET(), hu = [...Ge.prizes].sort((s, e) => e.threshold - s.threshold), await initSnakeAudio(), ii = await wT(Ge), ii.setPixelRatio(Math.min(window.devicePixelRatio, 2)), ii.setSize(window.innerWidth, window.innerHeight), _m.appendChild(ii.domElement), voo.copy(yT), Soo.copy(_T), ja(Qt), YT(), km(), uu(), Li(false), XT(), Xm(performance.now());
+  Ge = await ET(), hu = [...Ge.prizes].sort((s, e) => e.threshold - s.threshold), RooLoadScoreboardEntries(), await initSnakeAudio(), ii = await wT(Ge), ii.setPixelRatio(Math.min(window.devicePixelRatio, 2)), ii.setSize(window.innerWidth, window.innerHeight), _m.appendChild(ii.domElement), voo.copy(yT), Soo.copy(_T), ja(Qt), YT(), km(), uu(), Li(false), XT(), Xm(performance.now());
 }
 ZT().catch((s) => {
   console.error(s), Fm("Something went wrong loading Snake: Together.");
