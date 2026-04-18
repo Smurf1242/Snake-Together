@@ -20370,7 +20370,7 @@ function wrapStagePoint(s) {
 function yf(s, e) {
   return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, alive: false };
 }
-let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, Hn = cu(En), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = Ri, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [];
+let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, Hn = cu(En), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = Ri, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
 function cooNormalizeScoreboardName(s) {
   return `${s ?? ""}`.trim().replace(/\s+/g, " ").slice(0, 18) || "Player";
@@ -20712,20 +20712,29 @@ function FT(s) {
   s.stageId !== En && (En = s.stageId, is.value = En, Hn = cu(En), uu()), Dt = s.phase, Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
     const t = s.players[e];
     Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].alive = t.alive, Re[e].label = t.label;
-  }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage, zr = Math.max(zr, s.moveBlend * Ri), Vm(), du(false), ai(), xn(), Cn();
+  }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage, zr = Math.max(zr, s.moveBlend * Ri), Vm(), du(false), ai(), xn(), Cn(), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId });
 }
 function kn(s) {
   Bt != null && Bt.open && Bt.send(s);
+}
+function PooClearMatchStartRetry() {
+  booMatchStartRetryTimer != null && (window.clearTimeout(booMatchStartRetryTimer), booMatchStartRetryTimer = null), SooMatchStartRetryCount = 0, vooPendingMatchStartId = 0;
 }
 function xooBuildStartState(s = "Match started. Stay sharp.") {
   return fr(s);
 }
 function vooBroadcastMatchStart(s = "Match started. Stay sharp.") {
   if (tt !== "host") return;
-  const e = xooBuildStartState(s);
-  kn({ type: "match-start", state: e }), kn({ type: "state", state: e }), window.setTimeout(() => {
-    Dt === "running" && tt === "host" && kn({ type: "state", state: xooBuildStartState(s) });
-  }, 180);
+  PooClearMatchStartRetry();
+  const e = ++pooMatchStartId, t = () => {
+    if (tt !== "host" || Dt !== "running" || !Bn || !(Bt != null && Bt.open) || vooPendingMatchStartId !== e) {
+      PooClearMatchStartRetry();
+      return;
+    }
+    const n = xooBuildStartState(s);
+    kn({ type: "match-start", startId: e, state: n }), kn({ type: "state", state: n }), SooMatchStartRetryCount += 1, SooMatchStartRetryCount < 8 ? booMatchStartRetryTimer = window.setTimeout(t, 220) : PooClearMatchStartRetry();
+  };
+  vooPendingMatchStartId = e, t();
 }
 function oooIsTextEntryTarget(s) {
   const e = s instanceof Element ? s : s instanceof Node ? s.parentElement : null;
@@ -20736,7 +20745,7 @@ function looBlurActiveElement() {
   s instanceof HTMLElement && typeof s.blur == "function" && s.blur();
 }
 function Qa() {
-  Bt && (Bt.close(), Bt = null), An && (An.destroy(), An = null), Fa = "", us = "", Bn = false;
+  PooClearMatchStartRetry(), Bt && (Bt.close(), Bt = null), An && (An.destroy(), An = null), Fa = "", us = "", Bn = false;
 }
 function ka(s) {
   tt !== "single" && (Qa(), tt = "single", Ii = "host", ar(s, 8e3), Li(false));
@@ -20751,15 +20760,19 @@ function Wm(s, e) {
       return;
     }
     if (n.type === "join-ack" && e === "guest") {
-      Bn = true, looBlurActiveElement(), Re.host.label = n.hostLabel || "Host", Re.guest.label = n.guestLabel || Qt, yooMergeScoreboardEntries(n.scoreboard), ai(), xn(), Cn();
+      Bn = true, vooPendingMatchStartId = 0, looBlurActiveElement(), Re.host.label = n.hostLabel || "Host", Re.guest.label = n.guestLabel || Qt, yooMergeScoreboardEntries(n.scoreboard), ai(), xn(), Cn();
       return;
     }
     if (n.type === "start-request" && e === "host") {
       ga();
       return;
     }
+    if (n.type === "match-start-ack" && e === "host") {
+      n.startId === vooPendingMatchStartId && PooClearMatchStartRetry();
+      return;
+    }
     if (n.type === "match-start" && e === "guest") {
-      Bn = true, looBlurActiveElement(), FT(n.state);
+      Bn = true, vooPendingMatchStartId = Number(n.startId) || 0, looBlurActiveElement(), FT(n.state), kn({ type: "match-start-ack", startId: vooPendingMatchStartId });
       return;
     }
     if (n.type === "scoreboard-sync") {
