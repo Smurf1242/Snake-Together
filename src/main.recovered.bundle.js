@@ -20627,6 +20627,14 @@ function FT(s) {
 function kn(s) {
   Bt != null && Bt.open && Bt.send(s);
 }
+function oooIsTextEntryTarget(s) {
+  const e = s instanceof Element ? s : s instanceof Node ? s.parentElement : null;
+  return !!(e && e.closest('input, textarea, select, [contenteditable="true"]'));
+}
+function looBlurActiveElement() {
+  const s = document.activeElement;
+  s instanceof HTMLElement && typeof s.blur == "function" && s.blur();
+}
 function Qa() {
   Bt && (Bt.close(), Bt = null), An && (An.destroy(), An = null), Fa = "", us = "", Bn = false;
 }
@@ -20639,11 +20647,11 @@ function Wm(s, e) {
   }), s.on("data", (t) => {
     const n = t;
     if (n.type === "join-request" && e === "host") {
-      Bn = true, Re.guest.label = n.username || "Friend", Oa.textContent = `${Re.guest.label} connected. Press Start Match when ready.`, ai(), xn(), kn({ type: "join-ack", hostLabel: Re.host.label, guestLabel: Re.guest.label }), kn({ type: "state", state: fr("Connected. Waiting for the host to start the match.") });
+      Bn = true, looBlurActiveElement(), Re.guest.label = n.username || "Friend", Oa.textContent = `${Re.guest.label} connected. Press Start Match when ready.`, ai(), xn(), kn({ type: "join-ack", hostLabel: Re.host.label, guestLabel: Re.guest.label }), kn({ type: "state", state: fr("Connected. Waiting for the host to start the match.") });
       return;
     }
     if (n.type === "join-ack" && e === "guest") {
-      Bn = true, Re.host.label = n.hostLabel || "Host", Re.guest.label = n.guestLabel || Qt, ai(), xn(), Cn();
+      Bn = true, looBlurActiveElement(), Re.host.label = n.hostLabel || "Host", Re.guest.label = n.guestLabel || Qt, ai(), xn(), Cn();
       return;
     }
     if (n.type === "start-request" && e === "host") {
@@ -20693,10 +20701,14 @@ function zT() {
 function VT() {
   Qa(), tt = "single", Ii = "host", Re.host.label = Qt, Re.guest.label = "Friend", Li(false);
 }
+function yooCanHostStartMatch() {
+  return tt === "host" && (Bn || Bt != null && Bt.open);
+}
 function ga() {
-  if (tt === "host" && !(Bt != null && Bt.open || tt === "single")) return;
-  if (tt !== "single" && !Bn) return;
-  Li(true), xn(), Cn(), tt === "host" && kn({ type: "state", state: fr("Match started. Stay sharp.") });
+  if (tt === "single")
+    return looBlurActiveElement(), Li(true), xn(), Cn(), void 0;
+  if (!yooCanHostStartMatch()) return;
+  looBlurActiveElement(), Li(true), xn(), Cn(), kn({ type: "state", state: fr("Match started. Stay sharp.") });
 }
 function pooIsLaunchKey(s) {
   return s.code === "Space" || s.key === " " || s.key === "Spacebar" || s.key === "Space";
@@ -20704,10 +20716,10 @@ function pooIsLaunchKey(s) {
 function vooHandleLaunchInput() {
   if (!(Dt === "ready" || Dt === "game-over")) return;
   if (tt === "guest") {
-    Bn && (Bt != null && Bt.open) && kn({ type: "start-request" });
+    (Bn || Bt != null && Bt.open) && kn({ type: "start-request" });
     return;
   }
-  (tt === "host" && Bn && (Bt != null && Bt.open) || tt === "single") && ga();
+  (yooCanHostStartMatch() || tt === "single") && ga();
 }
 function Qc(s) {
   Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), ar(s, 8e3), ai(), xn(), tt === "host" && kn({ type: "state", state: fr(s) });
@@ -20870,6 +20882,7 @@ function YT() {
     (t = window.snake3dDesktop) != null && t.saveConfig && (Ge = ma(await window.snake3dDesktop.saveConfig(Ge))), hu = [...Ge.prizes].sort((n, i) => i.threshold - n.threshold), Tf();
   }), window.addEventListener("resize", qT), window.addEventListener("keydown", (s) => {
     resumeSnakeAudio();
+    if (s.ctrlKey || s.metaKey || s.altKey || oooIsTextEntryTarget(s.target)) return;
     if (pooIsLaunchKey(s)) {
       s.preventDefault(), vooHandleLaunchInput();
       return;
