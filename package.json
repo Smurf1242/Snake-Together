@@ -1,7 +1,7 @@
 {
   "name": "snake-3d-platform",
   "private": true,
-  "version": "1.8.4",
+  "version": "1.8.5",
   "type": "module",
   "description": "Snake: Together desktop build",
   "main": "electron/main.cjs",

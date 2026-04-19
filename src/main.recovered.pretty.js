@@ -20817,12 +20817,22 @@ function fr(s = "") {
   const e = haaGetSnakeStepDuration();
   return { phase: Dt, stageId: En, food: { ...Fn }, players: { host: { snake: rh(Re.host.snake), direction: Re.host.direction, score: Re.host.score, alive: Re.host.alive, label: Re.host.label }, guest: { snake: rh(Re.guest.snake), direction: Re.guest.direction, score: Re.guest.score, alive: Re.guest.alive, label: Re.guest.label } }, bestScore: Mi, hudMessage: s, moveBlend: Math.max(0, Math.min(1, er / e)) };
 }
+function coaSameSnakePath(s, e) {
+  if (s.length !== e.length) return false;
+  for (let t = 0; t < s.length; t += 1) {
+    const n = s[t], i = e[t];
+    if (!n || !i || n.x !== i.x || n.y !== i.y) return false;
+  }
+  return true;
+}
 function FT(s) {
-  const e = haaGetSnakeStepDuration(), t = Dt;
+  const e = haaGetSnakeStepDuration(), t = Dt, n = s.players.host, i = s.players.guest, r = coaSameSnakePath(Re.host.snake, n.snake), o = coaSameSnakePath(Re.guest.snake, i.snake), a = s.stageId !== En;
   s.stageId !== En && (En = s.stageId, is.value = En, Hn = cu(En), uu()), Dt = s.phase, Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
-    const n = s.players[e];
-    Re[e].snake = rh(n.snake), Re[e].direction = n.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = n.score, Re[e].alive = n.alive, Re[e].label = n.label;
-  }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage, zr = Math.max(zr, s.moveBlend * e), Vm(), du(false), ai(), xn(), Cn(), Dt === "running" && eaaAddReplaySnapshot("network"), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId }), laaMaybeTriggerReplay(t, Dt);
+    const t = s.players[e];
+    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].alive = t.alive, Re[e].label = t.label;
+  }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage;
+  const c = !r || !o || a;
+  zr = c ? Math.max(0, Math.min(e, s.moveBlend * e)) : Math.max(zr, s.moveBlend * e), Vm(), c && du(false), ai(), xn(), Cn(), Dt === "running" && eaaAddReplaySnapshot("network"), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId }), laaMaybeTriggerReplay(t, Dt);
 }
 function kn(s) {
   Bt != null && Bt.open && Bt.send(s);
