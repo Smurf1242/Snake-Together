@@ -20414,7 +20414,7 @@ function wrapStagePoint(s) {
 function yf(s, e) {
   return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false };
 }
-let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false;
+let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
 function cooNormalizeScoreboardName(s) {
   return `${s ?? ""}`.trim().replace(/\s+/g, " ").slice(0, 18) || "Player";
@@ -21084,6 +21084,23 @@ function ta(s) {
     Gm("host", s);
   }
 }
+function getControllerDirection() {
+  if (!navigator.getGamepads) return null;
+  const s = [...navigator.getGamepads()].find((a) => a && a.connected);
+  if (!s) return controllerLastDirection = null, null;
+  const e = s.buttons || [], t = (a) => !!(e[a] && e[a].pressed);
+  if (t(12)) return "up";
+  if (t(13)) return "down";
+  if (t(14)) return "left";
+  if (t(15)) return "right";
+  const n = Number(s.axes && s.axes[0] || 0), i = Number(s.axes && s.axes[1] || 0), r = 0.48;
+  return Math.max(Math.abs(n), Math.abs(i)) < r ? (controllerLastDirection = null, null) : Math.abs(n) > Math.abs(i) ? n < 0 ? "left" : "right" : i < 0 ? "up" : "down";
+}
+function pollControllerInput(s) {
+  if (Dt !== "running" || NooReplayActive || kooReplayPlaying) return;
+  const e = getControllerDirection();
+  e && (e !== controllerLastDirection || s - controllerLastInputAt > 185) && (controllerLastDirection = e, controllerLastInputAt = s, ta(e));
+}
 function XT() {
   if (bf) return;
   bf = true;
@@ -21216,7 +21233,7 @@ function Xm(s) {
     if (s - Sf < r) return;
   }
   const n = haaGetSnakeStepDuration();
-  Sf = s, tt !== "guest" ? GT(e) : Dt === "running" && (zr = Math.min(n, zr + e)), WT(s);
+  Sf = s, pollControllerInput(s), tt !== "guest" ? GT(e) : Dt === "running" && (zr = Math.min(n, zr + e)), WT(s);
   queuedFoodSound && (playFoodSound(queuedFoodSound), queuedFoodSound = null);
   const i = 1.15 + Math.sin(xf * 4.2) * 0.16;
   ls.position.y = i, hs.position.y = i + 0.14, ls.rotation.y += e * 0.9, hs.rotation.y += e * 1.3;
