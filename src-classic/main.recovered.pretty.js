@@ -20070,7 +20070,7 @@ class WM {
     t.drawingBufferColorSpace = nt._getDrawingBufferColorSpace(e), t.unpackColorSpace = nt._getUnpackColorSpace();
   }
 }
-const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "Try and beat 850 Amanda.... lots of love, Reece", ready: "Press <strong>Space</strong> to start.", running: "Classic mode. Eat the <strong>super food</strong> for bigger growth.", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
+const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "Try and beat 850 Amanda.... lots of love, Reece", ready: "Press <strong>Space</strong> to start.", running: "Classic mode. Eat the <strong>super food</strong> for bigger growth.", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
 if (!gm) throw new Error("App root not found.");
 const _m = gm;
 _m.innerHTML = `
@@ -20412,7 +20412,7 @@ function wrapStagePoint(s) {
   return Hn.definition.wrap ? { x: s.x < e.minX ? e.maxX : s.x > e.maxX ? e.minX : s.x, y: s.y < e.minY ? e.maxY : s.y > e.maxY ? e.minY : s.y } : s;
 }
 function yf(s, e) {
-  return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, alive: false };
+  return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false };
 }
 let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
@@ -20513,6 +20513,7 @@ function jooCaptureReplaySnapshot(s = "tick") {
         snake: rh(Re.host.snake),
         direction: Re.host.direction,
         score: Re.host.score,
+        lives: Re.host.lives,
         alive: Re.host.alive,
         label: Re.host.label
       },
@@ -20520,6 +20521,7 @@ function jooCaptureReplaySnapshot(s = "tick") {
         snake: rh(Re.guest.snake),
         direction: Re.guest.direction,
         score: Re.guest.score,
+        lives: Re.guest.lives,
         alive: Re.guest.alive,
         label: Re.guest.label
       }
@@ -20541,7 +20543,7 @@ function eaaAddReplaySnapshot(s = "tick") {
 function taaApplyReplaySnapshot(s) {
   s && (En = s.stageId, OooStageSeed = Number(s.stageSeed || 0), is.value = En, Hn = cu(En, OooStageSeed), uu(), Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
     const t = s.players[e];
-    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].alive = t.alive, Re[e].label = t.label;
+    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label;
   }), Mi = s.bestScore, Vm(), du(true), ai(), xn(), Cn());
 }
 async function naaStopReplayRecording() {
@@ -20603,8 +20605,11 @@ function Ba() {
 function Mf() {
   return Re[Ii === "host" ? "guest" : "host"];
 }
+function livesLabel(s) {
+  return tt === "single" ? s.label : `${s.label} ${"♥".repeat(Math.max(0, Number(s.lives ?? 0)))}`;
+}
 function ai() {
-  iT.textContent = Ba().label, sT.textContent = Mf().label, KM.textContent = Ba().score.toString(), jM.textContent = tt === "single" && !Re.guest.alive && Re.guest.score === 0 ? "--" : Mf().score.toString(), QM.textContent = Mi.toString(), eT.textContent = Hn.definition.name, tT.textContent = Fn.kind === "super" ? "Super" : "Normal";
+  iT.textContent = livesLabel(Ba()), sT.textContent = livesLabel(Mf()), KM.textContent = Ba().score.toString(), jM.textContent = tt === "single" && !Re.guest.alive && Re.guest.score === 0 ? "--" : Mf().score.toString(), QM.textContent = Mi.toString(), eT.textContent = Hn.definition.name, tT.textContent = Fn.kind === "super" ? "Super" : "Normal";
 }
 function Fm(s) {
   nT.innerHTML = s;
@@ -20674,6 +20679,7 @@ function buildOccupiedCellSet() {
   const s = /* @__PURE__ */ new Set();
   ["host", "guest"].forEach((e) => {
     const t = Re[e], n = t.growthPending === 0 ? t.snake.slice(0, -1) : t.snake;
+    if (!t.alive) return;
     n.forEach((i) => s.add(_n(i)));
   });
   return s;
@@ -20820,12 +20826,12 @@ function NT(s) {
 }
 function Af(s, e, t) {
   const n = Re[s], i = su[ru[t]], r = { x: e.x + i.x, y: e.y + i.y };
-  n.snake = zm(r) ? [e, r] : [e], n.direction = t, n.queuedDirection = null, n.growthPending = 0, n.score = 0, n.alive = true;
+  n.snake = zm(r) ? [e, r] : [e], n.direction = t, n.queuedDirection = null, n.growthPending = 0, n.score = 0, n.lives = tt === "single" ? 1 : MULTIPLAYER_MAX_LIVES, n.alive = true;
 }
 function Li(s = false) {
   En = is.value || En, vooGetStageDefinition(En).usesSeed ? (tt !== "guest" || s ? OooStageSeed = HooNextStageSeed() : OooStageSeed = OooStageSeed || 0) : OooStageSeed = 0, Hn = cu(En, OooStageSeed), uu();
   const e = NT(tt === "single" ? 1 : 2);
-  Re.host.label = tt === "guest" ? "Host" : Qt, Re.guest.label = tt === "guest" ? Qt : Re.guest.label || "Friend", Af("host", e[0], "right"), tt === "single" ? (Re.guest.snake = [], Re.guest.score = 0, Re.guest.growthPending = 0, Re.guest.alive = false) : Af("guest", e[1] ?? e[0], "left"), ch.clear(), us = "", qs = null, er = 0, zr = haaGetSnakeStepDuration(), oh = 0, Dt = s ? "running" : "ready", Hm(), du(true), ai(), xn(), Cn(), QooResetReplayTimeline(), eaaAddReplaySnapshot("start");
+  Re.host.label = tt === "guest" ? "Host" : Qt, Re.guest.label = tt === "guest" ? Qt : Re.guest.label || "Friend", Af("host", e[0], "right"), tt === "single" ? (Re.guest.snake = [], Re.guest.score = 0, Re.guest.growthPending = 0, Re.guest.lives = 0, Re.guest.alive = false) : Af("guest", e[1] ?? e[0], "left"), ch.clear(), us = "", qs = null, er = 0, zr = haaGetSnakeStepDuration(), oh = 0, Dt = s ? "running" : "ready", Hm(), du(true), ai(), xn(), Cn(), QooResetReplayTimeline(), eaaAddReplaySnapshot("start");
 }
 function Gm(s, e) {
   const t = Re[s];
@@ -20840,7 +20846,7 @@ function OT() {
 }
 function fr(s = "") {
   const e = haaGetSnakeStepDuration();
-  return { phase: Dt, stageId: En, stageSeed: OooStageSeed, food: { ...Fn }, players: { host: { snake: rh(Re.host.snake), direction: Re.host.direction, score: Re.host.score, alive: Re.host.alive, label: Re.host.label }, guest: { snake: rh(Re.guest.snake), direction: Re.guest.direction, score: Re.guest.score, alive: Re.guest.alive, label: Re.guest.label } }, bestScore: Mi, hudMessage: s, moveBlend: Math.max(0, Math.min(1, er / e)) };
+  return { phase: Dt, stageId: En, stageSeed: OooStageSeed, food: { ...Fn }, players: { host: { snake: rh(Re.host.snake), direction: Re.host.direction, score: Re.host.score, lives: Re.host.lives, alive: Re.host.alive, label: Re.host.label }, guest: { snake: rh(Re.guest.snake), direction: Re.guest.direction, score: Re.guest.score, lives: Re.guest.lives, alive: Re.guest.alive, label: Re.guest.label } }, bestScore: Mi, hudMessage: s, moveBlend: Math.max(0, Math.min(1, er / e)) };
 }
 function coaSameSnakePath(s, e) {
   if (s.length !== e.length) return false;
@@ -20854,7 +20860,7 @@ function FT(s) {
   const e = haaGetSnakeStepDuration(), t = Dt, n = s.players.host, i = s.players.guest, r = coaSameSnakePath(Re.host.snake, n.snake), o = coaSameSnakePath(Re.guest.snake, i.snake), a = s.stageId !== En;
   (s.stageId !== En || Number(s.stageSeed || 0) !== OooStageSeed) && (En = s.stageId, OooStageSeed = Number(s.stageSeed || 0), is.value = En, Hn = cu(En, OooStageSeed), uu()), Dt = s.phase, Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
     const t = s.players[e];
-    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].alive = t.alive, Re[e].label = t.label;
+    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label;
   }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage;
   const c = !r || !o || a;
   zr = c ? Math.max(0, Math.min(e, s.moveBlend * e)) : Math.max(zr, s.moveBlend * e), Vm(), c && du(false), ai(), xn(), Cn(), Dt === "running" && eaaAddReplaySnapshot("network"), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId }), laaMaybeTriggerReplay(t, Dt);
@@ -20987,6 +20993,19 @@ function vooHandleLaunchInput() {
   }
   (yooCanHostStartMatch() || tt === "single") && ga();
 }
+function respawnPlayerAfterLifeLoss(s) {
+  const e = NT(2), t = s === "host" ? e[0] : e[1] ?? e[0], n = s === "host" ? "right" : "left", i = Re[s], r = i.score, o = i.label, a = i.lives;
+  Af(s, t, n), i.score = r, i.label = o, i.lives = a, i.alive = true;
+}
+function handlePlayerCrash(s) {
+  const e = Re[s];
+  if (tt === "single") {
+    e.alive = false;
+    return;
+  }
+  e.lives = Math.max(0, Number(e.lives ?? MULTIPLAYER_MAX_LIVES) - 1);
+  e.lives > 0 ? (respawnPlayerAfterLifeLoss(s), ar(`${e.label} lost a life. ${e.lives} left.`, 2200)) : e.alive = false;
+}
 function Qc(s) {
   Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), eaaAddReplaySnapshot("game-over"), SooRefreshScoreboardFromPlayers(), ar(s, 8e3), ai(), xn(), laaMaybeTriggerReplay("running", Dt), tt === "host" && kn({ type: "state", state: fr(s) });
 }
@@ -21007,6 +21026,7 @@ function HT() {
   const n = /* @__PURE__ */ new Map();
   ["host", "guest"].forEach((i) => {
     const r = Re[i];
+    if (!r.alive) return;
     (r.growthPending === 0 ? r.snake.slice(0, -1) : r.snake).forEach((a) => n.set(_n(a), i));
   });
   const r = /* @__PURE__ */ new Set();
@@ -21024,7 +21044,7 @@ function HT() {
   if (s.forEach((i) => {
     const o = Re[i];
     if (r.has(i)) {
-      o.alive = false;
+      handlePlayerCrash(i);
       return;
     }
     const a = e.get(i);
