@@ -211,7 +211,11 @@ if (!bootConfig.graphics.vSync) {
 let mainWindow = null;
 let lastWindowedBounds = null;
 let updater = null;
-const launchMode = process.argv.includes('--updater-mode') ? 'updater' : 'game';
+const launchMode = process.argv.includes('--updater-mode')
+  ? 'updater'
+  : process.argv.includes('--classic-mode')
+    ? 'classic'
+    : 'game';
 let updateState = {
   configured: false,
   status: 'idle',
@@ -382,7 +386,7 @@ function buildWindowOptions(config) {
     minHeight: isBorderless ? undefined : 720,
     autoHideMenuBar: true,
     backgroundColor: '#07101d',
-    title: 'Snake: Together',
+    title: launchMode === 'classic' ? 'Snake: Together Classic' : 'Snake: Together',
     icon: fs.existsSync(getIconPath()) ? getIconPath() : undefined,
     frame: !isBorderless,
     fullscreen: isFullscreen,
@@ -431,6 +435,8 @@ function createWindow(config = bootConfig) {
 
   if (launchMode === 'updater') {
     win.loadFile(path.join(__dirname, 'updater.html'));
+  } else if (launchMode === 'classic') {
+    win.loadFile(path.join(__dirname, '..', 'dist-classic', 'index.html'));
   } else {
     win.loadFile(path.join(__dirname, '..', 'dist', 'index.html'));
   }
