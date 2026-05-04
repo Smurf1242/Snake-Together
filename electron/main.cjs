@@ -473,6 +473,10 @@ ipcMain.handle('snake3d:open-release-page', async () => {
   await shell.openExternal(getReleasePageUrl());
   return { ok: true };
 });
+ipcMain.handle('snake3d:quit-game', () => {
+  app.quit();
+  return { ok: true };
+});
 ipcMain.handle('snake3d:get-data-directory', () => ({
   ok: true,
   path: getDataDirectory()
