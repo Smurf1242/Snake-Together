@@ -20292,7 +20292,8 @@ function playFoodSound(s) {
   }
 }
 function ma(s) {
-  return { graphics: { ...js.graphics, ...(s == null ? void 0 : s.graphics) ?? {} }, messages: { ...js.messages, ...(s == null ? void 0 : s.messages) ?? {} }, prizes: Array.isArray(s == null ? void 0 : s.prizes) && s.prizes.length > 0 ? s.prizes.map((e) => ({ threshold: Number(e.threshold) || 0, message: typeof e.message == "string" ? e.message : "", durationMs: Number(e.durationMs) || 1e4 })) : js.prizes };
+  const e = { graphics: { ...js.graphics, ...(s == null ? void 0 : s.graphics) ?? {} }, messages: { ...js.messages, ...(s == null ? void 0 : s.messages) ?? {} }, prizes: Array.isArray(s == null ? void 0 : s.prizes) && s.prizes.length > 0 ? s.prizes.map((t) => ({ threshold: Number(t.threshold) || 0, message: typeof t.message == "string" ? t.message : "", durationMs: Number(t.durationMs) || 1e4 })) : js.prizes };
+  return e.messages.introChallenge = "", e.messages.running = "", e;
 }
 async function ET() {
   var s;
@@ -20795,7 +20796,7 @@ function UT() {
   if (Dt === "running") {
     if (us) return us;
     const s = Ba();
-    return s.alive && s.snake.length > 0 && RT(s.snake[0]) ? Ge.messages.edgeWarning : Ge.messages.running;
+    return s.alive && s.snake.length > 0 && RT(s.snake[0]) ? Ge.messages.edgeWarning : "";
   }
   return Ge.messages.ready;
 }
