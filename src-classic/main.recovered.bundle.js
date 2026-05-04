@@ -20070,7 +20070,7 @@ class WM {
     t.drawingBufferColorSpace = nt._getDrawingBufferColorSpace(e), t.unpackColorSpace = nt._getUnpackColorSpace();
   }
 }
-const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "Try and beat 850 Amanda.... lots of love, Reece", ready: "Press <strong>Space</strong> to start.", running: "Classic mode. Eat the <strong>super food</strong> for bigger growth.", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
+const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "", ready: "Press <strong>Space</strong> to start.", running: "", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
 if (!gm) throw new Error("App root not found.");
 const _m = gm;
 _m.innerHTML = `
@@ -20791,7 +20791,7 @@ function xn() {
 function UT() {
   if (qs && performance.now() < ah) return qs;
   if (qs && performance.now() >= ah && (qs = null), Dt === "game-over") return Ge.messages.gameOver;
-  if (Dt === "ready") return tt === "guest" && Bn ? "Connected. Waiting for the <strong>host</strong> to start the match." : tt === "host" && !Bn ? "Share your <strong>join code</strong> and wait for Amanda to connect." : tt === "host" && Bn ? "Friend connected. Press <strong>Start Match</strong> or hit <strong>Space</strong>." : Ge.messages.ready;
+  if (Dt === "ready") return tt === "guest" && Bn ? "Connected. Waiting for the <strong>host</strong> to start the match." : tt === "host" && !Bn ? "Share your <strong>join code</strong> and wait for your friend to connect." : tt === "host" && Bn ? "Friend connected. Press <strong>Start Match</strong> or hit <strong>Space</strong>." : Ge.messages.ready;
   if (Dt === "running") {
     if (us) return us;
     const s = Ba();
@@ -20863,7 +20863,8 @@ function FT(s) {
     Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label;
   }), Mi = s.bestScore, SooRefreshScoreboardFromPlayers(), us = s.hudMessage;
   const c = !r || !o || a;
-  zr = c ? Math.max(0, Math.min(e, s.moveBlend * e)) : Math.max(zr, s.moveBlend * e), Vm(), c && du(false), ai(), xn(), Cn(), Dt === "running" && eaaAddReplaySnapshot("network"), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId }), laaMaybeTriggerReplay(t, Dt);
+  const l = Math.max(0, Math.min(1, Number(s.moveBlend) || 0)), h = Math.min(e * 0.96, l * e + e * 0.14);
+  zr = c ? h : Math.max(zr, h), Vm(), c && du(false), ai(), xn(), Cn(), Dt === "running" && eaaAddReplaySnapshot("network"), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId }), laaMaybeTriggerReplay(t, Dt);
 }
 function kn(s) {
   Bt != null && Bt.open && Bt.send(s);
@@ -20931,7 +20932,7 @@ function Wm(s, e) {
       return;
     }
     if (n.type === "input") {
-      e === "host" && (Gm("guest", n.direction), kn({ type: "state", state: fr("Stay alive and chase the super food.") }));
+      e === "host" && (Gm("guest", n.direction), kn({ type: "state", state: fr("") }));
       return;
     }
     n.type === "state" && e === "guest" && FT(n.state);
@@ -21062,14 +21063,14 @@ function HT() {
     Qc("Both snakes wiped out. Press <strong>Space</strong> for another round.");
     return;
   }
-  t && eaaAddReplaySnapshot("food"), ai(), du(false), Cn(), tt === "host" && kn({ type: "state", state: fr("Stay alive and chase the super food.") });
+  t && eaaAddReplaySnapshot("food"), ai(), du(false), Cn(), tt === "host" && kn({ type: "state", state: fr("") });
 }
 function GT(s) {
   const e = haaGetSnakeStepDuration();
   if (Dt === "running") for (er += s; er >= e && (er -= e, HT(), Dt === "running"); ) ;
 }
 function WT(s) {
-  tt !== "host" || !(Bt != null && Bt.open) || Dt !== "running" || s - oh < 25 || (oh = s, kn({ type: "state", state: fr("Stay alive and chase the super food.") }));
+  tt !== "host" || !(Bt != null && Bt.open) || Dt !== "running" || s - oh < 16 || (oh = s, kn({ type: "state", state: fr("") }));
 }
 function ta(s) {
   if (Dt === "running") {
@@ -21109,7 +21110,7 @@ function XT() {
   const t = () => {
     if (e <= s.length) {
       const n = s.slice(0, e), i = s.slice(e);
-      hT.innerHTML = `<span class="snake-head">${n}</span><span class="remaining">${i}</span>`, mf.textContent = e < s.length ? "The snake is clearing the title..." : Ge.messages.introChallenge, e += 1, window.setTimeout(t, e < s.length ? 180 : 1400);
+      hT.innerHTML = `<span class="snake-head">${n}</span><span class="remaining">${i}</span>`, mf.textContent = e < s.length ? "The snake is clearing the title..." : "", e += 1, window.setTimeout(t, e < s.length ? 180 : 1400);
       return;
     }
     mf.innerHTML = "Press <strong>Space</strong> to start game", window.setTimeout(() => {
@@ -21233,7 +21234,7 @@ function Xm(s) {
     if (s - Sf < r) return;
   }
   const n = haaGetSnakeStepDuration();
-  Sf = s, pollControllerInput(s), tt !== "guest" ? GT(e) : Dt === "running" && (zr = Math.min(n, zr + e)), WT(s);
+  Sf = s, pollControllerInput(s), tt !== "guest" ? GT(e) : Dt === "running" && (zr = Math.min(n, zr + e * 1.08)), WT(s);
   queuedFoodSound && (playFoodSound(queuedFoodSound), queuedFoodSound = null);
   const i = 1.15 + Math.sin(xf * 4.2) * 0.16;
   ls.position.y = i, hs.position.y = i + 0.14, ls.rotation.y += e * 0.9, hs.rotation.y += e * 1.3;
