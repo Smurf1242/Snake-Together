@@ -20610,7 +20610,8 @@ function ai() {
   iT.textContent = livesLabel(Ba()), sT.textContent = livesLabel(Mf()), KM.textContent = Ba().score.toString(), jM.textContent = tt === "single" && !Re.guest.alive && Re.guest.score === 0 ? "--" : Mf().score.toString(), QM.textContent = Mi.toString(), eT.textContent = Hn.definition.name, tT.textContent = Fn.kind === "super" ? "Super" : "Normal";
 }
 function Fm(s) {
-  nT.innerHTML = s;
+  const e = String(s ?? "").trim();
+  nT.parentElement && nT.parentElement.classList.toggle("hidden", e.length === 0), nT.innerHTML = e;
 }
 function Bm() {
   mT.classList.toggle("hidden", !Ge.graphics.showFpsCounter), gT.textContent = Nm.toString();
