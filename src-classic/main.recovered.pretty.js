@@ -20136,7 +20136,7 @@ _m.innerHTML = `
     <button class="settings-button" id="settings-button" aria-label="Open settings">Settings</button>
     <section class="panel scoreboard-panel hidden" id="scoreboard-panel">
       <div class="scoreboard-header"><h2>Scoreboard</h2><button class="settings-close" id="scoreboard-close" aria-label="Close scoreboard">x</button></div>
-      <p class="scoreboard-copy">Best scores sync between players during multiplayer. Higher scores replace older records for the same name.</p>
+      <p class="scoreboard-copy">Best scores sync between players during multiplayer. Higher scores replace older records for the same name and game version.</p>
       <div class="scoreboard-list" id="scoreboard-list"></div>
     </section>
     <section class="panel settings-panel hidden" id="settings-panel">
@@ -20367,7 +20367,7 @@ function vooGetStageDefinition(s) {
   return Na.find((e) => e.id === s) ?? Na[0];
 }
 function BooGetInfiniteRandomBounds(s) {
-  const e = xooSeededRandomFactory(s), t = infiniteRandomMinBounds.maxX - infiniteRandomMinBounds.minX + 1, n = infiniteRandomMinBounds.maxY - infiniteRandomMinBounds.minY + 1, i = t + Math.floor(e() * 25), r = n + Math.floor(e() * 25);
+  const e = xooSeededRandomFactory(s), t = infiniteRandomMinBounds.maxX - infiniteRandomMinBounds.minX + 1, n = infiniteRandomMinBounds.maxY - infiniteRandomMinBounds.minY + 1, i = t + 25 + Math.floor(e() * 70), r = n + 25 + Math.floor(e() * 70);
   return { minX: 0, maxX: i - 1, minY: 0, maxY: r - 1 };
 }
 function BooGetStageBounds(s, e = 0) {
@@ -20455,7 +20455,7 @@ function wrapStagePoint(s, e2 = null) {
 function yf(s, e) {
   return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false };
 }
-let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, pauseQuitActive = false, xooScoreboardKey = "snake3d-scoreboard", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0;
+let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, pauseQuitActive = false, xooScoreboardKey = "snake3d-scoreboard", xooScoreboardVariant = "Classic", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
 function cooNormalizeScoreboardName(s) {
   return `${s ?? ""}`.trim().replace(/\s+/g, " ").slice(0, 18) || "Player";
@@ -20464,18 +20464,22 @@ function looScoreboardTimestamp(s) {
   const e = Number(s);
   return Number.isFinite(e) && e > 0 ? Math.floor(e) : Date.now();
 }
+function pooNormalizeScoreboardVariant(s) {
+  const e = `${s ?? ""}`.trim().toLowerCase();
+  return e.includes("classic") ? "Classic" : e.includes("3d") ? "3D" : xooScoreboardVariant;
+}
 function hooSortScoreboardEntries(s, e) {
-  return e.bestScore !== s.bestScore ? e.bestScore - s.bestScore : e.updatedAt !== s.updatedAt ? e.updatedAt - s.updatedAt : s.name.localeCompare(e.name);
+  return e.bestScore !== s.bestScore ? e.bestScore - s.bestScore : e.updatedAt !== s.updatedAt ? e.updatedAt - s.updatedAt : s.name !== e.name ? s.name.localeCompare(e.name) : s.variant.localeCompare(e.variant);
 }
 function uooSanitizeScoreboardEntries(s) {
   if (!Array.isArray(s)) return [];
   const e = /* @__PURE__ */ new Map();
   s.forEach((t) => {
     if (!t || typeof t != "object") return;
-    const n = cooNormalizeScoreboardName(t.name), i = Number(t.bestScore);
+    const n = cooNormalizeScoreboardName(t.name), i = Number(t.bestScore), a = pooNormalizeScoreboardVariant(t.variant ?? t.mode ?? t.gameVersion);
     if (!Number.isFinite(i) || i < 0) return;
-    const r = { name: n, bestScore: Math.max(0, Math.round(i)), updatedAt: looScoreboardTimestamp(t.updatedAt) }, o = e.get(n);
-    (!o || r.bestScore > o.bestScore || r.bestScore === o.bestScore && r.updatedAt > o.updatedAt) && e.set(n, r);
+    const r = { name: n, bestScore: Math.max(0, Math.round(i)), variant: a, updatedAt: looScoreboardTimestamp(t.updatedAt) }, o = `${n.toLowerCase()}::${a}`, l = e.get(o);
+    (!l || r.bestScore > l.bestScore || r.bestScore === l.bestScore && r.updatedAt > l.updatedAt) && e.set(o, r);
   });
   return [...e.values()].sort(hooSortScoreboardEntries);
 }
@@ -20500,7 +20504,7 @@ function fooRenderScoreboard() {
     const r = document.createElement("span");
     r.className = "scoreboard-name", r.textContent = e.name;
     const o = document.createElement("span");
-    o.className = "scoreboard-score", o.textContent = e.bestScore.toString(), n.append(i, r, o), s.appendChild(n);
+    o.className = "scoreboard-score", o.textContent = `${e.bestScore} points (${e.variant})`, n.append(i, r, o), s.appendChild(n);
   }), SooScoreboardList.replaceChildren(s);
 }
 function mooGetScoreboardSnapshot() {
@@ -20512,7 +20516,7 @@ function yooMergeScoreboardEntries(s) {
   if (!t) {
     for (let n = 0; n < e.length; n += 1) {
       const i = e[n], r = vooScoreboardEntries[n];
-      if (!r || i.name !== r.name || i.bestScore !== r.bestScore || i.updatedAt !== r.updatedAt) {
+      if (!r || i.name !== r.name || i.bestScore !== r.bestScore || i.variant !== r.variant || i.updatedAt !== r.updatedAt) {
         t = true;
         break;
       }
@@ -20523,8 +20527,8 @@ function yooMergeScoreboardEntries(s) {
 function _ooRecordScore(s, e) {
   const t = cooNormalizeScoreboardName(s), n = Math.max(0, Math.round(Number(e) || 0));
   if (!t || n <= 0) return false;
-  const i = vooScoreboardEntries.find((r) => r.name === t);
-  return i && i.bestScore >= n ? false : yooMergeScoreboardEntries([{ name: t, bestScore: n, updatedAt: Date.now() }]);
+  const i = vooScoreboardEntries.find((r) => r.name === t && r.variant === xooScoreboardVariant);
+  return i && i.bestScore >= n ? false : yooMergeScoreboardEntries([{ name: t, bestScore: n, variant: xooScoreboardVariant, updatedAt: Date.now() }]);
 }
 function booBroadcastScoreboardSync() {
   tt !== "single" && Bn && kn({ type: "scoreboard-sync", scoreboard: mooGetScoreboardSnapshot() });
