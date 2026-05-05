@@ -20070,7 +20070,7 @@ class WM {
     t.drawingBufferColorSpace = nt._getDrawingBufferColorSpace(e), t.unpackColorSpace = nt._getUnpackColorSpace();
   }
 }
-const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "", ready: "Press <strong>Space</strong> to start.", running: "", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
+const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, infiniteRandomMinBounds = xaaInfiniteBounds, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "", ready: "Press <strong>Space</strong> to start.", running: "", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "infinite-random", name: "Infinite Random Seed", wrap: true, usesSeed: true, randomShape: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
 if (!gm) throw new Error("App root not found.");
 const _m = gm;
 _m.innerHTML = `
@@ -20366,15 +20366,28 @@ function rh(s) {
 function vooGetStageDefinition(s) {
   return Na.find((e) => e.id === s) ?? Na[0];
 }
-function BooGetStageBounds(s) {
-  const e = s.bounds;
-  return e ? { minX: e.minX, maxX: e.maxX, minY: e.minY, maxY: e.maxY } : { minX: dm, maxX: pm, minY: fm, maxY: mm };
+function BooGetInfiniteRandomBounds(s) {
+  const e = xooSeededRandomFactory(s), t = infiniteRandomMinBounds.maxX - infiniteRandomMinBounds.minX + 1, n = infiniteRandomMinBounds.maxY - infiniteRandomMinBounds.minY + 1, i = t + Math.floor(e() * 25), r = n + Math.floor(e() * 25);
+  return { minX: 0, maxX: i - 1, minY: 0, maxY: r - 1 };
+}
+function BooGetStageBounds(s, e = 0) {
+  if (s.id === "infinite-random") return BooGetInfiniteRandomBounds(e);
+  const t = s.bounds;
+  return t ? { minX: t.minX, maxX: t.maxX, minY: t.minY, maxY: t.maxY } : { minX: dm, maxX: pm, minY: fm, maxY: mm };
 }
 function xooSeededRandomFactory(s) {
   let e = (Math.floor(Number(s) || 1) >>> 0) || 1;
   return () => (e = Math.imul(e, 1664525) + 1013904223 >>> 0, e / 4294967296);
 }
 function rooBuildFreeroamBlockedSet(s, e) {
+  if (s.id === "infinite-random") {
+    const t = BooGetInfiniteRandomBounds(e), n = xooSeededRandomFactory(e + 991), i = /* @__PURE__ */ new Set(), r = (t.minX + t.maxX) / 2, o = (t.minY + t.maxY) / 2, a = (t.maxX - t.minX + 1) / 2, c = (t.maxY - t.minY + 1) / 2, l = n() * Math.PI * 2, h = n() * Math.PI * 2;
+    for (let u = t.minY; u <= t.maxY; u += 1) for (let d = t.minX; d <= t.maxX; d += 1) {
+      const f = (d - r) / a, m = (u - o) / c, _ = Math.atan2(m, f), g = Math.sqrt(f * f + m * m), p = 0.78 + Math.sin(_ * 3 + l) * 0.16 + Math.cos(_ * 5 + h) * 0.1 + Math.sin((d + e) * 0.17) * 0.035;
+      g > p && i.add(_n({ x: d, y: u }));
+    }
+    return i;
+  }
   if (s.id !== "freeroam") return /* @__PURE__ */ new Set();
   const t = xooSeededRandomFactory(e), n = /* @__PURE__ */ new Set(), i = [
     { x: 6, y: 6, radius: 5 },
@@ -20392,7 +20405,7 @@ function rooBuildFreeroamBlockedSet(s, e) {
   return n;
 }
 function cu(s, e = 0) {
-  const t = vooGetStageDefinition(s), n = BooGetStageBounds(t), i = rooBuildFreeroamBlockedSet(t, e), r = [], o = /* @__PURE__ */ new Set();
+  const t = vooGetStageDefinition(s), n = BooGetStageBounds(t, e), i = rooBuildFreeroamBlockedSet(t, e), r = [], o = /* @__PURE__ */ new Set();
   for (let a = n.minY; a <= n.maxY; a += 1) for (let c = n.minX; c <= n.maxX; c += 1) if (t.isValid(c, a) && !i.has(_n({ x: c, y: a }))) {
     const l = { x: c, y: a };
     r.push(l), o.add(_n(l));
@@ -20416,9 +20429,28 @@ function lu(s, e) {
   const t = (Hn.bounds.minX + Hn.bounds.maxX) / 2, n = (Hn.bounds.minY + Hn.bounds.maxY) / 2;
   return new C((s.x - t) * wi, e, (s.y - n) * wi);
 }
-function wrapStagePoint(s) {
+function wrapStagePoint(s, e2 = null) {
   const e = Hn.bounds;
-  return Hn.definition.wrap ? { x: s.x < e.minX ? e.maxX : s.x > e.maxX ? e.minX : s.x, y: s.y < e.minY ? e.maxY : s.y > e.maxY ? e.minY : s.y } : s;
+  if (!Hn.definition.wrap) return s;
+  const t = { x: s.x < e.minX ? e.maxX : s.x > e.maxX ? e.minX : s.x, y: s.y < e.minY ? e.maxY : s.y > e.maxY ? e.minY : s.y };
+  if (Hn.validSet.has(_n(t))) return t;
+  const n = e2 ? su[e2] : null;
+  if (!n) return t;
+  if (n.x > 0 || n.x < 0) {
+    const i = n.x > 0 ? e.minX : e.maxX;
+    for (let r = 0; r <= e.maxX - e.minX; r += 1) {
+      const o = { x: i + r * n.x, y: t.y };
+      if (Hn.validSet.has(_n(o))) return o;
+    }
+  }
+  if (n.y > 0 || n.y < 0) {
+    const i = n.y > 0 ? e.minY : e.maxY;
+    for (let r = 0; r <= e.maxY - e.minY; r += 1) {
+      const o = { x: t.x, y: i + r * n.y };
+      if (Hn.validSet.has(_n(o))) return o;
+    }
+  }
+  return t;
 }
 function yf(s, e) {
   return { id: s, label: e, snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false };
@@ -20813,7 +20845,7 @@ function Cn() {
   Fm(UT());
 }
 function vooUpdateFoodArrow() {
-  const s = Hn.definition.id === "freeroam" && (Dt === "running" || Dt === "ready") && Ba().alive && Ba().snake.length > 0;
+  const s = (Hn.definition.id === "freeroam" || Hn.definition.id === "infinite-random") && (Dt === "running" || Dt === "ready") && Ba().alive && Ba().snake.length > 0;
   if (!s) {
     vooFoodArrowPanel.classList.add("hidden");
     return;
@@ -21044,7 +21076,7 @@ function HT() {
     const r = Re[i];
     r.queuedDirection && r.queuedDirection !== ru[r.direction] && (r.direction = r.queuedDirection), r.queuedDirection = null;
     const o = su[r.direction];
-    e.set(i, wrapStagePoint({ x: r.snake[0].x + o.x, y: r.snake[0].y + o.y }));
+    e.set(i, wrapStagePoint({ x: r.snake[0].x + o.x, y: r.snake[0].y + o.y }, r.direction));
   });
   const n = /* @__PURE__ */ new Map();
   ["host", "guest"].forEach((i) => {
