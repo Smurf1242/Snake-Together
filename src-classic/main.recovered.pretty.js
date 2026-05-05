@@ -21265,13 +21265,13 @@ function YT() {
 }
 function Xm(s) {
   window.requestAnimationFrame(Xm);
-  const e = Math.min((s - vf) / 1e3, 0.05);
-  vf = s, xf += e, ea += e, jc += 1, ea >= 0.5 && (Nm = Math.round(jc / ea), ea = 0, jc = 0, Bm());
   const t = Ge.graphics.fpsCap === "unlimited" ? 1 / 0 : Number(Ge.graphics.fpsCap);
   if (Number.isFinite(t)) {
     const r = 1e3 / t;
     if (s - Sf < r) return;
   }
+  const e = Math.min((s - vf) / 1e3, 0.05);
+  vf = s, xf += e, ea += e, jc += 1, ea >= 0.5 && (Nm = Math.round(jc / ea), ea = 0, jc = 0, Bm());
   const n = haaGetSnakeStepDuration();
   Sf = s, pauseQuitActive || pollControllerInput(s), tt !== "guest" ? GT(e) : Dt === "running" && !pauseQuitActive && (zr = Math.min(n, zr + e * 1.08)), WT(s);
   queuedFoodSound && (playFoodSound(queuedFoodSound), queuedFoodSound = null);
