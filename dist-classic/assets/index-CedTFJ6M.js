@@ -20759,7 +20759,7 @@ function LT(s) {
   }), e.children;
 }
 function Ef(s, e = false) {
-  const t = Re[s], n = lh[s].map((o) => o.clone()), i = t.snake.map((o) => lu(o, 0.52));
+  const t = Re[s], n = (s === "host" ? ou : au).children.map((o, a) => o.visible ? o.position.clone() : (lh[s][a] ? lh[s][a].clone() : null)).filter(Boolean), i = t.snake.map((o) => lu(o, 0.52));
   Om[s] = e ? i.map((o) => o.clone()) : n, lh[s] = i;
   const r = LT(s);
   r.forEach((o, a) => {
