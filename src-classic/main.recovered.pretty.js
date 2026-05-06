@@ -21345,7 +21345,7 @@ function YT() {
 }
 function Xm(s) {
   window.requestAnimationFrame(Xm);
-  const t = Ge.graphics.fpsCap === "unlimited" ? 1 / 0 : Number(Ge.graphics.fpsCap);
+  const t = tt === "single" && Dt === "running" ? 1 / 0 : Ge.graphics.fpsCap === "unlimited" ? 1 / 0 : Number(Ge.graphics.fpsCap);
   if (Number.isFinite(t)) {
     const r = 1e3 / t;
     if (s - Sf < r) return;
