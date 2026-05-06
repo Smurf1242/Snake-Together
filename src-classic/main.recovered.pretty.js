@@ -20683,7 +20683,7 @@ function cycleCameraMode() {
 }
 function shouldClassicCameraFollowSnake() {
   const s = Hn.bounds.maxX - Hn.bounds.minX + 1, e = Hn.bounds.maxY - Hn.bounds.minY + 1;
-  return Hn.definition.id === "freeroam" || Hn.definition.id === "infinite-random" || s > 36 || e > 36;
+  return Hn.definition.id === "infinite" || Hn.definition.id === "infinite-progressive" || Hn.definition.id === "freeroam" || Hn.definition.id === "infinite-random" || s > 24 || e > 24;
 }
 function getClassicCameraTarget() {
   if (!shouldClassicCameraFollowSnake()) return _T;
