@@ -20652,7 +20652,7 @@ function laaMaybeTriggerReplay(s, e) {
   s !== "game-over" && e === "game-over" && !ZooReplayTriggeredForPhase && (ZooReplayTriggeredForPhase = true, caaBeginReplaySequence());
 }
 function haaGetSnakeStepDuration() {
-  if (vooGetStageDefinition(En).progressive) return Math.max(0.018, 0.16 - progressiveFoodEaten * 0.006);
+  if (vooGetStageDefinition(En).progressive) return Math.max(0.045, 0.045 + 0.115 * Math.exp(-progressiveFoodEaten / 38));
   const s = Math.max(1, Math.min(12, Number(Ge.graphics.snakeSpeed ?? js.graphics.snakeSpeed) || 8));
   return Math.max(0.018, 0.1 - (s - 1) * 0.0075);
 }
