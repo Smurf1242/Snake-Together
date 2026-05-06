@@ -20157,10 +20157,10 @@ _m.innerHTML = `
         <label class="settings-row"><span>Resolution Scale</span><select id="setting-resolution-scale"><option value="0.75">75%</option><option value="1">100%</option><option value="1.25">125%</option><option value="1.5">150%</option></select></label>
         <label class="settings-row"><span>DLSS Style</span><select id="setting-dlss-mode"><option value="off">Off</option><option value="quality">Quality</option><option value="balanced">Balanced</option><option value="performance">Performance</option></select></label>
         <label class="settings-row"><span>Shadow Quality</span><select id="setting-shadow-quality"><option value="off">Off</option><option value="low">Low</option><option value="high">High</option></select></label>
-        <label class="settings-row"><span>Fog</span><input type="checkbox" id="setting-fog" /></label>
-        <label class="settings-row"><span>Day / Night Cycle</span><input type="checkbox" id="setting-day-night-cycle" /></label>
-        <label class="settings-row"><span>Day Length</span><span class="settings-inline"><input type="range" id="setting-day-cycle" min="60" max="480" step="30" /><strong id="setting-day-cycle-value">180s</strong></span></label>
-        <label class="settings-row"><span>Night Length</span><span class="settings-inline"><input type="range" id="setting-night-cycle" min="60" max="480" step="30" /><strong id="setting-night-cycle-value">180s</strong></span></label>
+        <label class="settings-row classic-3d-only hidden"><span>Fog</span><input type="checkbox" id="setting-fog" /></label>
+        <label class="settings-row classic-3d-only hidden"><span>Day / Night Cycle</span><input type="checkbox" id="setting-day-night-cycle" /></label>
+        <label class="settings-row classic-3d-only hidden"><span>Day Length</span><span class="settings-inline"><input type="range" id="setting-day-cycle" min="60" max="480" step="30" /><strong id="setting-day-cycle-value">180s</strong></span></label>
+        <label class="settings-row classic-3d-only hidden"><span>Night Length</span><span class="settings-inline"><input type="range" id="setting-night-cycle" min="60" max="480" step="30" /><strong id="setting-night-cycle-value">180s</strong></span></label>
           <label class="settings-row"><span>SFX Volume</span><span class="settings-inline"><input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" /><strong id="setting-sfx-volume-value">70%</strong></span></label>
           <label class="settings-row"><span>Mute SFX</span><input type="checkbox" id="setting-sfx-muted" /></label>
         </div>
@@ -20461,7 +20461,7 @@ function sanitizeSnakeColor(s, e = "#0f380f") {
   return /^#[0-9a-f]{6}$/i.test(t) ? t : e;
 }
 function yf(s, e) {
-  return { id: s, label: e, color: defaultSnakeColor(s), snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false };
+  return { id: s, label: e, color: defaultSnakeColor(s), snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, queuedDirections: [], growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false };
 }
 let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, pauseQuitActive = false, progressiveFoodEaten = 0, xooScoreboardKey = "snake3d-scoreboard-v2", xooScoreboardVariant = "Classic", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
@@ -20599,7 +20599,7 @@ function eaaAddReplaySnapshot(s = "tick") {
 function taaApplyReplaySnapshot(s) {
   s && (En = s.stageId, OooStageSeed = Number(s.stageSeed || 0), is.value = En, Hn = cu(En, OooStageSeed), uu(), Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
     const t = s.players[e];
-    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label, Re[e].color = sanitizeSnakeColor(t.color, defaultSnakeColor(e));
+    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].queuedDirections = [], Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label, Re[e].color = sanitizeSnakeColor(t.color, defaultSnakeColor(e));
   }), progressiveFoodEaten = Number(s.progressiveFoodEaten || 0), Mi = s.bestScore, Vm(), applySnakeColorMaterials(), du(true), ai(), xn(), Cn());
 }
 async function naaStopReplayRecording() {
@@ -20681,11 +20681,21 @@ function cameraLabel() {
 function cycleCameraMode() {
   goo = 0, ar(`${cameraLabel()} active.`, 1800);
 }
+function shouldClassicCameraFollowSnake() {
+  const s = Hn.bounds.maxX - Hn.bounds.minX + 1, e = Hn.bounds.maxY - Hn.bounds.minY + 1;
+  return Hn.definition.id === "freeroam" || Hn.definition.id === "infinite-random" || s > 36 || e > 36;
+}
+function getClassicCameraTarget() {
+  if (!shouldClassicCameraFollowSnake()) return _T;
+  const s = Ba(), e = Ii === "guest" ? au : ou, t = e.children[0];
+  if (s.alive && t && t.visible) return t.position;
+  return s.alive && s.snake.length > 0 ? lu(s.snake[0], 0) : _T;
+}
 function updateCameraView(s) {
-  const e = Ba(), t = e.alive && e.snake.length > 0 ? lu(e.snake[0], 0) : _T;
-  _oo.set(t.x, 60, t.z), yoo.set(t.x, 0, t.z);
-  const n = Math.min(1, s * 6);
-  voo.lerp(_oo, n), Soo.lerp(yoo, n), to.position.copy(voo), to.lookAt(Soo), boo.set(0, -1, 0);
+  const e = getClassicCameraTarget();
+  _oo.set(e.x, 60, e.z), yoo.set(e.x, 0, e.z);
+  const t = Math.min(1, s * (shouldClassicCameraFollowSnake() ? 10 : 18));
+  voo.lerp(_oo, t), Soo.lerp(yoo, t), to.position.copy(voo), to.lookAt(Soo), boo.set(0, -1, 0);
 }
 function updateSfxVolumeLabel() {
   const s = Math.max(0, Math.min(1, Number(Ge.graphics.sfxVolume ?? js.graphics.sfxVolume)));
@@ -20896,7 +20906,7 @@ function NT(s) {
 }
 function Af(s, e, t) {
   const n = Re[s], i = su[ru[t]], r = { x: e.x + i.x, y: e.y + i.y };
-  n.snake = zm(r) ? [e, r] : [e], n.direction = t, n.queuedDirection = null, n.growthPending = 0, n.score = 0, n.lives = tt === "single" ? 1 : MULTIPLAYER_MAX_LIVES, n.alive = true;
+  n.snake = zm(r) ? [e, r] : [e], n.direction = t, n.queuedDirection = null, n.queuedDirections = [], n.growthPending = 0, n.score = 0, n.lives = tt === "single" ? 1 : MULTIPLAYER_MAX_LIVES, n.alive = true;
 }
 function Li(s = false) {
   resumeSinglePlayerQuitPause(), En = is.value || En, vooGetStageDefinition(En).usesSeed ? (tt !== "guest" || s ? OooStageSeed = HooNextStageSeed() : OooStageSeed = OooStageSeed || 0) : OooStageSeed = 0, Hn = cu(En, OooStageSeed), uu();
@@ -20905,7 +20915,12 @@ function Li(s = false) {
 }
 function Gm(s, e) {
   const t = Re[s];
-  t.alive && e !== ru[t.direction] && (t.queuedDirection = e);
+  if (!t.alive) return;
+  t.queuedDirections || (t.queuedDirections = []);
+  const n = t.queuedDirections.length ? t.queuedDirections[t.queuedDirections.length - 1] : t.direction;
+  if (e === n || e === ru[n]) return;
+  t.queuedDirections.length < 3 ? t.queuedDirections.push(e) : t.queuedDirections[t.queuedDirections.length - 1] = e;
+  t.queuedDirection = t.queuedDirections[0] || null;
 }
 function OT() {
   const s = Ba().score;
@@ -20930,7 +20945,7 @@ function FT(s) {
   const t = Dt, n = s.players.host, i = s.players.guest, r = coaSameSnakePath(Re.host.snake, n.snake), o = coaSameSnakePath(Re.guest.snake, i.snake), a = s.stageId !== En;
   (s.stageId !== En || Number(s.stageSeed || 0) !== OooStageSeed) && (En = s.stageId, OooStageSeed = Number(s.stageSeed || 0), is.value = En, Hn = cu(En, OooStageSeed), uu()), Dt = s.phase, progressiveFoodEaten = Number(s.progressiveFoodEaten || 0), Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
     const t = s.players[e];
-    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label, Re[e].color = sanitizeSnakeColor(t.color, defaultSnakeColor(e));
+    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].queuedDirections = [], Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label, Re[e].color = sanitizeSnakeColor(t.color, defaultSnakeColor(e));
   }), Mi = s.bestScore, applySnakeColorMaterials(), SooRefreshScoreboardFromPlayers(), us = s.hudMessage;
   const c = !r || !o || a, e = haaGetSnakeStepDuration();
   const l = Math.max(0, Math.min(1, Number(s.moveBlend) || 0)), h = Math.min(e * 0.96, l * e + e * 0.14);
@@ -21116,9 +21131,10 @@ function HT() {
   let t = false;
   s.forEach((i) => {
     const r = Re[i];
-    r.queuedDirection && r.queuedDirection !== ru[r.direction] && (r.direction = r.queuedDirection), r.queuedDirection = null;
-    const o = su[r.direction];
-    e.set(i, wrapStagePoint({ x: r.snake[0].x + o.x, y: r.snake[0].y + o.y }, r.direction));
+    const o = r.queuedDirections && r.queuedDirections.length ? r.queuedDirections.shift() : r.queuedDirection;
+    o && o !== ru[r.direction] && (r.direction = o), r.queuedDirection = r.queuedDirections && r.queuedDirections.length ? r.queuedDirections[0] : null;
+    const a = su[r.direction];
+    e.set(i, wrapStagePoint({ x: r.snake[0].x + a.x, y: r.snake[0].y + a.y }, r.direction));
   });
   const n = /* @__PURE__ */ new Map();
   ["host", "guest"].forEach((i) => {
@@ -21197,7 +21213,7 @@ function getControllerDirection() {
 function pollControllerInput(s) {
   if (Dt !== "running" || NooReplayActive || kooReplayPlaying) return;
   const e = getControllerDirection();
-  e && (e !== controllerLastDirection || s - controllerLastInputAt > 185) && (controllerLastDirection = e, controllerLastInputAt = s, ta(e));
+  e && (e !== controllerLastDirection || s - controllerLastInputAt > 90) && (controllerLastDirection = e, controllerLastInputAt = s, ta(e));
 }
 function XT() {
   if (bf) return;
@@ -21336,7 +21352,22 @@ function YT() {
       s.preventDefault(), cycleCameraMode();
       return;
     }
-    s.key === "ArrowUp" && ta("up"), s.key === "ArrowDown" && ta("down"), s.key === "ArrowLeft" && ta("left"), s.key === "ArrowRight" && ta("right");
+    if (s.key === "ArrowUp") {
+      s.preventDefault(), ta("up");
+      return;
+    }
+    if (s.key === "ArrowDown") {
+      s.preventDefault(), ta("down");
+      return;
+    }
+    if (s.key === "ArrowLeft") {
+      s.preventDefault(), ta("left");
+      return;
+    }
+    if (s.key === "ArrowRight") {
+      s.preventDefault(), ta("right");
+      return;
+    }
   });
   const s = window.snake3dDesktop;
   s != null && s.onUpdateState && s.onUpdateState((e) => {
