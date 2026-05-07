@@ -20070,7 +20070,7 @@ class WM {
     t.drawingBufferColorSpace = nt._getDrawingBufferColorSpace(e), t.unpackColorSpace = nt._getUnpackColorSpace();
   }
 }
-const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, infiniteRandomMinBounds = xaaInfiniteBounds, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, snakeColor: "#0f380f", sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "", ready: "Press <strong>Space</strong> to start.", running: "", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "infinite-progressive", name: "Infinite Progressive", wrap: true, bounds: xaaInfiniteBounds, progressive: true, isValid: () => true }, { id: "infinite-random", name: "Infinite Random Seed", wrap: true, usesSeed: true, randomShape: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
+const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, POWER_FOOD_CHANCE = 0.07, POWER_SCORE = 50, COMBO_WINDOW_MS = 6500, MULTIPLAYER_MAX_LIVES = 3, xaaInfiniteBounds = { minX: 0, maxX: 34, minY: 0, maxY: 34 }, infiniteRandomMinBounds = xaaInfiniteBounds, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "low", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "off", fogEnabled: false, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: 8, snakeColor: "#0f380f", sfxVolume: 0.7, sfxMuted: false, musicEnabled: false, musicVolume: 0.28, retroSkin: "nokia" }, messages: { introChallenge: "", ready: "Press <strong>Space</strong> to start.", running: "", edgeWarning: "Border ahead. Turn now to stay inside the <strong>arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, bounds: xaaInfiniteBounds, isValid: () => true }, { id: "infinite-progressive", name: "Infinite Progressive", wrap: true, bounds: xaaInfiniteBounds, progressive: true, isValid: () => true }, { id: "infinite-random", name: "Infinite Random Seed", wrap: true, usesSeed: true, randomShape: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
 if (!gm) throw new Error("App root not found.");
 const _m = gm;
 _m.innerHTML = `
@@ -20108,6 +20108,12 @@ _m.innerHTML = `
         <button class="menu-button" id="quit-no-button">No</button>
       </div>
     </section>
+    <section class="panel gameover-panel hidden" id="gameover-panel">
+      <div class="gameover-header"><h2>Run Stats</h2><button class="settings-close" id="gameover-close" aria-label="Close stats">x</button></div>
+      <p class="gameover-copy" id="gameover-copy">Run over.</p>
+      <div class="gameover-stats" id="gameover-stats"></div>
+      <button class="menu-button primary" id="gameover-restart-button">Restart Run</button>
+    </section>
     <section class="panel food-arrow-panel hidden" id="food-arrow-panel"><p id="food-arrow-glyph">^</p><span id="food-arrow-distance">FOOD</span></section>
     <section class="panel replay-panel hidden" id="replay-panel">
       <div class="replay-header"><h2>Run Replay</h2><button class="settings-close" id="replay-close" aria-label="Close replay">x</button></div>
@@ -20137,6 +20143,11 @@ _m.innerHTML = `
     <section class="panel scoreboard-panel hidden" id="scoreboard-panel">
       <div class="scoreboard-header"><h2>Scoreboard</h2><button class="settings-close" id="scoreboard-close" aria-label="Close scoreboard">x</button></div>
       <p class="scoreboard-copy">Best scores sync between players during multiplayer. Higher scores replace older records for the same name and game version.</p>
+      <div class="scoreboard-filters">
+        <label><span>Game</span><select id="scoreboard-filter-game"><option value="all">All Games</option><option value="Classic">Classic</option><option value="3D">3D</option></select></label>
+        <label><span>Mode</span><select id="scoreboard-filter-mode"><option value="all">All Modes</option><option value="single">Single Player</option><option value="multiplayer">Multiplayer</option><option value="progressive">Progressive</option></select></label>
+        <label><span>Stage</span><select id="scoreboard-filter-stage"><option value="all">All Stages</option></select></label>
+      </div>
       <div class="scoreboard-list" id="scoreboard-list"></div>
     </section>
     <section class="panel settings-panel hidden" id="settings-panel">
@@ -20163,11 +20174,14 @@ _m.innerHTML = `
         <label class="settings-row classic-3d-only hidden"><span>Night Length</span><span class="settings-inline"><input type="range" id="setting-night-cycle" min="60" max="480" step="30" /><strong id="setting-night-cycle-value">180s</strong></span></label>
           <label class="settings-row"><span>SFX Volume</span><span class="settings-inline"><input type="range" id="setting-sfx-volume" min="0" max="1" step="0.05" /><strong id="setting-sfx-volume-value">70%</strong></span></label>
           <label class="settings-row"><span>Mute SFX</span><input type="checkbox" id="setting-sfx-muted" /></label>
+          <label class="settings-row"><span>Retro Music</span><input type="checkbox" id="setting-music-enabled" /></label>
+          <label class="settings-row"><span>Music Volume</span><span class="settings-inline"><input type="range" id="setting-music-volume" min="0" max="1" step="0.05" /><strong id="setting-music-volume-value">28%</strong></span></label>
         </div>
         <div class="settings-section">
           <h3>Gameplay</h3>
           <label class="settings-row"><span>Snake Speed</span><span class="settings-inline"><input type="range" id="setting-snake-speed" min="1" max="12" step="1" /><strong id="setting-snake-speed-value">8</strong></span></label>
           <label class="settings-row"><span>Multiplayer Snake Color</span><input type="color" id="setting-snake-color" /></label>
+          <label class="settings-row"><span>Retro Skin</span><select id="setting-retro-skin"><option value="nokia">Nokia Green</option><option value="gameboy">Game Boy Grey</option><option value="calculator">Calculator LCD</option><option value="arcade">Black & White Arcade</option></select></label>
         </div>
         <div class="settings-actions">
         <button class="settings-save secondary" id="update-check">Check for Updates</button>
@@ -20184,6 +20198,7 @@ function Ye(s, e) {
   return s;
 }
 const KM = Ye(document.querySelector("#score-local"), "score-local"), jM = Ye(document.querySelector("#score-remote"), "score-remote"), QM = Ye(document.querySelector("#best"), "best"), eT = Ye(document.querySelector("#stage-name"), "stage-name"), tT = Ye(document.querySelector("#food-type"), "food-type"), nT = Ye(document.querySelector("#message"), "message"), pauseQuitPanel = Ye(document.querySelector("#quit-panel"), "quit-panel"), pauseQuitYesButton = Ye(document.querySelector("#quit-yes-button"), "quit-yes-button"), pauseQuitNoButton = Ye(document.querySelector("#quit-no-button"), "quit-no-button"), vooFoodArrowPanel = Ye(document.querySelector("#food-arrow-panel"), "food-arrow-panel"), booFoodArrowGlyph = Ye(document.querySelector("#food-arrow-glyph"), "food-arrow-glyph"), SooFoodArrowDistance = Ye(document.querySelector("#food-arrow-distance"), "food-arrow-distance"), iT = Ye(document.querySelector("#label-local"), "label-local"), sT = Ye(document.querySelector("#label-remote"), "label-remote"), rT = Ye(document.querySelector("#menu-panel"), "menu-panel"), Kc = Ye(document.querySelector("#menu-note"), "menu-note"), Qs = Ye(document.querySelector("#username-input"), "username-input"), is = Ye(document.querySelector("#stage-select"), "stage-select"), ym = Ye(document.querySelector("#single-player-button"), "single-player-button"), xm = Ye(document.querySelector("#host-button"), "host-button"), oT = Ye(document.querySelector("#join-button"), "join-button"), vm = Ye(document.querySelector("#join-code-input"), "join-code-input"), aT = Ye(document.querySelector("#host-lobby"), "host-lobby"), cT = Ye(document.querySelector("#host-code"), "host-code"), Oa = Ye(document.querySelector("#lobby-status"), "lobby-status"), Sm = Ye(document.querySelector("#start-match-button"), "start-match-button"), lT = Ye(document.querySelector("#intro-screen"), "intro-screen"), hT = Ye(document.querySelector("#intro-title"), "intro-title"), mf = Ye(document.querySelector("#intro-note"), "intro-note"), pooScoreboardButton = Ye(document.querySelector("#scoreboard-button"), "scoreboard-button"), vooScoreboardPanel = Ye(document.querySelector("#scoreboard-panel"), "scoreboard-panel"), booScoreboardClose = Ye(document.querySelector("#scoreboard-close"), "scoreboard-close"), SooScoreboardList = Ye(document.querySelector("#scoreboard-list"), "scoreboard-list"), vooReplayPanel = Ye(document.querySelector("#replay-panel"), "replay-panel"), booReplayClose = Ye(document.querySelector("#replay-close"), "replay-close"), SooReplayCopy = Ye(document.querySelector("#replay-copy"), "replay-copy"), RooReplaySave = Ye(document.querySelector("#replay-save-button"), "replay-save-button"), PooReplaySkip = Ye(document.querySelector("#replay-skip-button"), "replay-skip-button"), uT = Ye(document.querySelector("#settings-button"), "settings-button"), gf = Ye(document.querySelector("#settings-panel"), "settings-panel"), dT = Ye(document.querySelector("#settings-close"), "settings-close"), fT = Ye(document.querySelector("#settings-save"), "settings-save"), Roo = Ye(document.querySelector("#update-check"), "update-check"), Poo = Ye(document.querySelector("#update-install"), "update-install"), mT = Ye(document.querySelector("#fps-panel"), "fps-panel"), gT = Ye(document.querySelector("#fps-value"), "fps-value"), Mm = Ye(document.querySelector("#setting-display-mode"), "setting-display-mode"), Foo = Ye(document.querySelector("#setting-window-resolution"), "setting-window-resolution"), Tm = Ye(document.querySelector("#setting-show-fps"), "setting-show-fps"), Em = Ye(document.querySelector("#setting-vsync"), "setting-vsync"), Am = Ye(document.querySelector("#setting-fps-cap"), "setting-fps-cap"), roo = Ye(document.querySelector("#setting-graphics-preset"), "setting-graphics-preset"), ss = Ye(document.querySelector("#setting-renderer"), "setting-renderer"), eo = Ye(document.querySelector("#setting-webgpu-toggle"), "setting-webgpu-toggle"), Cm = Ye(document.querySelector("#setting-resolution-scale"), "setting-resolution-scale"), wm = Ye(document.querySelector("#setting-dlss-mode"), "setting-dlss-mode"), Rm = Ye(document.querySelector("#setting-shadow-quality"), "setting-shadow-quality"), Pm = Ye(document.querySelector("#setting-fog"), "setting-fog"), noo = Ye(document.querySelector("#setting-day-night-cycle"), "setting-day-night-cycle"), pooDayCycle = Ye(document.querySelector("#setting-day-cycle"), "setting-day-cycle"), vooNightCycle = Ye(document.querySelector("#setting-night-cycle"), "setting-night-cycle"), booDayCycleValue = Ye(document.querySelector("#setting-day-cycle-value"), "setting-day-cycle-value"), SooNightCycleValue = Ye(document.querySelector("#setting-night-cycle-value"), "setting-night-cycle-value"), ao = Ye(document.querySelector("#setting-sfx-volume"), "setting-sfx-volume"), ioo = Ye(document.querySelector("#setting-sfx-volume-value"), "setting-sfx-volume-value"), soo = Ye(document.querySelector("#setting-sfx-muted"), "setting-sfx-muted"), uaa = Ye(document.querySelector("#setting-snake-speed"), "setting-snake-speed"), xaa = Ye(document.querySelector("#setting-snake-speed-value"), "setting-snake-speed-value"), progressiveSnakeColorInput = Ye(document.querySelector("#setting-snake-color"), "setting-snake-color"), On = new Ip(), _i = new Wa("#9bbc0f", 42, 96);
+const gameOverPanel = Ye(document.querySelector("#gameover-panel"), "gameover-panel"), gameOverCopy = Ye(document.querySelector("#gameover-copy"), "gameover-copy"), gameOverStats = Ye(document.querySelector("#gameover-stats"), "gameover-stats"), gameOverClose = Ye(document.querySelector("#gameover-close"), "gameover-close"), gameOverRestart = Ye(document.querySelector("#gameover-restart-button"), "gameover-restart-button"), scoreboardFilterGame = Ye(document.querySelector("#scoreboard-filter-game"), "scoreboard-filter-game"), scoreboardFilterMode = Ye(document.querySelector("#scoreboard-filter-mode"), "scoreboard-filter-mode"), scoreboardFilterStage = Ye(document.querySelector("#scoreboard-filter-stage"), "scoreboard-filter-stage"), musicEnabledInput = Ye(document.querySelector("#setting-music-enabled"), "setting-music-enabled"), musicVolumeInput = Ye(document.querySelector("#setting-music-volume"), "setting-music-volume"), musicVolumeValue = Ye(document.querySelector("#setting-music-volume-value"), "setting-music-volume-value"), retroSkinSelect = Ye(document.querySelector("#setting-retro-skin"), "setting-retro-skin");
 On.background = new xe("#9bbc0f");
 On.fog = null;
 const _T = new C(0, 0, 0), yT = new C(0, 60, 0), moo = ["overview", "chase", "first-person"];
@@ -20253,6 +20268,19 @@ const ih = new Un(), ou = new Un(), au = new Un(), Um = new Un();
 Lm.add(ih, ou, au, Um);
 const ST = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeHeadGeo = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeSnoutGeo = new Pi(wi * 0.19, wi * 0.11, wi * 0.38), snakeDorsalGeo = new qa(wi * 0.085, wi * 0.34, 4, 1), snakeScaleGeo = new qa(wi * 0.065, wi * 0.24, 4, 1), snakeEyeGeo = new lr(wi * 0.06, 10, 10), SNAKE_SEGMENT_POOL = 48, bT = new Pi(wi * 0.96, 0.03, wi * 0.96), MT = new Pi(wi * 0.34, 0.12, wi * 0.34), TT = new Pi(wi * 0.42, 0.12, wi * 0.42), ls = new gt(MT, xT), hs = new gt(TT, vT);
 const ooo = new xe("#7b84b8"), aooDay = new xe("#586897"), cooNight = new xe("#090512"), looNight = new xe("#14081f"), hooDay = new xe("#f2d7ee"), uooDay = new xe("#8db8ea"), vooDay = new xe("#64739c"), dooNight = new xe("#ffd9f4"), fooNight = new xe("#93ddff"), pooNightGround = new xe("#12081f");
+const classicSkinPalettes = {
+  nokia: { lcd: "#9bbc0f", dark: "#0f380f", mid: "#306230", light: "#cfe88a", panel: "#9bbc0ff2" },
+  gameboy: { lcd: "#cadc9f", dark: "#1f2f25", mid: "#536b54", light: "#eef5c6", panel: "#cadc9ff2" },
+  calculator: { lcd: "#b8c8aa", dark: "#1c2b22", mid: "#53665a", light: "#dfe8d0", panel: "#b8c8aaf2" },
+  arcade: { lcd: "#f4f4f0", dark: "#050505", mid: "#333333", light: "#ffffff", panel: "#f4f4f0f2" }
+};
+function getClassicSkinPalette() {
+  return classicSkinPalettes[Ge.graphics.retroSkin] ?? classicSkinPalettes.nokia;
+}
+function applyClassicRetroSkin() {
+  const s = getClassicSkinPalette(), e = document.documentElement;
+  e.style.setProperty("--lcd", s.lcd), e.style.setProperty("--lcd-dark", s.light), e.style.setProperty("--ink", s.dark), e.style.setProperty("--ink-mid", s.mid), e.style.setProperty("--panel", s.panel), e.style.setProperty("--panel-border", s.dark), e.style.setProperty("--text", s.dark), e.style.setProperty("--muted", s.mid), e.style.setProperty("--accent", s.dark), e.style.setProperty("--accent-strong", s.dark), On.background = new xe(s.lcd), Ka.material.color.set(s.lcd), jl.color.set(s.lcd), Ur.color.set(s.lcd), Nr.color.set(s.dark), Ql.color.set(s.mid), eh.color.set(s.mid), th.color.set(s.dark), nh.color.set(s.mid), xT.color.set(s.mid), vT.color.set(s.light);
+}
 snakeSnoutGeo.translate(0, 0.01, wi * 0.22);
 snakeDorsalGeo.rotateX(Math.PI / 2);
 snakeScaleGeo.rotateX(Math.PI / 2);
@@ -20277,23 +20305,39 @@ async function loadSoundBuffer(s) {
 async function initSnakeAudio() {
   if (!SnakeAudioContext || snakeAudioContext)
     return;
-  snakeAudioContext = new SnakeAudioContext(), snakeMasterGain = snakeAudioContext.createGain(), snakeMasterGain.gain.value = 1, snakeMasterGain.connect(snakeAudioContext.destination), [normalFoodSound, superFoodSound] = await Promise.all([loadSoundBuffer("./normal-food.wav"), loadSoundBuffer("./super-food.wav")]);
+  snakeAudioContext = new SnakeAudioContext(), snakeMasterGain = snakeAudioContext.createGain(), snakeMasterGain.gain.value = 1, snakeMasterGain.connect(snakeAudioContext.destination), [normalFoodSound, superFoodSound] = await Promise.all([loadSoundBuffer("./normal-food.wav"), loadSoundBuffer("./super-food.wav")]), syncRetroMusic();
 }
 function resumeSnakeAudio() {
   snakeAudioContext && snakeAudioContext.state === "suspended" && snakeAudioContext.resume().catch(() => {
-  });
+  }), syncRetroMusic();
+}
+function updateMusicVolumeLabel() {
+  const s = Math.max(0, Math.min(1, Number(Ge.graphics.musicVolume ?? js.graphics.musicVolume)));
+  musicVolumeInput.value = String(s), musicVolumeValue.textContent = `${Math.round(s * 100)}%`, musicEnabledInput.checked = !!Ge.graphics.musicEnabled;
+}
+function playRetroMusicNote() {
+  if (!snakeAudioContext || !snakeMasterGain || !Ge.graphics.musicEnabled) return;
+  const s = Math.max(0, Math.min(1, Number(Ge.graphics.musicVolume ?? js.graphics.musicVolume)));
+  if (s <= 0) return;
+  const e = [196, 247, 294, 247, 330, 294, 247, 220, 196, 247, 330, 392, 330, 294, 247, 220], t = snakeAudioContext.currentTime, n = snakeAudioContext.createOscillator(), i = snakeAudioContext.createGain();
+  n.type = "square", n.frequency.value = e[retroMusicStep % e.length], i.gain.setValueAtTime(0.0001, t), i.gain.exponentialRampToValueAtTime(0.055 * s, t + 0.015), i.gain.exponentialRampToValueAtTime(0.0001, t + 0.18), n.connect(i), i.connect(snakeMasterGain), n.start(t), n.stop(t + 0.2), retroMusicStep += 1;
+}
+function syncRetroMusic() {
+  if (!snakeAudioContext || !snakeMasterGain) return;
+  (!Ge.graphics.musicEnabled || Ge.graphics.musicVolume <= 0) && retroMusicTimer && (window.clearInterval(retroMusicTimer), retroMusicTimer = null);
+  Ge.graphics.musicEnabled && Ge.graphics.musicVolume > 0 && !retroMusicTimer && (playRetroMusicNote(), retroMusicTimer = window.setInterval(playRetroMusicNote, 260));
 }
 function playFoodSound(s) {
-  const e = s === "super" ? superFoodSound : normalFoodSound;
+  const e = s === "super" || s === "power" ? superFoodSound : normalFoodSound;
   if (!snakeAudioContext || !snakeMasterGain || !e) return;
   if (Ge.graphics.sfxMuted) return;
   const t = Math.max(0, Math.min(1, Number(Ge.graphics.sfxVolume ?? js.graphics.sfxVolume)));
   if (t <= 0) return;
   const n = (o = 1, a = 1, c = 0) => {
     const l = snakeAudioContext.createBufferSource(), h = snakeAudioContext.createGain();
-    l.buffer = e, l.playbackRate.value = o, h.gain.value = (s === "super" ? 0.78 : 0.68) * t * a, l.connect(h), h.connect(snakeMasterGain), l.start(snakeAudioContext.currentTime + c);
+    l.buffer = e, l.playbackRate.value = o, h.gain.value = (s === "super" || s === "power" ? 0.78 : 0.68) * t * a, l.connect(h), h.connect(snakeMasterGain), l.start(snakeAudioContext.currentTime + c);
   };
-  const i = s === "super" ? 1.06 : 1;
+  const i = s === "power" ? 1.24 : s === "super" ? 1.06 : 1;
   n(i);
   if (s === "normal" && Math.random() < 0.12) {
     const r = Math.max(0.14, Math.min(0.32, e.duration * 0.78));
@@ -20461,9 +20505,9 @@ function sanitizeSnakeColor(s, e = "#0f380f") {
   return /^#[0-9a-f]{6}$/i.test(t) ? t : e;
 }
 function yf(s, e) {
-  return { id: s, label: e, color: defaultSnakeColor(s), snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, queuedDirections: [], growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false };
+  return { id: s, label: e, color: defaultSnakeColor(s), snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, queuedDirections: [], growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false, foodEaten: 0, maxLength: 0, combo: 0, bestCombo: 0, lastFoodAt: 0, boostTicks: 0, slowTicks: 0, slowFlip: false };
 }
-let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, pauseQuitActive = false, progressiveFoodEaten = 0, xooScoreboardKey = "snake3d-scoreboard-v2", xooScoreboardVariant = "Classic", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0;
+let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, runStartedAt = 0, foodRevealUntil = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, pauseQuitActive = false, progressiveFoodEaten = 0, xooScoreboardKey = "snake3d-scoreboard-v2", xooScoreboardVariant = "Classic", vooScoreboardEntries = [], pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0, controllerLastLaunchPressed = false, controllerLastStartPressed = false, controllerLastActionAt = 0, retroMusicTimer = null, retroMusicStep = 0;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
 function cooNormalizeScoreboardName(s) {
   return `${s ?? ""}`.trim().replace(/\s+/g, " ").slice(0, 18) || "Player";
@@ -20476,6 +20520,20 @@ function pooNormalizeScoreboardVariant(s) {
   const e = `${s ?? ""}`.trim().toLowerCase();
   return e.includes("classic") ? "Classic" : e.includes("3d") ? "3D" : xooScoreboardVariant;
 }
+function stageNameForScoreboard(s) {
+  return (Na.find((e) => e.id === s) || {}).name || (s === "unknown" ? "Legacy" : "Unknown Stage");
+}
+function normalizeScoreboardMode(s) {
+  const e = `${s ?? ""}`.trim().toLowerCase();
+  return e.includes("multi") || e === "host" || e === "guest" ? "multiplayer" : "single";
+}
+function normalizeScoreboardStageId(s) {
+  const e = `${s ?? ""}`.trim();
+  return e || "unknown";
+}
+function currentScoreboardMeta() {
+  return { variant: xooScoreboardVariant, mode: tt === "single" ? "single" : "multiplayer", stageId: En, stageName: Hn.definition.name, progressive: !!Hn.definition.progressive };
+}
 function hooSortScoreboardEntries(s, e) {
   return e.bestScore !== s.bestScore ? e.bestScore - s.bestScore : e.updatedAt !== s.updatedAt ? e.updatedAt - s.updatedAt : s.name !== e.name ? s.name.localeCompare(e.name) : s.variant.localeCompare(e.variant);
 }
@@ -20486,7 +20544,7 @@ function uooSanitizeScoreboardEntries(s) {
     if (!t || typeof t != "object") return;
     const n = cooNormalizeScoreboardName(t.name), i = Number(t.bestScore), a = pooNormalizeScoreboardVariant(t.variant ?? t.mode ?? t.gameVersion);
     if (!Number.isFinite(i) || i < 0) return;
-    const r = { name: n, bestScore: Math.max(0, Math.round(i)), variant: a, updatedAt: looScoreboardTimestamp(t.updatedAt) }, o = `${n.toLowerCase()}::${a}`, l = e.get(o);
+    const h = normalizeScoreboardMode(t.playMode ?? t.scoreMode ?? t.mode), u = normalizeScoreboardStageId(t.stageId), d = typeof t.stageName == "string" && t.stageName.trim() ? t.stageName.trim() : stageNameForScoreboard(u), f = !!t.progressive || u.includes("progressive"), r = { name: n, bestScore: Math.max(0, Math.round(i)), variant: a, mode: h, stageId: u, stageName: d, progressive: f, updatedAt: looScoreboardTimestamp(t.updatedAt) }, o = `${n.toLowerCase()}::${a}::${h}::${u}::${f ? "progressive" : "standard"}`, l = e.get(o);
     (!l || r.bestScore > l.bestScore || r.bestScore === l.bestScore && r.updatedAt > l.updatedAt) && e.set(o, r);
   });
   return [...e.values()].sort(hooSortScoreboardEntries);
@@ -20499,20 +20557,21 @@ function dooSaveScoreboardEntries() {
 }
 function fooRenderScoreboard() {
   const s = document.createDocumentFragment();
-  if (vooScoreboardEntries.length === 0) {
+  const e = scoreboardFilterGame.value, t = scoreboardFilterMode.value, n = scoreboardFilterStage.value, i = vooScoreboardEntries.filter((r) => (e === "all" || r.variant === e) && (n === "all" || r.stageId === n) && (t === "all" || t === "progressive" && r.progressive || r.mode === t));
+  if (i.length === 0) {
     const e = document.createElement("div");
-    e.className = "scoreboard-empty", e.textContent = "No scores yet. Play a run to start the rivalry.", s.appendChild(e), SooScoreboardList.replaceChildren(s);
+    e.className = "scoreboard-empty", e.textContent = "No matching scores yet. Change filters or play a run to start the rivalry.", s.appendChild(e), SooScoreboardList.replaceChildren(s);
     return;
   }
-  vooScoreboardEntries.forEach((e, t) => {
+  i.forEach((e, t) => {
     const n = document.createElement("div");
     n.className = "scoreboard-entry";
     const i = document.createElement("span");
     i.className = "scoreboard-rank", i.textContent = `#${t + 1}`;
     const r = document.createElement("span");
-    r.className = "scoreboard-name", r.textContent = e.name;
+    r.className = "scoreboard-name", r.textContent = `${e.name} - ${e.stageName}${e.progressive ? " Progressive" : ""}`;
     const o = document.createElement("span");
-    o.className = "scoreboard-score", o.textContent = `${e.bestScore} points (${e.variant})`, n.append(i, r, o), s.appendChild(n);
+    o.className = "scoreboard-score", o.textContent = `${e.bestScore} points (${e.variant}, ${e.mode === "multiplayer" ? "MP" : "SP"})`, n.append(i, r, o), s.appendChild(n);
   }), SooScoreboardList.replaceChildren(s);
 }
 function mooGetScoreboardSnapshot() {
@@ -20535,8 +20594,8 @@ function yooMergeScoreboardEntries(s) {
 function _ooRecordScore(s, e) {
   const t = cooNormalizeScoreboardName(s), n = Math.max(0, Math.round(Number(e) || 0));
   if (!t || n <= 0) return false;
-  const i = vooScoreboardEntries.find((r) => r.name === t && r.variant === xooScoreboardVariant);
-  return i && i.bestScore >= n ? false : yooMergeScoreboardEntries([{ name: t, bestScore: n, variant: xooScoreboardVariant, updatedAt: Date.now() }]);
+  const i = currentScoreboardMeta(), r = vooScoreboardEntries.find((o) => o.name === t && o.variant === i.variant && o.mode === i.mode && o.stageId === i.stageId && !!o.progressive === !!i.progressive);
+  return r && r.bestScore >= n ? false : yooMergeScoreboardEntries([{ name: t, bestScore: n, ...i, updatedAt: Date.now() }]);
 }
 function booBroadcastScoreboardSync() {
   tt !== "single" && Bn && kn({ type: "scoreboard-sync", scoreboard: mooGetScoreboardSnapshot() });
@@ -20552,6 +20611,42 @@ function RooLoadScoreboardEntries() {
     vooScoreboardEntries = [];
   }
   fooRenderScoreboard();
+}
+function resetPlayerRunStats(s) {
+  s.foodEaten = 0, s.maxLength = s.snake.length, s.combo = 0, s.bestCombo = 0, s.lastFoodAt = 0, s.boostTicks = 0, s.slowTicks = 0, s.slowFlip = false;
+}
+function updatePlayerMaxLength(s) {
+  s.maxLength = Math.max(s.maxLength || 0, s.snake.length);
+}
+function getRunTimeSeconds() {
+  return runStartedAt > 0 ? Math.max(0, Math.floor((performance.now() - runStartedAt) / 1e3)) : 0;
+}
+function formatRunTime(s) {
+  const e = Math.floor(s / 60), t = s % 60;
+  return `${e}:${String(t).padStart(2, "0")}`;
+}
+function recordFoodCombo(s) {
+  const e = performance.now();
+  s.combo = e - (s.lastFoodAt || 0) <= COMBO_WINDOW_MS ? (s.combo || 0) + 1 : 1, s.lastFoodAt = e, s.bestCombo = Math.max(s.bestCombo || 0, s.combo);
+  return Math.min(5, 1 + Math.floor((s.combo - 1) / 4));
+}
+function renderGameOverStats(s) {
+  const e = Ba(), t = getRunTimeSeconds(), n = [
+    ["Score", e.score],
+    ["Food eaten", e.foodEaten || 0],
+    ["Max length", e.maxLength || e.snake.length],
+    ["Best combo", `${e.bestCombo || 0}x`],
+    ["Time survived", formatRunTime(t)],
+    ["Stage", Hn.definition.name],
+    ["Mode", tt === "single" ? "Single Player" : "Multiplayer"]
+  ], i = document.createDocumentFragment();
+  n.forEach(([r, o]) => {
+    const a = document.createElement("div"), c = document.createElement("span"), l = document.createElement("strong");
+    a.className = "gameover-stat", c.textContent = r, l.textContent = `${o}`, a.append(c, l), i.appendChild(a);
+  }), gameOverCopy.innerHTML = s, gameOverStats.replaceChildren(i), gameOverPanel.classList.remove("hidden");
+}
+function maybeShowGameOverStats(s) {
+  NooReplayActive || kooReplayPlaying ? gameOverPanel.classList.add("hidden") : renderGameOverStats(s);
 }
 function jooCaptureReplaySnapshot(s = "tick") {
   return {
@@ -20632,7 +20727,7 @@ function raaFinishReplayVisuals() {
 }
 async function oaaEndReplay(s = false) {
   if (!NooReplayActive && !kooReplayPlaying) return;
-  kooReplayPlaying = false, NooReplayActive = false, HooReplayStepElapsed = 0, zooReplayIndex = 0, await naaStopReplayRecording(), vooReplayPanel.classList.add("hidden"), GooReplayRecordedBlob = s ? GooReplayRecordedBlob : null, YooReplayFinalState && taaApplyReplaySnapshot(YooReplayFinalState);
+  kooReplayPlaying = false, NooReplayActive = false, HooReplayStepElapsed = 0, zooReplayIndex = 0, await naaStopReplayRecording(), vooReplayPanel.classList.add("hidden"), GooReplayRecordedBlob = s ? GooReplayRecordedBlob : null, YooReplayFinalState && taaApplyReplaySnapshot(YooReplayFinalState), Dt === "game-over" && renderGameOverStats(Ge.messages.gameOver);
 }
 async function aaaSaveReplayClip() {
   var e;
@@ -20646,7 +20741,7 @@ async function aaaSaveReplayClip() {
 }
 function caaBeginReplaySequence() {
   if (NooReplayActive || kooReplayPlaying || FooReplayTimeline.length < 2) return;
-  YooReplayFinalState = jooCaptureReplaySnapshot("final"), NooReplayActive = true, kooReplayPlaying = true, zooReplayIndex = 0, HooReplayStepElapsed = 0, GooReplayRecordedBlob = null, RooReplaySave.disabled = true, RooReplaySave.textContent = "Recording...", SooReplayCopy.textContent = "Rewinding the run into a timelapse clip...", vooReplayPanel.classList.remove("hidden"), gf.classList.add("hidden"), vooScoreboardPanel.classList.add("hidden"), taaApplyReplaySnapshot(FooReplayTimeline[0]), iaaStartReplayRecording();
+  YooReplayFinalState = jooCaptureReplaySnapshot("final"), NooReplayActive = true, kooReplayPlaying = true, zooReplayIndex = 0, HooReplayStepElapsed = 0, GooReplayRecordedBlob = null, RooReplaySave.disabled = true, RooReplaySave.textContent = "Recording...", SooReplayCopy.textContent = "Rewinding the run into a timelapse clip...", gameOverPanel.classList.add("hidden"), vooReplayPanel.classList.remove("hidden"), gf.classList.add("hidden"), vooScoreboardPanel.classList.add("hidden"), taaApplyReplaySnapshot(FooReplayTimeline[0]), iaaStartReplayRecording();
 }
 function laaMaybeTriggerReplay(s, e) {
   s !== "game-over" && e === "game-over" && !ZooReplayTriggeredForPhase && (ZooReplayTriggeredForPhase = true, caaBeginReplaySequence());
@@ -20666,7 +20761,7 @@ function livesLabel(s) {
   return tt === "single" ? s.label : `${s.label} ${"♥".repeat(Math.max(0, Number(s.lives ?? 0)))}`;
 }
 function ai() {
-  iT.textContent = livesLabel(Ba()), sT.textContent = livesLabel(Mf()), KM.textContent = Ba().score.toString(), jM.textContent = tt === "single" && !Re.guest.alive && Re.guest.score === 0 ? "--" : Mf().score.toString(), QM.textContent = Mi.toString(), eT.textContent = Hn.definition.name, tT.textContent = Fn.kind === "super" ? "Super" : "Normal";
+  iT.textContent = livesLabel(Ba()), sT.textContent = livesLabel(Mf()), KM.textContent = Ba().score.toString(), jM.textContent = tt === "single" && !Re.guest.alive && Re.guest.score === 0 ? "--" : Mf().score.toString(), QM.textContent = Mi.toString(), eT.textContent = Hn.definition.name, tT.textContent = Fn.kind === "power" ? "Power" : Fn.kind === "super" ? "Super" : "Normal";
 }
 function Fm(s) {
   const e = String(s ?? "").trim();
@@ -20725,11 +20820,11 @@ function updateResolutionSettingAvailability() {
   Foo.disabled = Mm.value !== "windowed";
 }
 function Tf() {
-  Mm.value = Ge.graphics.displayMode, Foo.value = Ge.graphics.windowResolution || "1920x1080", Tm.checked = Ge.graphics.showFpsCounter, Em.checked = Ge.graphics.vSync, Am.value = Ge.graphics.fpsCap, roo.value = Ge.graphics.graphicsPreset || "high", ss.value = Ge.graphics.rendererPreference, eo.checked = Ge.graphics.experimentalWebGpu, Cm.value = Ge.graphics.resolutionScale, wm.value = Ge.graphics.dlssMode, Rm.value = Ge.graphics.shadowQuality, Pm.checked = Ge.graphics.fogEnabled, noo.checked = Ge.graphics.dayNightCycle, soo.checked = Ge.graphics.sfxMuted, updateSfxVolumeLabel(), updateCycleDurationLabels(), updateSnakeSpeedLabel(), updateSnakeColorControl(), updateResolutionSettingAvailability(), eo.disabled = ss.value !== "webgpu", CT();
+  Mm.value = Ge.graphics.displayMode, Foo.value = Ge.graphics.windowResolution || "1920x1080", Tm.checked = Ge.graphics.showFpsCounter, Em.checked = Ge.graphics.vSync, Am.value = Ge.graphics.fpsCap, roo.value = Ge.graphics.graphicsPreset || "high", ss.value = Ge.graphics.rendererPreference, eo.checked = Ge.graphics.experimentalWebGpu, Cm.value = Ge.graphics.resolutionScale, wm.value = Ge.graphics.dlssMode, Rm.value = Ge.graphics.shadowQuality, Pm.checked = Ge.graphics.fogEnabled, noo.checked = Ge.graphics.dayNightCycle, soo.checked = Ge.graphics.sfxMuted, retroSkinSelect.value = Ge.graphics.retroSkin || "nokia", updateSfxVolumeLabel(), updateMusicVolumeLabel(), updateCycleDurationLabels(), updateSnakeSpeedLabel(), updateSnakeColorControl(), updateResolutionSettingAvailability(), eo.disabled = ss.value !== "webgpu", CT();
 }
 function km() {
   const s = Number(Ge.graphics.resolutionScale), e = Ge.graphics.dlssMode === "quality" ? 0.92 : Ge.graphics.dlssMode === "balanced" ? 0.82 : Ge.graphics.dlssMode === "performance" ? 0.72 : 1;
-  ii.setPixelRatio(Math.min(window.devicePixelRatio * s * e, 3)), ii.setSize(window.innerWidth, window.innerHeight), ii.shadowMap.enabled = false, It.intensity = 0, poo.intensity = 0, Or.intensity = 0, Ki.intensity = 0, oo.intensity = 0, aoo.intensity = 0, yooSnakeGlow.intensity = 0, _ooSnakeGlow.intensity = 0, On.background = new xe(pooClassicGreen), On.fog = null, Ka.material.color.set(pooClassicGreen), jl.color.set(pooClassicGreen), Ur.color.set(pooClassicGreen), Nr.color.set(vooClassicDark), Ql.color.set(xooClassicSnakeHost), eh.color.set(rooClassicSnakeGuest), th.color.set(vooClassicDark), nh.color.set(booClassicMid), xT.color.set(booClassicMid), vT.color.set(yooClassicLight), hoo.visible = false, applySnakeColorMaterials(), Bm();
+  ii.setPixelRatio(Math.min(window.devicePixelRatio * s * e, 3)), ii.setSize(window.innerWidth, window.innerHeight), ii.shadowMap.enabled = false, It.intensity = 0, poo.intensity = 0, Or.intensity = 0, Ki.intensity = 0, oo.intensity = 0, aoo.intensity = 0, yooSnakeGlow.intensity = 0, _ooSnakeGlow.intensity = 0, On.background = new xe(pooClassicGreen), On.fog = null, Ka.material.color.set(pooClassicGreen), jl.color.set(pooClassicGreen), Ur.color.set(pooClassicGreen), Nr.color.set(vooClassicDark), Ql.color.set(xooClassicSnakeHost), eh.color.set(rooClassicSnakeGuest), th.color.set(vooClassicDark), nh.color.set(booClassicMid), xT.color.set(booClassicMid), vT.color.set(yooClassicLight), hoo.visible = false, applyClassicRetroSkin(), applySnakeColorMaterials(), Bm();
 }
 function updateSnakeNightGlow(s) {
   yooSnakeGlow.intensity = 0, _ooSnakeGlow.intensity = 0;
@@ -20780,10 +20875,11 @@ function IT() {
 }
 function Vm() {
   const s = lu(Fn, 1.2);
-  ls.visible = Fn.kind === "normal", hs.visible = Fn.kind === "super", ls.position.copy(s), hs.position.copy(s);
+  ls.visible = Fn.kind === "normal", hs.visible = Fn.kind === "super" || Fn.kind === "power", ls.position.copy(s), hs.position.copy(s), hs.scale.setScalar(Fn.kind === "power" ? 1.28 : 1);
 }
 function Hm() {
-  Fn = { ...IT(), kind: Math.random() < ZM ? "super" : "normal" }, Vm();
+  const s = Math.random();
+  Fn = { ...IT(), kind: s < POWER_FOOD_CHANCE ? "power" : s < POWER_FOOD_CHANCE + ZM ? "super" : "normal" }, Vm();
 }
 function createSnakeSegmentNode(s, e, t) {
   const n = new Un(), i = new gt(s === 0 ? snakeHeadGeo : ST, s === 0 ? e : t), r = new gt(snakeSnoutGeo, s === 0 ? e : t), o = new gt(snakeDorsalGeo, s === 0 ? e : t), a = new gt(snakeDorsalGeo, s === 0 ? e : t), c = new gt(snakeScaleGeo, s === 0 ? e : t), l = new gt(snakeScaleGeo, s === 0 ? e : t), h = new gt(snakeScaleGeo, s === 0 ? e : t), u = new gt(snakeScaleGeo, s === 0 ? e : t), d = new gt(snakeScaleGeo, s === 0 ? e : t), f = new gt(snakeScaleGeo, s === 0 ? e : t), m = new gt(snakeScaleGeo, s === 0 ? e : t), _ = new gt(snakeScaleGeo, s === 0 ? e : t), g = new gt(snakeScaleGeo, s === 0 ? e : t), p = new gt(snakeScaleGeo, s === 0 ? e : t), x = new gt(snakeScaleGeo, s === 0 ? e : t), y = new gt(snakeScaleGeo, s === 0 ? e : t), T = new gt(snakeScaleGeo, s === 0 ? e : t), U = new gt(snakeScaleGeo, s === 0 ? e : t), F = new gt(snakeScaleGeo, s === 0 ? e : t), N = new gt(snakeScaleGeo, s === 0 ? e : t), q = new gt(snakeEyeGeo, Nr), fe = new gt(snakeEyeGeo, Nr);
@@ -20883,7 +20979,7 @@ function Cn() {
   Fm(UT());
 }
 function vooUpdateFoodArrow() {
-  const s = (Hn.definition.id === "freeroam" || Hn.definition.id === "infinite-random") && (Dt === "running" || Dt === "ready") && Ba().alive && Ba().snake.length > 0;
+  const s = ((Hn.definition.id === "freeroam" || Hn.definition.id === "infinite-random") || performance.now() < foodRevealUntil) && (Dt === "running" || Dt === "ready") && Ba().alive && Ba().snake.length > 0;
   if (!s) {
     vooFoodArrowPanel.classList.add("hidden");
     return;
@@ -20907,11 +21003,12 @@ function NT(s) {
 function Af(s, e, t) {
   const n = Re[s], i = su[ru[t]], r = { x: e.x + i.x, y: e.y + i.y };
   n.snake = zm(r) ? [e, r] : [e], n.direction = t, n.queuedDirection = null, n.queuedDirections = [], n.growthPending = 0, n.score = 0, n.lives = tt === "single" ? 1 : MULTIPLAYER_MAX_LIVES, n.alive = true;
+  resetPlayerRunStats(n);
 }
 function Li(s = false) {
   resumeSinglePlayerQuitPause(), En = is.value || En, vooGetStageDefinition(En).usesSeed ? (tt !== "guest" || s ? OooStageSeed = HooNextStageSeed() : OooStageSeed = OooStageSeed || 0) : OooStageSeed = 0, Hn = cu(En, OooStageSeed), uu();
   const e = NT(tt === "single" ? 1 : 2);
-  Re.host.label = tt === "guest" ? "Host" : Qt, Re.guest.label = tt === "guest" ? Qt : Re.guest.label || "Friend", Re.host.color = tt === "guest" ? sanitizeSnakeColor(Re.host.color, defaultSnakeColor("host")) : sanitizeSnakeColor(Ge.graphics.snakeColor, defaultSnakeColor("host")), Re.guest.color = tt === "guest" ? sanitizeSnakeColor(Ge.graphics.snakeColor, defaultSnakeColor("guest")) : sanitizeSnakeColor(Re.guest.color, defaultSnakeColor("guest")), progressiveFoodEaten = 0, applySnakeColorMaterials(), Af("host", e[0], "right"), tt === "single" ? (Re.guest.snake = [], Re.guest.score = 0, Re.guest.growthPending = 0, Re.guest.lives = 0, Re.guest.alive = false) : Af("guest", e[1] ?? e[0], "left"), ch.clear(), us = "", qs = null, er = 0, zr = haaGetSnakeStepDuration(), oh = 0, Dt = s ? "running" : "ready", Hm(), du(true), ai(), xn(), Cn(), QooResetReplayTimeline(), eaaAddReplaySnapshot("start");
+  Re.host.label = tt === "guest" ? "Host" : Qt, Re.guest.label = tt === "guest" ? Qt : Re.guest.label || "Friend", Re.host.color = tt === "guest" ? sanitizeSnakeColor(Re.host.color, defaultSnakeColor("host")) : sanitizeSnakeColor(Ge.graphics.snakeColor, defaultSnakeColor("host")), Re.guest.color = tt === "guest" ? sanitizeSnakeColor(Ge.graphics.snakeColor, defaultSnakeColor("guest")) : sanitizeSnakeColor(Re.guest.color, defaultSnakeColor("guest")), progressiveFoodEaten = 0, foodRevealUntil = 0, gameOverPanel.classList.add("hidden"), applySnakeColorMaterials(), Af("host", e[0], "right"), tt === "single" ? (Re.guest.snake = [], Re.guest.score = 0, Re.guest.growthPending = 0, Re.guest.lives = 0, Re.guest.alive = false, resetPlayerRunStats(Re.guest)) : Af("guest", e[1] ?? e[0], "left"), ch.clear(), us = "", qs = null, er = 0, zr = haaGetSnakeStepDuration(), oh = 0, runStartedAt = s ? performance.now() : 0, Dt = s ? "running" : "ready", Hm(), du(true), ai(), xn(), Cn(), QooResetReplayTimeline(), eaaAddReplaySnapshot("start");
 }
 function Gm(s, e) {
   const t = Re[s];
@@ -20931,7 +21028,7 @@ function OT() {
 }
 function fr(s = "") {
   const e = haaGetSnakeStepDuration();
-  return { phase: Dt, stageId: En, stageSeed: OooStageSeed, progressiveFoodEaten, food: { ...Fn }, players: { host: { snake: rh(Re.host.snake), direction: Re.host.direction, score: Re.host.score, lives: Re.host.lives, alive: Re.host.alive, label: Re.host.label, color: Re.host.color }, guest: { snake: rh(Re.guest.snake), direction: Re.guest.direction, score: Re.guest.score, lives: Re.guest.lives, alive: Re.guest.alive, label: Re.guest.label, color: Re.guest.color } }, bestScore: Mi, hudMessage: s, moveBlend: Math.max(0, Math.min(1, er / e)) };
+  return { phase: Dt, stageId: En, stageSeed: OooStageSeed, progressiveFoodEaten, foodRevealRemaining: Math.max(0, foodRevealUntil - performance.now()), food: { ...Fn }, players: { host: { snake: rh(Re.host.snake), direction: Re.host.direction, score: Re.host.score, lives: Re.host.lives, alive: Re.host.alive, label: Re.host.label, color: Re.host.color, foodEaten: Re.host.foodEaten, maxLength: Re.host.maxLength, bestCombo: Re.host.bestCombo, combo: Re.host.combo }, guest: { snake: rh(Re.guest.snake), direction: Re.guest.direction, score: Re.guest.score, lives: Re.guest.lives, alive: Re.guest.alive, label: Re.guest.label, color: Re.guest.color, foodEaten: Re.guest.foodEaten, maxLength: Re.guest.maxLength, bestCombo: Re.guest.bestCombo, combo: Re.guest.combo } }, bestScore: Mi, hudMessage: s, moveBlend: Math.max(0, Math.min(1, er / e)) };
 }
 function coaSameSnakePath(s, e) {
   if (s.length !== e.length) return false;
@@ -20945,8 +21042,8 @@ function FT(s) {
   const t = Dt, n = s.players.host, i = s.players.guest, r = coaSameSnakePath(Re.host.snake, n.snake), o = coaSameSnakePath(Re.guest.snake, i.snake), a = s.stageId !== En;
   (s.stageId !== En || Number(s.stageSeed || 0) !== OooStageSeed) && (En = s.stageId, OooStageSeed = Number(s.stageSeed || 0), is.value = En, Hn = cu(En, OooStageSeed), uu()), Dt = s.phase, progressiveFoodEaten = Number(s.progressiveFoodEaten || 0), Fn = { ...s.food }, ["host", "guest"].forEach((e) => {
     const t = s.players[e];
-    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].queuedDirections = [], Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label, Re[e].color = sanitizeSnakeColor(t.color, defaultSnakeColor(e));
-  }), Mi = s.bestScore, applySnakeColorMaterials(), SooRefreshScoreboardFromPlayers(), us = s.hudMessage;
+    Re[e].snake = rh(t.snake), Re[e].direction = t.direction, Re[e].queuedDirection = null, Re[e].queuedDirections = [], Re[e].growthPending = 0, Re[e].score = t.score, Re[e].lives = Number(t.lives ?? MULTIPLAYER_MAX_LIVES), Re[e].alive = t.alive, Re[e].label = t.label, Re[e].color = sanitizeSnakeColor(t.color, defaultSnakeColor(e)), Re[e].foodEaten = Number(t.foodEaten || 0), Re[e].maxLength = Number(t.maxLength || Re[e].snake.length), Re[e].bestCombo = Number(t.bestCombo || 0), Re[e].combo = Number(t.combo || 0);
+  }), t !== "running" && s.phase === "running" && (runStartedAt = performance.now()), s.phase === "game-over" && t !== "game-over" && maybeShowGameOverStats(s.hudMessage || Ge.messages.gameOver), foodRevealUntil = Math.max(foodRevealUntil, performance.now() + Number(s.foodRevealRemaining || 0)), Mi = s.bestScore, applySnakeColorMaterials(), SooRefreshScoreboardFromPlayers(), us = s.hudMessage;
   const c = !r || !o || a, e = haaGetSnakeStepDuration();
   const l = Math.max(0, Math.min(1, Number(s.moveBlend) || 0)), h = Math.min(e * 0.96, l * e + e * 0.14);
   zr = c ? h : Math.max(zr, h), Vm(), c && du(false), ai(), xn(), Cn(), Dt === "running" && eaaAddReplaySnapshot("network"), tt === "guest" && s.phase === "running" && kn({ type: "match-start-ack", startId: vooPendingMatchStartId }), laaMaybeTriggerReplay(t, Dt);
@@ -21118,8 +21215,26 @@ function handlePlayerCrash(s) {
   e.lives = Math.max(0, Number(e.lives ?? MULTIPLAYER_MAX_LIVES) - 1);
   e.lives > 0 ? (respawnPlayerAfterLifeLoss(s), ar(`${e.label} lost a life. ${e.lives} left.`, 2200)) : e.alive = false;
 }
+function applyPowerFoodEffect(s) {
+  const e = Re[s], t = s === "host" ? "guest" : "host", n = Re[t], i = tt !== "single" ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 2);
+  if (i === 0) {
+    e.boostTicks = Math.max(e.boostTicks || 0, 28), ar(`${e.label} hit <strong>Power Food</strong>: combo boost active!`, 3200);
+    return;
+  }
+  if (i === 1 && tt !== "single" && n.alive) {
+    n.slowTicks = Math.max(n.slowTicks || 0, 22), ar(`${e.label} hit <strong>Power Food</strong>: ${n.label} is slowed!`, 3200);
+    return;
+  }
+  foodRevealUntil = performance.now() + 12e3, ar(`${e.label} hit <strong>Power Food</strong>: food compass revealed!`, 3200);
+}
+function shouldSkipSlowedMove(s) {
+  const e = Re[s];
+  if (!e.slowTicks || e.slowTicks <= 0) return false;
+  e.slowTicks -= 1, e.slowFlip = !e.slowFlip;
+  return e.slowFlip;
+}
 function Qc(s) {
-  Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), eaaAddReplaySnapshot("game-over"), SooRefreshScoreboardFromPlayers(), ar(s, 8e3), ai(), xn(), laaMaybeTriggerReplay("running", Dt), tt === "host" && kn({ type: "state", state: fr(s) });
+  Dt = "game-over", Mi = Math.max(Mi, Re.host.score, Re.guest.score, Mi), eaaAddReplaySnapshot("game-over"), SooRefreshScoreboardFromPlayers(), ar(s, 8e3), ai(), xn(), maybeShowGameOverStats(s), laaMaybeTriggerReplay("running", Dt), tt === "host" && kn({ type: "state", state: fr(s) });
 }
 function HT() {
   const s = (tt === "single" ? ["host"] : ["host", "guest"]).filter((i) => Re[i].alive);
@@ -21128,9 +21243,14 @@ function HT() {
     return;
   }
   const e = /* @__PURE__ */ new Map();
+  const skipped = /* @__PURE__ */ new Set();
   let t = false;
   s.forEach((i) => {
     const r = Re[i];
+    if (shouldSkipSlowedMove(i)) {
+      skipped.add(i), e.set(i, r.snake[0]);
+      return;
+    }
     const o = r.queuedDirections && r.queuedDirections.length ? r.queuedDirections.shift() : r.queuedDirection;
     o && o !== ru[r.direction] && (r.direction = o), r.queuedDirection = r.queuedDirections && r.queuedDirections.length ? r.queuedDirections[0] : null;
     const a = su[r.direction];
@@ -21144,6 +21264,7 @@ function HT() {
   });
   const r = /* @__PURE__ */ new Set();
   if (s.forEach((i) => {
+    if (skipped.has(i)) return;
     const o = e.get(i);
     if (!zm(o)) {
       r.add(i);
@@ -21156,16 +21277,17 @@ function HT() {
   }
   if (s.forEach((i) => {
     const o = Re[i];
+    if (skipped.has(i)) return;
     if (r.has(i)) {
       handlePlayerCrash(i);
       return;
     }
     const a = e.get(i);
     if (o.snake.unshift(a), sh(a, Fn)) {
-      const c = Fn.kind === "super" ? qM : XM, l = Fn.kind;
-      t = true, o.growthPending += c, o.score += l === "super" ? YM : $M, Hn.definition.progressive && (progressiveFoodEaten += 1), Mi = Math.max(Mi, o.score), _ooRecordScore(o.label, o.score) && tt === "host" && booBroadcastScoreboardSync(), i === Ii && (queuedFoodSound = l, OT()), Hm();
+      const c = Fn.kind === "super" ? qM : Fn.kind === "power" ? JM : XM, l = Fn.kind, h = l === "super" ? YM : l === "power" ? POWER_SCORE : $M, u = recordFoodCombo(o), d = o.boostTicks > 0 ? 10 : 0;
+      t = true, o.growthPending += c, o.foodEaten += 1, o.score += h * u + d, Hn.definition.progressive && (progressiveFoodEaten += 1), l === "power" && applyPowerFoodEffect(i), Mi = Math.max(Mi, o.score), _ooRecordScore(o.label, o.score) && tt === "host" && booBroadcastScoreboardSync(), i === Ii && (queuedFoodSound = l, OT()), Hm();
     }
-    o.growthPending > 0 ? o.growthPending -= 1 : o.snake.pop();
+    o.growthPending > 0 ? o.growthPending -= 1 : o.snake.pop(), o.boostTicks > 0 && (o.boostTicks -= 1), updatePlayerMaxLength(o);
   }), tt === "single") {
     if (!Re.host.alive) {
       Qc(Ge.messages.gameOver);
@@ -21198,9 +21320,12 @@ function ta(s) {
     Gm("host", s);
   }
 }
-function getControllerDirection() {
+function getActiveGamepad() {
   if (!navigator.getGamepads) return null;
-  const s = [...navigator.getGamepads()].find((a) => a && a.connected);
+  return [...navigator.getGamepads()].find((s) => s && s.connected) || null;
+}
+function getControllerDirection() {
+  const s = getActiveGamepad();
   if (!s) return controllerLastDirection = null, null;
   const e = s.buttons || [], t = (a) => !!(e[a] && e[a].pressed);
   if (t(12)) return "up";
@@ -21211,9 +21336,15 @@ function getControllerDirection() {
   return Math.max(Math.abs(n), Math.abs(i)) < r ? (controllerLastDirection = null, null) : Math.abs(n) > Math.abs(i) ? n < 0 ? "left" : "right" : i < 0 ? "up" : "down";
 }
 function pollControllerInput(s) {
-  if (Dt !== "running" || NooReplayActive || kooReplayPlaying) return;
-  const e = getControllerDirection();
-  e && (e !== controllerLastDirection || s - controllerLastInputAt > 90) && (controllerLastDirection = e, controllerLastInputAt = s, ta(e));
+  if (NooReplayActive || kooReplayPlaying) return;
+  const e = getActiveGamepad();
+  if (e) {
+    const t = e.buttons || [], n = !!(t[0] && t[0].pressed), i = !!(t[9] && t[9].pressed);
+    n && !controllerLastLaunchPressed && s - controllerLastActionAt > 160 && (controllerLastActionAt = s, resumeSnakeAudio(), vooHandleLaunchInput()), i && !controllerLastStartPressed && s - controllerLastActionAt > 160 && (controllerLastActionAt = s, pauseQuitActive ? resumeSinglePlayerQuitPause() : showSinglePlayerQuitPause()), controllerLastLaunchPressed = n, controllerLastStartPressed = i;
+  }
+  if (Dt !== "running") return;
+  const t = getControllerDirection();
+  t && (t !== controllerLastDirection || s - controllerLastInputAt > 90) && (controllerLastDirection = t, controllerLastInputAt = s, ta(t));
 }
 function XT() {
   if (bf) return;
@@ -21240,16 +21371,22 @@ function HooNextStageSeed() {
   return Math.floor(Math.random() * 2147483646) + 1;
 }
 function $T() {
-  return { ...Ge.graphics, displayMode: Mm.value, windowResolution: Foo.value, showFpsCounter: Tm.checked, vSync: Em.checked, fpsCap: Am.value, graphicsPreset: roo.value, rendererPreference: ss.value, experimentalWebGpu: eo.checked, resolutionScale: Cm.value, dlssMode: wm.value, shadowQuality: Rm.value, fogEnabled: Pm.checked, dayNightCycle: noo.checked, dayCycleSeconds: Number(pooDayCycle.value), nightCycleSeconds: Number(vooNightCycle.value), snakeSpeed: Number(uaa.value), snakeColor: progressiveSnakeColorInput.value, sfxVolume: Number(ao.value), sfxMuted: soo.checked };
+  return { ...Ge.graphics, displayMode: Mm.value, windowResolution: Foo.value, showFpsCounter: Tm.checked, vSync: Em.checked, fpsCap: Am.value, graphicsPreset: roo.value, rendererPreference: ss.value, experimentalWebGpu: eo.checked, resolutionScale: Cm.value, dlssMode: wm.value, shadowQuality: Rm.value, fogEnabled: Pm.checked, dayNightCycle: noo.checked, dayCycleSeconds: Number(pooDayCycle.value), nightCycleSeconds: Number(vooNightCycle.value), snakeSpeed: Number(uaa.value), snakeColor: progressiveSnakeColorInput.value, sfxVolume: Number(ao.value), sfxMuted: soo.checked, musicEnabled: musicEnabledInput.checked, musicVolume: Number(musicVolumeInput.value), retroSkin: retroSkinSelect.value };
 }
 function YT() {
   Qs.value = Qt, Na.forEach((s) => {
     const e = document.createElement("option");
     e.value = s.id, e.textContent = s.name, is.appendChild(e);
+    const t = document.createElement("option");
+    t.value = s.id, t.textContent = s.name, scoreboardFilterStage.appendChild(t);
   }), is.value = En, Tf(), xn(), ai(), Cn(), pooScoreboardButton.addEventListener("click", () => {
     vooScoreboardPanel.classList.remove("hidden"), gf.classList.add("hidden"), fooRenderScoreboard();
   }), booScoreboardClose.addEventListener("click", () => {
     vooScoreboardPanel.classList.add("hidden");
+  }), scoreboardFilterGame.addEventListener("change", fooRenderScoreboard), scoreboardFilterMode.addEventListener("change", fooRenderScoreboard), scoreboardFilterStage.addEventListener("change", fooRenderScoreboard), gameOverClose.addEventListener("click", () => {
+    gameOverPanel.classList.add("hidden");
+  }), gameOverRestart.addEventListener("click", () => {
+    gameOverPanel.classList.add("hidden"), resumeSnakeAudio(), ga();
   }), booReplayClose.addEventListener("click", () => {
     oaaEndReplay(false);
   }), RooReplaySave.addEventListener("click", async () => {
@@ -21264,6 +21401,10 @@ function YT() {
     Ge = ma({ ...Ge, graphics: { ...Ge.graphics, sfxVolume: Number(ao.value) } }), updateSfxVolumeLabel();
   }), soo.addEventListener("change", () => {
     Ge = ma({ ...Ge, graphics: { ...Ge.graphics, sfxMuted: soo.checked } });
+  }), musicEnabledInput.addEventListener("change", () => {
+    Ge = ma({ ...Ge, graphics: { ...Ge.graphics, musicEnabled: musicEnabledInput.checked } }), resumeSnakeAudio(), syncRetroMusic();
+  }), musicVolumeInput.addEventListener("input", () => {
+    Ge = ma({ ...Ge, graphics: { ...Ge.graphics, musicVolume: Number(musicVolumeInput.value) } }), updateMusicVolumeLabel(), syncRetroMusic();
   }), pooDayCycle.addEventListener("input", () => {
     Ge = ma({ ...Ge, graphics: { ...Ge.graphics, dayCycleSeconds: Number(pooDayCycle.value) } }), updateCycleDurationLabels();
   }), vooNightCycle.addEventListener("input", () => {
@@ -21272,6 +21413,8 @@ function YT() {
     Ge = ma({ ...Ge, graphics: { ...Ge.graphics, snakeSpeed: Number(uaa.value) } }), updateSnakeSpeedLabel(), zr = Math.min(zr, haaGetSnakeStepDuration());
   }), progressiveSnakeColorInput.addEventListener("input", () => {
     applyLocalSnakeColor();
+  }), retroSkinSelect.addEventListener("change", () => {
+    Ge = ma({ ...Ge, graphics: { ...Ge.graphics, retroSkin: retroSkinSelect.value } }), applyClassicRetroSkin(), applySnakeColorMaterials();
   }), roo.addEventListener("change", () => {
     applyGraphicsPresetToControls(roo.value, true);
   }), noo.addEventListener("change", () => {
@@ -21316,7 +21459,7 @@ function YT() {
       const n = await window.snake3dDesktop.applyGraphicsSettings(Ge.graphics);
       Ge = ma(n.config);
     }
-    (t = window.snake3dDesktop) != null && t.saveConfig && (Ge = ma(await window.snake3dDesktop.saveConfig(Ge))), hu = [...Ge.prizes].sort((n, i) => i.threshold - n.threshold), Tf();
+    (t = window.snake3dDesktop) != null && t.saveConfig && (Ge = ma(await window.snake3dDesktop.saveConfig(Ge))), hu = [...Ge.prizes].sort((n, i) => i.threshold - n.threshold), Tf(), applyClassicRetroSkin(), applySnakeColorMaterials(), syncRetroMusic();
   }), pauseQuitNoButton.addEventListener("click", () => {
     resumeSinglePlayerQuitPause();
   }), pauseQuitYesButton.addEventListener("click", () => {
@@ -21384,7 +21527,7 @@ function Xm(s) {
   const e = Math.min((s - vf) / 1e3, 0.05);
   vf = s, xf += e, ea += e, jc += 1, ea >= 0.5 && (Nm = Math.round(jc / ea), ea = 0, jc = 0, Bm());
   const n = haaGetSnakeStepDuration();
-  Sf = s, pauseQuitActive || pollControllerInput(s), tt !== "guest" ? GT(e) : Dt === "running" && !pauseQuitActive && (zr = Math.min(n, zr + e * 1.08)), WT(s);
+  Sf = s, pollControllerInput(s), tt !== "guest" ? GT(e) : Dt === "running" && !pauseQuitActive && (zr = Math.min(n, zr + e * 1.08)), WT(s);
   queuedFoodSound && (playFoodSound(queuedFoodSound), queuedFoodSound = null);
   const i = 1.15 + Math.sin(xf * 4.2) * 0.16;
   ls.position.y = i, hs.position.y = i + 0.14, ls.rotation.y += e * 0.9, hs.rotation.y += e * 1.3;
