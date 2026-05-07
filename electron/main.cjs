@@ -24,6 +24,9 @@ const defaultConfig = {
     nightCycleSeconds: 180,
     snakeSpeed: 'normal',
     snakeModel: 'title',
+    snakeSkin: 'custom',
+    snakeColor: '#ff8ed0',
+    crtEnabled: false,
     sfxVolume: 0.7,
     sfxMuted: false
   },
