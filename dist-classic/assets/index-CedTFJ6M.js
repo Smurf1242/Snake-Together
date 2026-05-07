@@ -20181,7 +20181,7 @@ _m.innerHTML = `
           <h3>Gameplay</h3>
           <label class="settings-row"><span>Snake Speed</span><span class="settings-inline"><input type="range" id="setting-snake-speed" min="1" max="12" step="1" /><strong id="setting-snake-speed-value">8</strong></span></label>
           <label class="settings-row"><span>Multiplayer Snake Color</span><input type="color" id="setting-snake-color" /></label>
-          <label class="settings-row"><span>Snake Model</span><select id="setting-snake-model"><option value="title">Title Snake</option><option value="blocky">Classic Blocky</option><option value="beads">Bead Chain</option><option value="slim">Slim Retro</option></select></label>
+          <label class="settings-row"><span>Snake Model</span><select id="setting-snake-model"><option value="title">Title Snake</option><option value="blocky">Classic Blocky</option><option value="blocky-detailed">Detailed Blocky</option><option value="beads">Bead Chain</option><option value="slim">Slim Retro</option></select></label>
           <label class="settings-row"><span>Retro Skin</span><select id="setting-retro-skin"><option value="nokia">Nokia Green</option><option value="gameboy">Game Boy Grey</option><option value="calculator">Calculator LCD</option><option value="arcade">Black & White Arcade</option></select></label>
         </div>
         <div class="settings-actions">
@@ -20267,7 +20267,7 @@ _ooSnakeGlow.position.set(0, 1.2, 0);
 On.add(Or, Ki, pooTarget, It, poo, oo, aoo, yooSnakeGlow, _ooSnakeGlow, hoo);
 const ih = new Un(), ou = new Un(), au = new Un(), Um = new Un();
 Lm.add(ih, ou, au, Um);
-const ST = new lr(wi * 0.48, 18, 10), snakeHeadGeo = new lr(wi * 0.54, 20, 10), snakeBlockGeo = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeBlockHeadGeo = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeSnoutGeo = new Pi(wi * 0.19, wi * 0.11, wi * 0.38), snakeDorsalGeo = new qa(wi * 0.085, wi * 0.34, 4, 1), snakeScaleGeo = new qa(wi * 0.065, wi * 0.24, 4, 1), snakeEyeGeo = new lr(wi * 0.075, 10, 10), SNAKE_SEGMENT_POOL = 48, bT = new Pi(wi * 0.96, 0.03, wi * 0.96), MT = new Pi(wi * 0.34, 0.12, wi * 0.34), TT = new Pi(wi * 0.42, 0.12, wi * 0.42), ls = new gt(MT, xT), hs = new gt(TT, vT);
+const ST = new lr(wi * 0.48, 18, 10), snakeHeadGeo = new lr(wi * 0.54, 20, 10), snakeBlockGeo = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeBlockHeadGeo = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeBlockDetailGeo = new Pi(wi * 0.18, 0.04, wi * 0.18), snakeSnoutGeo = new Pi(wi * 0.19, wi * 0.11, wi * 0.38), snakeDorsalGeo = new qa(wi * 0.085, wi * 0.34, 4, 1), snakeScaleGeo = new qa(wi * 0.065, wi * 0.24, 4, 1), snakeEyeGeo = new lr(wi * 0.075, 10, 10), SNAKE_SEGMENT_POOL = 48, bT = new Pi(wi * 0.96, 0.03, wi * 0.96), MT = new Pi(wi * 0.34, 0.12, wi * 0.34), TT = new Pi(wi * 0.42, 0.12, wi * 0.42), ls = new gt(MT, xT), hs = new gt(TT, vT);
 const ooo = new xe("#7b84b8"), aooDay = new xe("#586897"), cooNight = new xe("#090512"), looNight = new xe("#14081f"), hooDay = new xe("#f2d7ee"), uooDay = new xe("#8db8ea"), vooDay = new xe("#64739c"), dooNight = new xe("#ffd9f4"), fooNight = new xe("#93ddff"), pooNightGround = new xe("#12081f");
 const classicSkinPalettes = {
   nokia: { lcd: "#9bbc0f", dark: "#0f380f", mid: "#306230", light: "#cfe88a", panel: "#9bbc0ff2" },
@@ -20809,7 +20809,7 @@ function updateSnakeColorControl() {
   progressiveSnakeColorInput.value = sanitizeSnakeColor(Ge.graphics.snakeColor, defaultSnakeColor(Ii));
 }
 function getSnakeModel() {
-  return ["title", "blocky", "beads", "slim"].includes(Ge.graphics.snakeModel) ? Ge.graphics.snakeModel : "title";
+  return ["title", "blocky", "blocky-detailed", "beads", "slim"].includes(Ge.graphics.snakeModel) ? Ge.graphics.snakeModel : "title";
 }
 function applySnakeColorMaterials() {
   Re.host.color = sanitizeSnakeColor(Re.host.color, defaultSnakeColor("host")), Re.guest.color = sanitizeSnakeColor(Re.guest.color, defaultSnakeColor("guest"));
@@ -20925,8 +20925,9 @@ function styleSnakeSegment(s, e, t, n, i, r) {
   const o = s.userData, d = t;
   o.core.material = d, o.snout.material = d, o.dorsal.material = d, o.dorsalRear.material = d, o.leftScale.material = d, o.rightScale.material = d, o.upperLeft.material = d, o.upperRight.material = d, o.bellyLeft.material = d, o.bellyRight.material = d, o.dorsalMid.material = d, o.dorsalTail.material = d, o.flankLeft.material = d, o.flankRight.material = d, o.crestLeft.material = d, o.crestRight.material = d, o.featherLeft.material = d, o.featherRight.material = d, o.rearFrillLeft.material = d, o.rearFrillRight.material = d;
   const a = Math.max(1, r - 1), c = Math.max(0, Math.min(1, e / a)), l = i ? 1 : Math.max(0.78, 1 - c * 0.12), h = getSnakeModel();
-  o.core.geometry = h === "blocky" ? i ? snakeBlockHeadGeo : snakeBlockGeo : i ? snakeHeadGeo : ST;
-  if (h === "blocky")
+  const isBlockModel = h === "blocky" || h === "blocky-detailed";
+  o.core.geometry = isBlockModel ? i ? snakeBlockHeadGeo : snakeBlockGeo : i ? snakeHeadGeo : ST;
+  if (isBlockModel)
     o.core.scale.set(1, 1, 1), o.core.position.y = 0.07;
   else if (h === "beads")
     o.core.scale.set(i ? 0.72 : 0.54 * l, i ? 0.28 : 0.22, i ? 0.72 : 0.54 * l), o.core.position.y = i ? 0.16 : 0.12;
@@ -20936,6 +20937,19 @@ function styleSnakeSegment(s, e, t, n, i, r) {
     o.core.scale.set(i ? 0.68 : 0.62 * l, i ? 0.24 : 0.16, i ? 0.98 : 0.86 * l), o.core.position.y = i ? 0.14 : 0.09;
   o.snout.visible = false, o.eyeLeft.visible = i && h !== "blocky", o.eyeRight.visible = i && h !== "blocky", o.eyeLeft.material = getSnakeEyeMaterial(d), o.eyeRight.material = getSnakeEyeMaterial(d), o.eyeLeft.position.set(-wi * 0.17, wi * 0.18, wi * 0.34), o.eyeRight.position.set(wi * 0.17, wi * 0.18, wi * 0.34), o.eyeLeft.scale.setScalar(1), o.eyeRight.scale.setScalar(1);
   o.dorsal.visible = false, o.dorsalRear.visible = false, o.leftScale.visible = false, o.rightScale.visible = false, o.upperLeft.visible = false, o.upperRight.visible = false, o.bellyLeft.visible = false, o.bellyRight.visible = false, o.dorsalMid.visible = false, o.dorsalTail.visible = false, o.flankLeft.visible = false, o.flankRight.visible = false, o.crestLeft.visible = false, o.crestRight.visible = false, o.featherLeft.visible = false, o.featherRight.visible = false, o.rearFrillLeft.visible = false, o.rearFrillRight.visible = false;
+  if (h === "blocky-detailed") {
+    const detailMaterial = getSnakeEyeMaterial(d);
+    o.dorsalMid.geometry = snakeBlockDetailGeo, o.dorsalTail.geometry = snakeBlockDetailGeo, o.leftScale.geometry = snakeBlockDetailGeo, o.rightScale.geometry = snakeBlockDetailGeo, o.crestLeft.geometry = snakeBlockDetailGeo, o.crestRight.geometry = snakeBlockDetailGeo;
+    o.dorsalMid.material = detailMaterial, o.dorsalTail.material = detailMaterial, o.leftScale.material = detailMaterial, o.rightScale.material = detailMaterial, o.crestLeft.material = detailMaterial, o.crestRight.material = detailMaterial;
+    o.dorsalMid.visible = true, o.dorsalTail.visible = true, o.leftScale.visible = true, o.rightScale.visible = true;
+    o.dorsalMid.position.set(0, 0.165, -wi * 0.22), o.dorsalMid.rotation.set(0, 0, 0), o.dorsalMid.scale.set(i ? 1.35 : 1.05 * l, 1, i ? 0.9 : 0.7);
+    o.dorsalTail.position.set(0, 0.165, wi * 0.22), o.dorsalTail.rotation.set(0, 0, 0), o.dorsalTail.scale.set(i ? 1.12 : 0.9 * l, 1, i ? 0.82 : 0.62);
+    o.leftScale.position.set(-wi * 0.32, 0.16, 0), o.leftScale.rotation.set(0, 0, 0), o.leftScale.scale.set(0.62, 1, 1.25 * l);
+    o.rightScale.position.set(wi * 0.32, 0.16, 0), o.rightScale.rotation.set(0, 0, 0), o.rightScale.scale.set(0.62, 1, 1.25 * l);
+    o.crestLeft.visible = i, o.crestRight.visible = i;
+    o.crestLeft.position.set(-wi * 0.28, 0.18, wi * 0.32), o.crestLeft.rotation.set(0, 0, 0), o.crestLeft.scale.set(0.68, 1, 0.68);
+    o.crestRight.position.set(wi * 0.28, 0.18, wi * 0.32), o.crestRight.rotation.set(0, 0, 0), o.crestRight.scale.set(0.68, 1, 0.68);
+  }
 }
 function LT(s) {
   const e = s === "host" ? ou : au, t = Re[s], n = s === "host" ? Ql : th, i = s === "host" ? eh : nh;
