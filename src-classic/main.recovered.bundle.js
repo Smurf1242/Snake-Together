@@ -20623,14 +20623,14 @@ function RooLoadScoreboardEntries() {
   }
   fooRenderScoreboard();
 }
-const ACHIEVEMENT_TOTAL_FOOD_TARGET = 1e3, ACHIEVEMENT_STORM_RUN_TARGET = 60, ACHIEVEMENT_BOSS_TOTAL_TARGET = 5, ACHIEVEMENT_COMBO_TARGET = 8, ACHIEVEMENT_SCORE_TARGET = 5e3;
+const ACHIEVEMENT_TOTAL_FOOD_TARGET = 1e3, ACHIEVEMENT_STORM_RUN_TARGET = 60, ACHIEVEMENT_BOSS_TOTAL_TARGET = 5, ACHIEVEMENT_COMBO_TARGET = 8, ACHIEVEMENT_SCORE_TARGET = 5e3, ACHIEVEMENT_SILLY_GOOSE_SCORE = 350;
 const achievementDefinitions = [
   { id: "first-bite", name: "Seasoned Snake", detail: `Eat ${ACHIEVEMENT_TOTAL_FOOD_TARGET} food across all runs.` },
   { id: "storm-chaser", name: "Storm Chaser", detail: `Eat ${ACHIEVEMENT_STORM_RUN_TARGET} food in one Infinite FoodStorm run.`, unlock: "Storm Blue skin" },
   { id: "boss-hunter", name: "Boss Hunter", detail: `Catch ${ACHIEVEMENT_BOSS_TOTAL_TARGET} Boss Food across all runs.`, unlock: "Boss Gold skin" },
   { id: "combo-run", name: "Combo Runner", detail: `Reach an ${ACHIEVEMENT_COMBO_TARGET}x food combo.`, unlock: "Combo Cyan skin" },
   { id: "score-850", name: "5000 Club", detail: `Score at least ${ACHIEVEMENT_SCORE_TARGET} points.`, unlock: "Royal Pink skin" },
-  { id: "silly-goose", name: "Silly Goose", detail: "Amanda dies below 300 points.", unlock: "Silly Goose skin" }
+  { id: "silly-goose", name: "Silly Goose", detail: `Game over below ${ACHIEVEMENT_SILLY_GOOSE_SCORE} points.`, unlock: "Silly Goose skin" }
 ];
 const snakeSkinDefinitions = [
   { id: "custom", name: "Custom Color", color: null },
@@ -20729,9 +20729,12 @@ function recordFoodProgress(s, e) {
   saveProgressState(), renderProgressPanel();
 }
 function recordGameOverProgress() {
-  const s = Ba(), e = `${s.label || ""}`.trim().toLowerCase();
+  const s = Ba(), players = /* @__PURE__ */ new Set([s, Re.host, Re.guest]);
   s.score >= ACHIEVEMENT_SCORE_TARGET && unlockAchievement("score-850");
-  e === "amanda" && s.score < 300 && unlockAchievement("silly-goose");
+  players.forEach((e) => {
+    const t = `${e.label || ""}`.trim().toLowerCase(), n = e === s || t === "amanda";
+    n && e.score < ACHIEVEMENT_SILLY_GOOSE_SCORE && unlockAchievement("silly-goose");
+  });
   saveProgressState(), renderProgressPanel();
 }
 function resetPlayerRunStats(s) {

@@ -20561,14 +20561,14 @@ function RooLoadScoreboardEntries() {
   }
   fooRenderScoreboard();
 }
-const ACHIEVEMENT_TOTAL_FOOD_TARGET = 1e3, ACHIEVEMENT_STORM_RUN_TARGET = 60, ACHIEVEMENT_BOSS_TOTAL_TARGET = 5, ACHIEVEMENT_COMBO_TARGET = 8, ACHIEVEMENT_SCORE_TARGET = 5e3;
+const ACHIEVEMENT_TOTAL_FOOD_TARGET = 1e3, ACHIEVEMENT_STORM_RUN_TARGET = 60, ACHIEVEMENT_BOSS_TOTAL_TARGET = 5, ACHIEVEMENT_COMBO_TARGET = 8, ACHIEVEMENT_SCORE_TARGET = 5e3, ACHIEVEMENT_SILLY_GOOSE_SCORE = 350;
 const achievementDefinitions = [
   { id: "first-bite", name: "Seasoned Snake", detail: `Eat ${ACHIEVEMENT_TOTAL_FOOD_TARGET} food across all runs.` },
   { id: "storm-chaser", name: "Storm Chaser", detail: `Eat ${ACHIEVEMENT_STORM_RUN_TARGET} food in one Infinite FoodStorm run.`, unlock: "Storm Blue skin" },
   { id: "boss-hunter", name: "Boss Hunter", detail: `Catch ${ACHIEVEMENT_BOSS_TOTAL_TARGET} Boss Food across all runs.`, unlock: "Boss Gold skin" },
   { id: "combo-run", name: "Combo Runner", detail: `Reach an ${ACHIEVEMENT_COMBO_TARGET}x food combo.`, unlock: "Combo Cyan skin" },
   { id: "score-850", name: "5000 Club", detail: `Score at least ${ACHIEVEMENT_SCORE_TARGET} points.`, unlock: "Royal Pink skin" },
-  { id: "silly-goose", name: "Silly Goose", detail: "Amanda dies below 300 points.", unlock: "Silly Goose skin" }
+  { id: "silly-goose", name: "Silly Goose", detail: `Game over below ${ACHIEVEMENT_SILLY_GOOSE_SCORE} points.`, unlock: "Silly Goose skin" }
 ];
 const snakeSkinDefinitions = [
   { id: "custom", name: "Custom Colour", color: null },
@@ -20651,8 +20651,11 @@ function recordFoodProgress(s, e) {
   s.combo = n - Number(s.lastFoodAt || 0) <= 6500 ? Number(s.combo || 0) + 1 : 1, s.lastFoodAt = n, s.bestCombo = Math.max(Number(s.bestCombo || 0), s.combo), s.foodEaten = Number(s.foodEaten || 0) + 1, s.maxLength = Math.max(Number(s.maxLength || 0), s.snake.length), t.stats.totalFood = Number(t.stats.totalFood || 0) + 1, t.stats.bestScore = Math.max(Number(t.stats.bestScore || 0), s.score), t.stats.totalFood >= ACHIEVEMENT_TOTAL_FOOD_TARGET && unlockAchievement("first-bite", false), e === "boss" && (t.stats.bossFood = Number(t.stats.bossFood || 0) + 1, t.stats.bossFood >= ACHIEVEMENT_BOSS_TOTAL_TARGET && unlockAchievement("boss-hunter")), Hn.definition.foodStorm && (s.stormFoodEaten = Number(s.stormFoodEaten || 0) + 1, t.stats.foodStormFood = Number(t.stats.foodStormFood || 0) + 1, s.stormFoodEaten >= ACHIEVEMENT_STORM_RUN_TARGET && unlockAchievement("storm-chaser")), s.bestCombo >= ACHIEVEMENT_COMBO_TARGET && unlockAchievement("combo-run"), s.score >= ACHIEVEMENT_SCORE_TARGET && unlockAchievement("score-850"), saveProgressState(), renderProgressPanel();
 }
 function recordGameOverProgress() {
-  const s = Ba(), e = `${s.label || ""}`.trim().toLowerCase();
-  e === "amanda" && s.score < 300 && unlockAchievement("silly-goose");
+  const s = /* @__PURE__ */ new Set([Ba(), Re.host, Re.guest]);
+  s.forEach((e) => {
+    const t = `${e.label || ""}`.trim().toLowerCase(), n = e === Ba() || t === "amanda";
+    n && e.score < ACHIEVEMENT_SILLY_GOOSE_SCORE && unlockAchievement("silly-goose");
+  });
 }
 function jooCaptureReplaySnapshot(s = "tick") {
   return {
