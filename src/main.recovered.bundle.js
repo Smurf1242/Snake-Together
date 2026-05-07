@@ -20917,10 +20917,15 @@ function isFoodStormStage() {
   return !!Hn.definition.foodStorm;
 }
 function getFoodKindFromRoll(s = Math.random()) {
-  return s < BOSS_FOOD_CHANCE ? "boss" : isFoodStormStage() ? s < BOSS_FOOD_CHANCE + FOOD_STORM_SUPER_CHANCE ? "super" : "normal" : s < BOSS_FOOD_CHANCE + ZM ? "super" : "normal";
+  return isFoodStormStage() ? s < BOSS_FOOD_CHANCE ? "boss" : s < BOSS_FOOD_CHANCE + FOOD_STORM_SUPER_CHANCE ? "super" : "normal" : s < ZM ? "super" : "normal";
 }
 function getActiveFoods() {
-  return isFoodStormStage() ? foodStormFoods : [Fn];
+  return isFoodStormStage() ? foodStormFoods : [Fn, ...foodStormFoods];
+}
+function canFoodUseCell(s, e = "normal") {
+  if (!s || !zm(s)) return false;
+  if (e !== "boss") return true;
+  return (Hn.edgeDistance.get(_n(s)) ?? 0) >= 1;
 }
 function foodCellOccupied(s, e = -1) {
   return getActiveFoods().some((t, n) => n !== e && sh(t, s)) || PT(s);
@@ -20929,9 +20934,14 @@ function makeFood(s = null, e = -1) {
   const t = getFoodKindFromRoll(), n = s || t;
   for (let i = 0; i < 220; i += 1) {
     const r = IT();
-    if (!foodCellOccupied(r, e)) return { ...r, kind: n };
+    if (canFoodUseCell(r, n) && !foodCellOccupied(r, e)) return { ...r, kind: n };
   }
-  return { ...IT(), kind: n };
+  const i = Hn.cells.find((r) => canFoodUseCell(r, n) && !foodCellOccupied(r, e)) || IT();
+  return { ...i, kind: n };
+}
+function maybeSpawnBossFood() {
+  if (isFoodStormStage() || foodStormFoods.some((s) => s.kind === "boss") || Math.random() >= BOSS_FOOD_CHANCE) return;
+  foodStormFoods.push(makeFood("boss"));
 }
 function resetFoodStormFoods() {
   foodStormFoods = [];
@@ -20948,7 +20958,11 @@ function replaceFoodAtIndex(s) {
     foodStormFoods[s] = makeFood(null, s), Fn = foodStormFoods[0] || Fn, Vm();
     return;
   }
-  Hm();
+  if (s === 0) {
+    Fn = makeFood(), maybeSpawnBossFood(), Vm();
+    return;
+  }
+  foodStormFoods.splice(s - 1, 1), Vm();
 }
 function nearestSnakeDistance(s) {
   let e = 1 / 0;
@@ -20966,7 +20980,12 @@ function moveBossFoods() {
   const s = buildOccupiedCellSet();
   getActiveFoods().forEach((e, t) => {
     if (e.kind !== "boss") return;
-    const n = Object.values(su).map((i) => ({ x: e.x + i.x, y: e.y + i.y, kind: "boss" })).filter((i) => zm(i) && !s.has(_n(i)) && !foodCellOccupied(i, t)).sort((i, r) => nearestSnakeDistance(r) - nearestSnakeDistance(i));
+    if (!canFoodUseCell(e, "boss")) {
+      const i = makeFood("boss", t);
+      e.x = i.x, e.y = i.y;
+      return;
+    }
+    const n = Object.values(su).map((i) => ({ x: e.x + i.x, y: e.y + i.y, kind: "boss" })).filter((i) => canFoodUseCell(i, "boss") && !s.has(_n(i)) && !foodCellOccupied(i, t)).sort((i, r) => nearestSnakeDistance(r) - nearestSnakeDistance(i));
     n[0] && (e.x = n[0].x, e.y = n[0].y);
   }), Fn = isFoodStormStage() ? foodStormFoods[0] || Fn : Fn, Vm();
 }
@@ -20981,13 +21000,17 @@ function Vm() {
   }
   const s = lu(Fn, 1.2);
   ls.visible = Fn.kind === "normal", hs.visible = Fn.kind !== "normal", ls.position.copy(s), hs.position.copy(s), hs.scale.setScalar(Fn.kind === "boss" ? 1.65 : 1);
+  foodStormFoods.forEach((e) => {
+    const t = new gt(TT, vT);
+    t.position.copy(lu(e, 1.2)), t.scale.setScalar(1.65), t.castShadow = true, t.receiveShadow = true, foodStormGroup.add(t);
+  });
 }
 function Hm() {
   if (isFoodStormStage()) {
     resetFoodStormFoods(), Vm();
     return;
   }
-  Fn = makeFood(), Vm();
+  Fn = makeFood(), maybeSpawnBossFood(), Vm();
 }
 function createSnakeSegmentNode(s, e, t) {
   const n = new Un(), i = new gt(s === 0 ? snakeHeadGeo : ST, s === 0 ? e : t), r = new gt(snakeSnoutGeo, s === 0 ? e : t), o = new gt(snakeDorsalGeo, s === 0 ? e : t), a = new gt(snakeDorsalGeo, s === 0 ? e : t), c = new gt(snakeScaleGeo, s === 0 ? e : t), l = new gt(snakeScaleGeo, s === 0 ? e : t), h = new gt(snakeScaleGeo, s === 0 ? e : t), u = new gt(snakeScaleGeo, s === 0 ? e : t), d = new gt(snakeScaleGeo, s === 0 ? e : t), f = new gt(snakeScaleGeo, s === 0 ? e : t), m = new gt(snakeScaleGeo, s === 0 ? e : t), _ = new gt(snakeScaleGeo, s === 0 ? e : t), g = new gt(snakeScaleGeo, s === 0 ? e : t), p = new gt(snakeScaleGeo, s === 0 ? e : t), x = new gt(snakeScaleGeo, s === 0 ? e : t), y = new gt(snakeScaleGeo, s === 0 ? e : t), T = new gt(snakeScaleGeo, s === 0 ? e : t), U = new gt(snakeScaleGeo, s === 0 ? e : t), F = new gt(snakeScaleGeo, s === 0 ? e : t), N = new gt(snakeScaleGeo, s === 0 ? e : t), q = new gt(snakeEyeGeo, Nr), fe = new gt(snakeEyeGeo, Nr);
