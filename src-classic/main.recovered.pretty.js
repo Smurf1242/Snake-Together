@@ -20706,7 +20706,7 @@ function renderProgressPanel() {
   achievementDefinitions.forEach((t) => {
     const n = document.createElement("div"), i = !!s.achievements[t.id];
     n.className = `challenge-entry ${i ? "complete" : "locked"}`;
-    n.innerHTML = `<strong>${i ? "Unlocked" : "Locked"} - ${t.name}</strong><span>${t.detail}${t.unlock ? ` Unlocks ${t.unlock}.` : ""}</span>`;
+    n.innerHTML = `<strong>${i ? "Unlocked" : "Locked"} - ${t.name}</strong><span>${i ? `${t.detail}${t.unlock ? ` Unlocks ${t.unlock}.` : ""}` : "Unlock this achievement to reveal the challenge details."}</span>`;
     e.appendChild(n);
   }), challengeList.replaceChildren(e);
   const t = document.createDocumentFragment();
