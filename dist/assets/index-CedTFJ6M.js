@@ -20471,7 +20471,7 @@ function sanitizeSnakeColor(s, e = "#ff8ed0") {
 function yf(s, e) {
   return { id: s, label: e, color: defaultSnakeColor(s), snake: [], direction: s === "host" ? "right" : "left", queuedDirection: null, growthPending: 0, score: 0, lives: MULTIPLAYER_MAX_LIVES, alive: false, foodEaten: 0, stormFoodEaten: 0, bestCombo: 0, combo: 0, lastFoodAt: 0, maxLength: 0 };
 }
-let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, foodStormFoods = [], bossMoveTick = 0, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, pauseQuitActive = false, progressiveFoodEaten = 0, xooScoreboardKey = "snake3d-scoreboard-v3", xooScoreboardVariant = "3D", vooScoreboardEntries = [], xooProgressKey = "snake3d-progress-v2", playerProgress = null, pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0, controllerLastLaunchPressed = false, controllerLastStartPressed = false, controllerLastActionAt = 0;
+let Ge = js, hu = [...js.prizes].sort((s, e) => e.threshold - s.threshold), En = Na[0].id, OooStageSeed = 0, Hn = cu(En, OooStageSeed), Fn = { x: 10, y: 10, kind: "normal" }, foodStormFoods = [], bossMoveTick = 0, Dt = "ready", Mi = 0, xf = 0, er = 0, vf = performance.now(), Sf = 0, jc = 0, ea = 0, Nm = 0, bf = false, zr = oaaBaseStep, oh = 0, Qt = window.localStorage.getItem("snake3d-username") || "Player", tt = "single", Ii = "host", An = null, Bt = null, Fa = "", us = "", qs = null, ah = 0, Bn = false, queuedFoodSound = null, pauseQuitActive = false, progressiveFoodEaten = 0, xooScoreboardKey = "snake3d-scoreboard-v4", xooScoreboardVariant = "3D", vooScoreboardEntries = [], xooProgressKey = "snake3d-progress-v3", playerProgress = null, pooMatchStartId = 0, vooPendingMatchStartId = 0, booMatchStartRetryTimer = null, SooMatchStartRetryCount = 0, FooReplayTimeline = [], NooReplayActive = false, kooReplayPlaying = false, zooReplayIndex = 0, HooReplayStepElapsed = 0, UooReplayStepDuration = 0.4, GooReplayRecordedBlob = null, WOOReplayRecorder = null, XooReplayChunks = [], YooReplayFinalState = null, ZooReplayTriggeredForPhase = false, controllerLastDirection = null, controllerLastInputAt = 0, controllerLastLaunchPressed = false, controllerLastStartPressed = false, controllerLastActionAt = 0;
 const ch = /* @__PURE__ */ new Set(), Re = { host: yf("host", "You"), guest: yf("guest", "Friend") }, Om = { host: [], guest: [] }, lh = { host: [], guest: [] };
 function cooNormalizeScoreboardName(s) {
   return `${s ?? ""}`.trim().replace(/\s+/g, " ").slice(0, 18) || "Player";
@@ -20561,13 +20561,13 @@ function RooLoadScoreboardEntries() {
   }
   fooRenderScoreboard();
 }
-const ACHIEVEMENT_TOTAL_FOOD_TARGET = 100, ACHIEVEMENT_STORM_RUN_TARGET = 60, ACHIEVEMENT_BOSS_TOTAL_TARGET = 5, ACHIEVEMENT_COMBO_TARGET = 8, ACHIEVEMENT_SCORE_TARGET = 1500;
+const ACHIEVEMENT_TOTAL_FOOD_TARGET = 1e3, ACHIEVEMENT_STORM_RUN_TARGET = 60, ACHIEVEMENT_BOSS_TOTAL_TARGET = 5, ACHIEVEMENT_COMBO_TARGET = 8, ACHIEVEMENT_SCORE_TARGET = 5e3;
 const achievementDefinitions = [
   { id: "first-bite", name: "Seasoned Snake", detail: `Eat ${ACHIEVEMENT_TOTAL_FOOD_TARGET} food across all runs.` },
   { id: "storm-chaser", name: "Storm Chaser", detail: `Eat ${ACHIEVEMENT_STORM_RUN_TARGET} food in one Infinite FoodStorm run.`, unlock: "Storm Blue skin" },
   { id: "boss-hunter", name: "Boss Hunter", detail: `Catch ${ACHIEVEMENT_BOSS_TOTAL_TARGET} Boss Food across all runs.`, unlock: "Boss Gold skin" },
   { id: "combo-run", name: "Combo Runner", detail: `Reach an ${ACHIEVEMENT_COMBO_TARGET}x food combo.`, unlock: "Combo Cyan skin" },
-  { id: "score-850", name: "1500 Club", detail: `Score at least ${ACHIEVEMENT_SCORE_TARGET} points.`, unlock: "Royal Pink skin" },
+  { id: "score-850", name: "5000 Club", detail: `Score at least ${ACHIEVEMENT_SCORE_TARGET} points.`, unlock: "Royal Pink skin" },
   { id: "silly-goose", name: "Silly Goose", detail: "Amanda dies below 300 points.", unlock: "Silly Goose skin" }
 ];
 const snakeSkinDefinitions = [
