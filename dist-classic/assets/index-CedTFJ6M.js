@@ -20266,7 +20266,7 @@ _ooSnakeGlow.position.set(0, 1.2, 0);
 On.add(Or, Ki, pooTarget, It, poo, oo, aoo, yooSnakeGlow, _ooSnakeGlow, hoo);
 const ih = new Un(), ou = new Un(), au = new Un(), Um = new Un();
 Lm.add(ih, ou, au, Um);
-const ST = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeHeadGeo = new Pi(wi * 0.98, 0.14, wi * 0.98), snakeSnoutGeo = new Pi(wi * 0.19, wi * 0.11, wi * 0.38), snakeDorsalGeo = new qa(wi * 0.085, wi * 0.34, 4, 1), snakeScaleGeo = new qa(wi * 0.065, wi * 0.24, 4, 1), snakeEyeGeo = new lr(wi * 0.06, 10, 10), SNAKE_SEGMENT_POOL = 48, bT = new Pi(wi * 0.96, 0.03, wi * 0.96), MT = new Pi(wi * 0.34, 0.12, wi * 0.34), TT = new Pi(wi * 0.42, 0.12, wi * 0.42), ls = new gt(MT, xT), hs = new gt(TT, vT);
+const ST = new lr(wi * 0.48, 18, 10), snakeHeadGeo = new lr(wi * 0.54, 20, 10), snakeSnoutGeo = new Pi(wi * 0.19, wi * 0.11, wi * 0.38), snakeDorsalGeo = new qa(wi * 0.085, wi * 0.34, 4, 1), snakeScaleGeo = new qa(wi * 0.065, wi * 0.24, 4, 1), snakeEyeGeo = new lr(wi * 0.075, 10, 10), SNAKE_SEGMENT_POOL = 48, bT = new Pi(wi * 0.96, 0.03, wi * 0.96), MT = new Pi(wi * 0.34, 0.12, wi * 0.34), TT = new Pi(wi * 0.42, 0.12, wi * 0.42), ls = new gt(MT, xT), hs = new gt(TT, vT);
 const ooo = new xe("#7b84b8"), aooDay = new xe("#586897"), cooNight = new xe("#090512"), looNight = new xe("#14081f"), hooDay = new xe("#f2d7ee"), uooDay = new xe("#8db8ea"), vooDay = new xe("#64739c"), dooNight = new xe("#ffd9f4"), fooNight = new xe("#93ddff"), pooNightGround = new xe("#12081f");
 const classicSkinPalettes = {
   nokia: { lcd: "#9bbc0f", dark: "#0f380f", mid: "#306230", light: "#cfe88a", panel: "#9bbc0ff2" },
@@ -20895,7 +20895,12 @@ function directionAngle(s) {
 function segmentForwardVector(s, e, t) {
   const n = e[s], i = e[s - 1], r = e[s + 1];
   let o = new C(0, 0, 1);
-  if (i && r)
+  if (s === 0 && t) {
+    const a = su[t];
+    o = new C(a.x, 0, a.y);
+  } else if (s === 0 && r)
+    o = n.clone().sub(r);
+  else if (i && r)
     o = r.clone().sub(i);
   else if (r)
     o = r.clone().sub(n);
@@ -20907,11 +20912,18 @@ function segmentForwardVector(s, e, t) {
   }
   return o.y = 0, o.lengthSq() < 1e-4 ? new C(0, 0, 1) : o.normalize();
 }
+function getSnakeEyeMaterial(s) {
+  const e = s && s.color;
+  if (!e) return vT;
+  return e.r * 0.2126 + e.g * 0.7152 + e.b * 0.0722 < 0.48 ? vT : Nr;
+}
 function styleSnakeSegment(s, e, t, n, i, r) {
   const o = s.userData, d = t;
   o.core.material = d, o.snout.material = d, o.dorsal.material = d, o.dorsalRear.material = d, o.leftScale.material = d, o.rightScale.material = d, o.upperLeft.material = d, o.upperRight.material = d, o.bellyLeft.material = d, o.bellyRight.material = d, o.dorsalMid.material = d, o.dorsalTail.material = d, o.flankLeft.material = d, o.flankRight.material = d, o.crestLeft.material = d, o.crestRight.material = d, o.featherLeft.material = d, o.featherRight.material = d, o.rearFrillLeft.material = d, o.rearFrillRight.material = d;
-  o.core.scale.set(1, 1, 1), o.core.position.y = 0.07;
-  o.snout.visible = false, o.eyeLeft.visible = false, o.eyeRight.visible = false, o.dorsal.visible = false, o.dorsalRear.visible = false, o.leftScale.visible = false, o.rightScale.visible = false, o.upperLeft.visible = false, o.upperRight.visible = false, o.bellyLeft.visible = false, o.bellyRight.visible = false, o.dorsalMid.visible = false, o.dorsalTail.visible = false, o.flankLeft.visible = false, o.flankRight.visible = false, o.crestLeft.visible = false, o.crestRight.visible = false, o.featherLeft.visible = false, o.featherRight.visible = false, o.rearFrillLeft.visible = false, o.rearFrillRight.visible = false;
+  const a = Math.max(1, r - 1), c = Math.max(0, Math.min(1, e / a)), l = i ? 1 : Math.max(0.78, 1 - c * 0.12);
+  o.core.scale.set(i ? 0.68 : 0.62 * l, i ? 0.24 : 0.16, i ? 0.98 : 0.86 * l), o.core.position.y = i ? 0.14 : 0.09;
+  o.snout.visible = false, o.eyeLeft.visible = i, o.eyeRight.visible = i, o.eyeLeft.material = getSnakeEyeMaterial(d), o.eyeRight.material = getSnakeEyeMaterial(d), o.eyeLeft.position.set(-wi * 0.17, wi * 0.18, wi * 0.34), o.eyeRight.position.set(wi * 0.17, wi * 0.18, wi * 0.34), o.eyeLeft.scale.setScalar(1), o.eyeRight.scale.setScalar(1);
+  o.dorsal.visible = false, o.dorsalRear.visible = false, o.leftScale.visible = false, o.rightScale.visible = false, o.upperLeft.visible = false, o.upperRight.visible = false, o.bellyLeft.visible = false, o.bellyRight.visible = false, o.dorsalMid.visible = false, o.dorsalTail.visible = false, o.flankLeft.visible = false, o.flankRight.visible = false, o.crestLeft.visible = false, o.crestRight.visible = false, o.featherLeft.visible = false, o.featherRight.visible = false, o.rearFrillLeft.visible = false, o.rearFrillRight.visible = false;
 }
 function LT(s) {
   const e = s === "host" ? ou : au, t = Re[s], n = s === "host" ? Ql : th, i = s === "host" ? eh : nh;
