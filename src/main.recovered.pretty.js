@@ -20070,7 +20070,7 @@ class WM {
     t.drawingBufferColorSpace = nt._getDrawingBufferColorSpace(e), t.unpackColorSpace = nt._getUnpackColorSpace();
   }
 }
-const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, infiniteRandomMinBounds = { minX: dm, maxX: pm, minY: fm, maxY: mm }, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "high", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "high", fogEnabled: true, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: "normal", snakeColor: "#ff8ed0", sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "", ready: "Press <strong>Space</strong> to start.", running: "", edgeWarning: "Border ahead. Turn now to stay inside the <strong>highlighted arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [{ threshold: 300, message: "Amanda, collect your <strong>300 points prize</strong> from Reece.", durationMs: 1e4 }, { threshold: 800, message: "Amanda, collect your <strong>800 points prize</strong> from Reece.", durationMs: 1e4 }] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, isValid: () => true }, { id: "infinite-progressive", name: "Infinite Progressive", wrap: true, progressive: true, isValid: () => true }, { id: "infinite-random", name: "Infinite Random Seed", wrap: true, usesSeed: true, randomShape: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
+const dm = 0, fm = 0, pm = 20, mm = 20, wi = 2, oaaBaseStep = 0.17, XM = 1, qM = 3, $M = 10, YM = 30, ZM = 0.22, JM = 2, MULTIPLAYER_MAX_LIVES = 3, infiniteRandomMinBounds = { minX: dm, maxX: pm, minY: fm, maxY: mm }, fooFreeroamBounds = { minX: 0, maxX: 55, minY: 0, maxY: 55 }, js = { graphics: { rendererPreference: "webgl", experimentalWebGpu: false, graphicsPreset: "high", dlssMode: "off", displayMode: "windowed", windowResolution: "1920x1080", showFpsCounter: false, vSync: true, fpsCap: "60", resolutionScale: "1", shadowQuality: "high", fogEnabled: true, dayNightCycle: false, dayCycleSeconds: 180, nightCycleSeconds: 180, snakeSpeed: "normal", snakeColor: "#ff8ed0", sfxVolume: 0.7, sfxMuted: false }, messages: { introChallenge: "", ready: "Press <strong>Space</strong> to start.", running: "", edgeWarning: "Border ahead. Turn now to stay inside the <strong>highlighted arena</strong>.", gameOver: "Run over. Press <strong>Space</strong> to restart." }, prizes: [] }, Na = [{ id: "open-arena", name: "Open Arena", wrap: false, isValid: () => true }, { id: "infinite", name: "Infinite", wrap: true, isValid: () => true }, { id: "infinite-progressive", name: "Infinite Progressive", wrap: true, progressive: true, isValid: () => true }, { id: "infinite-random", name: "Infinite Random Seed", wrap: true, usesSeed: true, randomShape: true, isValid: () => true }, { id: "crossroads", name: "Crossroads", wrap: false, isValid: (s, e) => Math.abs(s - 10) <= 2 || Math.abs(e - 10) <= 2 }, { id: "diamond", name: "Diamond Drift", wrap: false, isValid: (s, e) => Math.abs(s - 10) + Math.abs(e - 10) <= 10 }, { id: "freeroam", name: "Freeroam", wrap: false, bounds: fooFreeroamBounds, usesSeed: true, isValid: () => true }], su = { up: { x: 0, y: -1 }, down: { x: 0, y: 1 }, left: { x: -1, y: 0 }, right: { x: 1, y: 0 } }, ru = { up: "down", down: "up", left: "right", right: "left" }, pooTurnLeft = { up: "left", left: "down", down: "right", right: "up" }, vooTurnRight = { up: "right", right: "down", down: "left", left: "up" }, gm = document.querySelector("#app");
 if (!gm) throw new Error("App root not found.");
 const _m = gm;
 _m.innerHTML = `
@@ -20299,7 +20299,7 @@ function playFoodSound(s) {
   }
 }
 function ma(s) {
-  const e = { graphics: { ...js.graphics, ...(s == null ? void 0 : s.graphics) ?? {} }, messages: { ...js.messages, ...(s == null ? void 0 : s.messages) ?? {} }, prizes: Array.isArray(s == null ? void 0 : s.prizes) && s.prizes.length > 0 ? s.prizes.map((t) => ({ threshold: Number(t.threshold) || 0, message: typeof t.message == "string" ? t.message : "", durationMs: Number(t.durationMs) || 1e4 })) : js.prizes };
+  const e = { graphics: { ...js.graphics, ...(s == null ? void 0 : s.graphics) ?? {} }, messages: { ...js.messages, ...(s == null ? void 0 : s.messages) ?? {} }, prizes: [] };
   return e.messages.introChallenge = "", e.messages.running = "", e;
 }
 async function ET() {
@@ -20932,11 +20932,6 @@ function Gm(s, e) {
   t.alive && e !== ru[t.direction] && (t.queuedDirection = e);
 }
 function OT() {
-  const s = Ba().score;
-  hu.forEach((e) => {
-    const t = `${e.threshold}`;
-    s >= e.threshold && !ch.has(t) && (ch.add(t), ar(e.message, e.durationMs));
-  });
 }
 function fr(s = "") {
   const e = haaGetSnakeStepDuration();
@@ -21232,15 +21227,26 @@ function pollControllerInput(s) {
   const t = getControllerDirection();
   t && (t !== controllerLastDirection || s - controllerLastInputAt > 185) && (controllerLastDirection = t, controllerLastInputAt = s, ta(t));
 }
+function escapeIntroTitleHtml(s) {
+  return s.replace(/[&<>"']/g, (e) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[e]);
+}
+function renderIntroTitleFrame(s, e) {
+  const t = Array.from(s);
+  if (e < 0) {
+    hT.innerHTML = t.map((n) => `<span class="intro-letter">${n === " " ? "&nbsp;" : escapeIntroTitleHtml(n)}</span>`).join("");
+    return;
+  }
+  const n = 6, i = Math.min(e, t.length - 1), r = Math.max(0, i - n + 1);
+  hT.innerHTML = t.map((o, a) => e >= t.length || a < r ? '<span class="intro-letter intro-eaten">&nbsp;</span>' : a >= r && a <= i ? `<span class="intro-snake-segment${a === i ? " intro-snake-head" : ""}" aria-hidden="true"></span>` : `<span class="intro-letter">${o === " " ? "&nbsp;" : escapeIntroTitleHtml(o)}</span>`).join("");
+}
 function XT() {
   if (bf) return;
   bf = true;
   const s = "Snake: Together";
-  let e = 0;
+  let e = -1;
   const t = () => {
     if (e <= s.length) {
-      const n = s.slice(0, e), i = s.slice(e);
-      hT.innerHTML = `<span class="snake-head">${n}</span><span class="remaining">${i}</span>`, mf.textContent = e < s.length ? "The snake is clearing the title..." : "", e += 1, window.setTimeout(t, e < s.length ? 180 : 1400);
+      renderIntroTitleFrame(s, e), mf.textContent = "", e += 1, window.setTimeout(t, e <= 0 ? 520 : e <= s.length ? 145 : 700);
       return;
     }
     mf.innerHTML = "Press <strong>Space</strong> to start game", window.setTimeout(() => {

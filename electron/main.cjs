@@ -27,24 +27,13 @@ const defaultConfig = {
     sfxMuted: false
   },
   messages: {
-    introChallenge: 'Try and beat 850 Amanda.... lots of love, Reece',
+    introChallenge: '',
     ready: 'Press <strong>Space</strong> to launch the run.',
-    running: 'Use the full arena. Chase the <strong>bubblegum pink super food</strong> for bigger growth.',
+    running: '',
     edgeWarning: 'Border ahead. Turn now to stay inside the <strong>highlighted arena</strong>.',
     gameOver: 'Run over. Press <strong>Space</strong> to restart.'
   },
-  prizes: [
-    {
-      threshold: 300,
-      message: 'Amanda, collect your <strong>300 points prize</strong> from Reece.',
-      durationMs: 10000
-    },
-    {
-      threshold: 800,
-      message: 'Amanda, collect your <strong>800 points prize</strong> from Reece.',
-      durationMs: 10000
-    }
-  ]
+  prizes: []
 };
 
 function findFirstExistingPath(...paths) {
@@ -156,13 +145,7 @@ function mergeConfig(rawConfig = {}) {
       ...defaultConfig.messages,
       ...(rawConfig.messages || {})
     },
-    prizes: Array.isArray(rawConfig.prizes) && rawConfig.prizes.length > 0
-      ? rawConfig.prizes.map((prize) => ({
-          threshold: Number(prize.threshold) || 0,
-          message: typeof prize.message === 'string' ? prize.message : '',
-          durationMs: Number(prize.durationMs) || 10000
-        }))
-      : defaultConfig.prizes
+    prizes: []
   };
 }
 
