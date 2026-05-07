@@ -23,6 +23,7 @@ const defaultConfig = {
     dayCycleSeconds: 180,
     nightCycleSeconds: 180,
     snakeSpeed: 'normal',
+    snakeModel: 'title',
     sfxVolume: 0.7,
     sfxMuted: false
   },
